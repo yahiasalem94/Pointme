@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Pointme</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_signup">SignupActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="facebook_app_id">599278173835264</string>
+    <string name="fb_login_protocol_scheme">fb599278173835264</string>
+</resources>
+
