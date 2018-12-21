@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "392445852077",
+    "firebase_url": "https://pointme-dbd0b.firebaseio.com",
+    "project_id": "pointme-dbd0b",
+    "storage_bucket": "pointme-dbd0b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392445852077:android:7aa80ca59f63e3df",
+        "android_client_info": {
+          "package_name": "com.example.pointme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392445852077-h9hsc5km7vvgfs2udenuhj78is68pu8b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pointme",
+            "certificate_hash": "4326de718b30b7db6cc9ccd53f820f2fdba0ae0f"
+          }
+        },
+        {
+          "client_id": "392445852077-v4an1semsko0oj162l3fu587c5isq2os.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhVwO1Ri_6rSKCkCKGRbX7v-LyQEBeGAE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392445852077-v4an1semsko0oj162l3fu587c5isq2os.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

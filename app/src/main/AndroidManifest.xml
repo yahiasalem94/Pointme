@@ -3,14 +3,14 @@
     package="com.example.pointme" >
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    package="com.example.pointme">
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="com.example.pointme.activities.MainActivity"
-            android:label="@string/app_name" >
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +30,6 @@
         </activity>
         <activity android:name="com.example.pointme.activities.SignupActivity" android:theme="@style/AppTheme.Dark" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-
     </application>
 
 </manifest>
