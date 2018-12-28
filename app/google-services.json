@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "392445852077-a9f66q65ismg4lveq7j48bm9ugtb179m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pointme",
+            "certificate_hash": "c42a0c839bde3d3fe87b31c7259420025f2e6347"
+          }
+        },
+        {
           "client_id": "392445852077-v4an1semsko0oj162l3fu587c5isq2os.apps.googleusercontent.com",
           "client_type": 3
         }
