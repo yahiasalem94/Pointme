@@ -14,17 +14,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScheduleHelper {
+
+    public static HashMap<String, Boolean> convertDateListToMap(ArrayList<String> dates){
+        HashMap<String, Boolean> map = new HashMap<>();
+        for (String date: dates){
+            map.put(date, true);
+        }
+        return map;
+    }
 
     public static void uploadEvent(FirebaseAuth auth, DatabaseReference database, Event event){
         String eventKey = database.child(Constants.EVENTS).child(auth.getCurrentUser().getUid()).push().getKey();
         Map<String, Object> eventMap = new HashMap<>();
 
         eventMap.put(Constants.EVENTSPATH + auth.getCurrentUser().getUid() + "/" + eventKey, event);
-        eventMap.put(Constants.DATESPATH + auth.getCurrentUser().getUid() + "/" + eventKey, event.getDates());
+        eventMap.put(Constants.DATESPATH + auth.getCurrentUser().getUid() + "/" + eventKey, convertDateListToMap(event.getDates()));
 
         database.updateChildren(eventMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -44,7 +53,7 @@ public class ScheduleHelper {
         Map<String, Object> eventMap = new HashMap<>();
 
         eventMap.put(Constants.APPOINTMENTSPATH + auth.getCurrentUser().getUid() + "/" + appointmentKey, appointment);
-        eventMap.put(Constants.DATESPATH + auth.getCurrentUser().getUid() + "/" + appointmentKey, appointment.getDates());
+        eventMap.put(Constants.DATESPATH + auth.getCurrentUser().getUid() + "/" + appointmentKey, convertDateListToMap(appointment.getDates()));
 
         database.updateChildren(eventMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -75,7 +84,7 @@ public class ScheduleHelper {
                     Map<String, Object> eventMap = new HashMap<>();
 
                     eventMap.put(Constants.BOOKINGSPATH + auth.getCurrentUser().getUid() + "/" + key + "/" + bookingKey, booking);
-                    eventMap.put(Constants.DATESPATH + auth.getCurrentUser().getUid() + "/" + bookingKey, booking.getDates());
+                    eventMap.put(Constants.DATESPATH + auth.getCurrentUser().getUid() + "/" + bookingKey, convertDateListToMap(booking.getDates()));
 
                     database.updateChildren(eventMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
