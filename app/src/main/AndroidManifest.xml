@@ -1,37 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.pointme" >
-
-    <uses-permission android:name="android.permission.INTERNET"/>
     package="com.example.pointme">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    package="com.example.pointme">
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.pointme.activities.MainActivity"
-            android:label="@string/app_name" >
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme.Dark">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.example.pointme.activities.LoginActivity"
-            android:theme="@style/AppTheme.Dark"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.pointme.activities.SignupActivity" android:theme="@style/AppTheme.Dark" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <activity
+            android:name=".activities.SignupActivity"
+            android:theme="@style/AppTheme.Dark" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".activities.CategoriesActivity"
+            android:label="@string/title_activity_categories"
+            android:theme="@style/AppTheme.Dark">
+            <!--<intent-filter>-->
+
+            <!--</intent-filter>-->
+        </activity>
+        <activity
+            android:name=".activities.ListOfServiceProviders"
+            android:label="@string/title_activity_list_of_service_providers"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
