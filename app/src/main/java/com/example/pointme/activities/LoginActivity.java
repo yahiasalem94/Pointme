@@ -40,7 +40,7 @@ import com.facebook.appevents.AppEventsLogger;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-
+    private static int FACEBOOK_REQUEST_CODE;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -67,12 +67,14 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mCallbackManager = CallbackManager.Factory.create();
 
-        fbButton.setReadPermissions("email");
+        fbButton.setReadPermissions("email", "public_profile");
+        FACEBOOK_REQUEST_CODE = fbButton.getRequestCode();
+
         fbButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                Log.i(TAG,"Hello"+loginResult.getAccessToken().getToken());
+                Log.d(TAG,"Hello"+loginResult.getAccessToken().getToken());
                 //  Toast.makeText(MainActivity.this, "Token:"+loginResult.getAccessToken(), Toast.LENGTH_SHORT).show();
 
                 handleFacebookAccessToken(loginResult.getAccessToken());
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-
+                Log.d(TAG,"operation cancelled");
             }
 
             @Override
@@ -118,12 +120,12 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Log.d(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Log.d(TAG, "check existence");
-                            checkUserExistence();
+                            onLoginSuccess();
                         }
 
 
@@ -161,7 +163,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }else {
-            Log.d(TAG,"fucken");
             new android.os.Handler().postDelayed(
                     new Runnable() {
                         public void run() {
@@ -178,6 +179,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
 
@@ -186,6 +189,11 @@ public class LoginActivity extends AppCompatActivity {
                 this.finish();
             }
         }
+        else if (requestCode == FACEBOOK_REQUEST_CODE) {
+            Log.d(TAG, "onActivityResult"+ " " + "Facebook request");
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+
     }
 
     @Override
@@ -196,6 +204,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         loginButton.setEnabled(true);
+        Intent intent = new Intent(this, CategoriesActivity.class);
+        startActivity(intent);
         finish();
     }
 
