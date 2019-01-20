@@ -21,6 +21,8 @@ import com.example.pointme.classes.Event;
 import com.example.pointme.classes.PointmeDate;
 import com.example.pointme.classes.ScheduleHelper;
 import com.example.pointme.fragments.DatePickerFragment;
+import com.example.pointme.fragments.DayPickerFragment;
+import com.example.pointme.fragments.NewEventFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity{
     private Event mEvent;
     private Appointment mAppointment;
     private Booking mBooking;
+
+    private ArrayList<String> mDates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,27 +108,24 @@ public class MainActivity extends AppCompatActivity{
             mAppointment = new Appointment("RamyApp", "niceee", "no loc", 25, 0, 150, 1, 0.5, true, true, false, false, arrayDates);
             mBooking = new Booking("No loc", false, false, arrayDates);
 
-            //ScheduleHelper.uploadEvent(mAuth, mDatabase, mEvent);
-            //ScheduleHelper.uploadAppointment(mAuth, mDatabase, mAppointment);
-            ScheduleHelper.uploadBooking(mAuth, mDatabase, Constants.APPOINTMENTTYPE, "RamyApp", mBooking);
+            mDates = new ArrayList<>();
 
-            mDatabase.child(Constants.APPOINTMENTS).child(mAuth.getCurrentUser().getUid()).orderByChild("RamyApp").addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(Constants.EVENTS).child(mAuth.getCurrentUser().getUid()).orderByChild("Crossfit for beginners").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot dataSnap: dataSnapshot.getChildren()){
+                    for(DataSnapshot dataSnap: dataSnapshot.getChildren()){
                         String key = dataSnap.getKey();
                         mDatabase.child(Constants.DATES).child(mAuth.getCurrentUser().getUid()).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                ArrayList<String> dates = new ArrayList<>();
-                                for (DataSnapshot dataSnap: dataSnapshot.getChildren()){
-                                    dates.add(dataSnap.getKey());
-                                    Log.d("Ramy", dataSnap.getKey());
+                                for(DataSnapshot dataSnap1: dataSnapshot.getChildren()){
+                                    mDates.add(dataSnap1.getKey());
                                 }
                                 Bundle bundle = new Bundle();
-                                bundle.putStringArrayList("Dates", dates);
+                                bundle.putStringArrayList("Dates", mDates);
                                 DatePickerFragment fragment = new DatePickerFragment();
                                 fragment.setArguments(bundle);
+                                //NewEventFragment fragment = new NewEventFragment();
                                 loadFragment(fragment);
                             }
 
@@ -141,6 +142,52 @@ public class MainActivity extends AppCompatActivity{
 
                 }
             });
+
+            //Bundle bundle = new Bundle();
+            //bundle.putStringArrayList("Dates", mDates);
+            //DatePickerFragment fragment = new DatePickerFragment();
+            //fragment.setArguments(bundle);
+            //NewEventFragment fragment = new NewEventFragment();
+            //loadFragment(fragment);
+
+            //ScheduleHelper.uploadEvent(mAuth, mDatabase, mEvent);
+            //ScheduleHelper.uploadAppointment(mAuth, mDatabase, mAppointment);
+            //ScheduleHelper.uploadBooking(mAuth, mDatabase, Constants.APPOINTMENTTYPE, "RamyApp", mBooking);
+
+            /*mDatabase.child(Constants.APPOINTMENTS).child(mAuth.getCurrentUser().getUid()).orderByChild("RamyApp").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnap: dataSnapshot.getChildren()){
+                        String key = dataSnap.getKey();
+                        mDatabase.child(Constants.DATES).child(mAuth.getCurrentUser().getUid()).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ArrayList<String> dates = new ArrayList<>();
+                                for (DataSnapshot dataSnap: dataSnapshot.getChildren()){
+                                    dates.add(dataSnap.getKey());
+                                    Log.d("Ramy", dataSnap.getKey());
+                                }
+                                Bundle bundle = new Bundle();
+                                bundle.putStringArrayList("Dates", dates);
+                                DatePickerFragment fragment = new DatePickerFragment();
+                                fragment.setArguments(bundle);
+                                //NewEventFragment fragment = new NewEventFragment();
+                                loadFragment(fragment);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });*/
         }
     }
 

@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TimePicker;
 
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
@@ -55,6 +56,7 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
     private ArrayList<String> dates;
     private ArrayList<String> times;
     private String time;
+    private String date;
 
     private RecyclerView mTimeRecView;
     private ArrayAdapter mArrayAdapter;
@@ -104,12 +106,23 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
         slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
         mTimeRecView = (RecyclerView) view.findViewById(R.id.time_rec_view);
         mTimeButton = (Button) view.findViewById(R.id.time_button);
-        dates = getArguments().getStringArrayList("Dates");
         times = new ArrayList<>();
-        for(String date : dates){
-            String hours = date.substring(8,10);
-            String minutes = date.substring(10);
-            times.add(hours + ":" + minutes);
+        dates = getArguments().getStringArrayList("Dates");
+        if(!dates.isEmpty()) {
+            for (String date : dates) {
+                String hours = date.substring(8, 10);
+                String minutes = date.substring(10);
+                times.add(hours + ":" + minutes);
+            }
+        }else{
+            date = getArguments().getString("Date");
+            for(int i = 2; i + 8 <= date.length(); i = i + 8){
+                String stHours = date.substring(i, i+2);
+                String stMinutes = date.substring(i+2, i+4);
+                String enHours = date.substring(i+4, i+6);
+                String enMinutes = date.substring(i+6, i+8);
+                times.add(stHours + ":" + stMinutes + " - " + enHours + ":" + enMinutes);
+            }
         }
 
         adapter = new TimeAdapter(times, getContext());

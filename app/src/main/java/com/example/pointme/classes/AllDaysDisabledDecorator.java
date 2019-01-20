@@ -6,15 +6,11 @@ import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
 public class AllDaysDisabledDecorator implements DayViewDecorator {
 
-    private int month;
-
-    public AllDaysDisabledDecorator(int month){
-        this.month = month;
-    }
+    public AllDaysDisabledDecorator(){}
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        return day.getMonth() == month; //decorate all days in calendar
+        return true; //decorate all days in calendar
     }
 
     @Override

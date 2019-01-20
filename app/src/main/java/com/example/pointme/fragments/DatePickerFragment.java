@@ -26,7 +26,11 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
+import org.threeten.bp.DayOfWeek;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -39,6 +43,8 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
     private ArrayList<CalendarDay> enabledDates;
     private ArrayList<String> dates;
     private ArrayList<String> pickedDates;
+    private  String pickedDate;
+    private ArrayList<String> dayDates;
     private Animation slideUp;
     private Animation slideDown;
 
@@ -88,15 +94,17 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
         View view = inflater.inflate(R.layout.fragment_date_picker, container, false);
         enabledDates = new ArrayList<>();
         pickedDates = new ArrayList<>();
+        String[] array = {"Su12301330", "Th110013001500170018002000"};
+        //dayDates = new ArrayList<>(Arrays.asList(array));
         dates = getArguments().getStringArrayList("Dates");
 
-        for (String date: dates){
+        /*for (String date: dates){
             PointmeDate pointmeDate = PointmeDate.StringToDate(date);
             CalendarDay day = CalendarDay.from(pointmeDate.getYear(), pointmeDate.getMonth(), pointmeDate.getDay());
             if(!day.isBefore(CalendarDay.today())){
                 enabledDates.add(day);
             }
-        }
+        }*/
 
         mCalendarButton = (Button) view.findViewById(R.id.calendar_button);
         mCalendarButton.setVisibility(View.GONE);
@@ -106,17 +114,17 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
 
         MaterialCalendarView materialCalendarView=(MaterialCalendarView) view.findViewById (R.id.calendarView);
         materialCalendarView.setAllowClickDaysOutsideCurrentMonth(false);
-        materialCalendarView.setCurrentDate(enabledDates.get(0), true);
+        //materialCalendarView.setCurrentDate(enabledDates.get(0), true);
 
-        materialCalendarView.addDecorator(new AllDaysDisabledDecorator(enabledDates.get(0).getMonth()));
-        materialCalendarView.addDecorator(new DayEnableDecorator(enabledDates));
+        materialCalendarView.addDecorator(new AllDaysDisabledDecorator());
+        materialCalendarView.addDecorator(new DayEnableDecorator(dates, 8));
 
         materialCalendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
                 materialCalendarView.removeDecorators();
-                materialCalendarView.addDecorator(new AllDaysDisabledDecorator(calendarDay.getMonth()));
-                materialCalendarView.addDecorator(new DayEnableDecorator(enabledDates));
+                materialCalendarView.addDecorator(new AllDaysDisabledDecorator());
+                materialCalendarView.addDecorator(new DayEnableDecorator(dates, 8));
                 CalendarDay day = materialCalendarView.getSelectedDate();
                 if (mCalendarButton.getVisibility() == View.VISIBLE) {
                     mCalendarButton.startAnimation(slideDown);
@@ -135,6 +143,43 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
                     mCalendarButton.startAnimation(slideUp);
                     mCalendarButton.setVisibility(View.VISIBLE);
                 }
+                pickedDates = new ArrayList<>();
+                char c = dates.get(0).charAt(0);
+                String aday = "";
+                if (c >= 'F' && c <= 'W'){
+                    DayOfWeek dayOfWeek = calendarDay.getDate().getDayOfWeek();
+                    switch (dayOfWeek) {
+                        case FRIDAY:
+                            aday = "Fr";
+                            break;
+                        case SATURDAY:
+                            aday = "Sa";
+                            break;
+                        case SUNDAY:
+                            aday = "Su";
+                            break;
+                        case MONDAY:
+                            aday = "Mo";
+                            break;
+                        case TUESDAY:
+                            aday = "Tu";
+                            break;
+                        case WEDNESDAY:
+                            aday = "We";
+                            break;
+                        case THURSDAY:
+                            aday = "Th";
+                            break;
+                        default:
+                            break;
+                    }
+                    for (String s : dates) {
+                        if (s.contains(aday)) {
+                            pickedDate = s;
+                            break;
+                        }
+                    }
+                }
                 String date = calendarDayToString(calendarDay);
                 Log.d("Ramy", date);
                 for(String dateTime: dates){
@@ -150,6 +195,7 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList("Dates", pickedDates);
+                bundle.putString("Date", pickedDate);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
                 TimePickerFragment fragment = new TimePickerFragment();
