@@ -1,6 +1,5 @@
 package com.example.pointme.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.pointme.R;
-import com.example.pointme.classes.TimePickerAdapter;
+import com.example.pointme.adapters.TimePickerAdapter;
 
 /**
  * A simple {@link Fragment} subclass.

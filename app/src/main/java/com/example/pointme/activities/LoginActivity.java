@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,19 +50,20 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private LoginButton fbButton;
     private TextView signupLink;
-
+    private ImageView iv;
     CallbackManager mCallbackManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.android_login);
 
         loginButton = findViewById(R.id.btn_login);
         fbButton = findViewById(R.id.fbbutton);
         emailText = findViewById(R.id.input_email);
         passwordText = findViewById(R.id.input_password);
         signupLink = findViewById(R.id.link_signup);
+        iv = findViewById(R.id.iv);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -204,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         loginButton.setEnabled(true);
-        Intent intent = new Intent(this, CategoriesActivity.class);
+        Intent intent = new Intent(this, testActivity.class);
         startActivity(intent);
         finish();
     }

@@ -53,7 +53,7 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private String TAG = "DatePickerFragment";
     private OnFragmentInteractionListener mListener;
 
     public DatePickerFragment() {
@@ -85,6 +85,7 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Log.d(TAG, "DatePickerFragment");
     }
 
     @Override

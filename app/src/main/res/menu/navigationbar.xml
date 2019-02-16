@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/baseline_dashboard_black"
+        android:title="@string/home" />
+
+    <item
+        android:id="@+id/favorites"
+        android:icon="@drawable/baseline_favorite_black"
+        android:title="@string/favorites" />
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/baseline_search_black"
+        android:title="@string/search" />
+
+    <item
+        android:id="@+id/booking"
+        android:icon="@drawable/baseline_business_center_black"
+        android:title="@string/booking" />
+
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/baseline_more_horiz_black"
+        android:title="@string/more" />
+
+</menu>

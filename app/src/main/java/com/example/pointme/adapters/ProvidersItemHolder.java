@@ -1,4 +1,4 @@
-package com.example.pointme.classes;
+package com.example.pointme.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,7 +24,7 @@ public class ProvidersItemHolder extends RecyclerView.ViewHolder {
             title = itemView.findViewById(R.id.title);
         }
     }
-    public TextView geNameText() {
+    public TextView getNameText() {
         return name;
     }
 

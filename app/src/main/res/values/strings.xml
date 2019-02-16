@@ -11,5 +11,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_list_of_service_providers">ListOfServiceProviders</string>
+    <string name="title_activity_test">testActivity</string>
+    <string name="home">home</string>
+    <string name="favorites">favorites</string>
+    <string name="search">search</string>
+    <string name="booking">booking</string>
+    <string name="more">more</string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>
 

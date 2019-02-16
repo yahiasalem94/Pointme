@@ -1,4 +1,4 @@
-package com.example.pointme.classes;
+package com.example.pointme.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

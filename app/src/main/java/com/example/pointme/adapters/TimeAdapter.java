@@ -1,9 +1,8 @@
-package com.example.pointme.classes;
+package com.example.pointme.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.example.pointme.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TimeAdapter extends Adapter<TimeAdapter.Holder> {
 

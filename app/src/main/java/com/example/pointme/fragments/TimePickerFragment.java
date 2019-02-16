@@ -18,18 +18,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TimePicker;
 
 import com.example.pointme.R;
-import com.example.pointme.activities.MainActivity;
-import com.example.pointme.classes.TimeAdapter;
+import com.example.pointme.adapters.TimeAdapter;
 
-import java.lang.reflect.Array;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 

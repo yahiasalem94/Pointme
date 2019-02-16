@@ -2,11 +2,12 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    card_view:cardCornerRadius="8dp"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:layout_margin="30dp"
+    card_view:cardCornerRadius="75dp"
     card_view:cardElevation="10dp"
+    android:shape="ring"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground">
 
