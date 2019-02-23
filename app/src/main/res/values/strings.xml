@@ -18,5 +18,7 @@
     <string name="booking">booking</string>
     <string name="more">more</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="backdrop_title">backdrop_title</string>
+    <string name="backdrop_subtitle">backdrop_subtitle</string>
 </resources>
 

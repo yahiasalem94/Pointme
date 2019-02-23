@@ -3,6 +3,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
 
+import com.example.pointme.Interfaces.AdapterCallback;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.adapters.ProfileEventInfo;
@@ -18,7 +20,7 @@ import com.example.pointme.adapters.ProfileEventInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements AdapterCallback {
 
     private Toolbar toolbar;
     private ProfileAdapter adapter;
@@ -36,7 +38,7 @@ public class ProfileFragment extends Fragment {
             title = "Pointme";
         }
 
-        adapter = new ProfileAdapter(createList());
+        adapter = new ProfileAdapter(createList(), this);
     }
 
     @Override
@@ -69,6 +71,18 @@ public class ProfileFragment extends Fragment {
         list.setAdapter(adapter);
     }
 
+    @Override
+    public void onMethodCallback(String title) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_PARAM1,title);
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
     private List<ProfileEventInfo> createList() {
 

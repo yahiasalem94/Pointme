@@ -32,13 +32,6 @@ public class testActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-
-//        if (mAuth.getCurrentUser() == null)
-//        {
-//            Intent intent = new Intent(this, LoginActivity.class);
-//            startActivity(intent);
-//        }
-
         bottomNavigationView = findViewById(R.id.navigation);
         CategoriesFragment fragment = new CategoriesFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

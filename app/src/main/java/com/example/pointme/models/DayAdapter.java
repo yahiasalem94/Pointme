@@ -1,4 +1,4 @@
-package com.example.pointme.classes;
+package com.example.pointme.models;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -14,8 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.pointme.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;

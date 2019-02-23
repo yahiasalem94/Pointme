@@ -78,7 +78,7 @@ public class ListOfServiceProvidersFragment extends Fragment implements AdapterC
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
-        transaction.replace(R.id.your_placeholder, fragment);
+        transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

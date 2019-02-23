@@ -2,7 +2,6 @@ package com.example.pointme.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,9 +17,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 
 import com.example.pointme.R;
-import com.example.pointme.classes.AllDaysDisabledDecorator;
-import com.example.pointme.classes.DayEnableDecorator;
-import com.example.pointme.classes.PointmeDate;
+import com.example.pointme.models.AllDaysDisabledDecorator;
+import com.example.pointme.models.DayEnableDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -28,9 +26,7 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import org.threeten.bp.DayOfWeek;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 

@@ -1,42 +1,48 @@
-package com.example.pointme.classes;
+package com.example.pointme.models;
 
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
 
-public class Appointment {
+public class Event implements Cloneable{
 
     private String name;
     private String desc;
     private String loc;
+    private String key;
     private int maxN;
     private int curN;
     private int fees;
     private double dur;
-    private double timD;
     private boolean notB;
     private boolean reqA;
     private boolean canc;
-    private boolean allO;
     private ArrayList<String> dates;
 
-    public Appointment()
-    {}
+    public Event() {}
 
-    public Appointment(String Name, String Description, String Location, int MaxNumber, int CurrentNumber, int Fees, double Duration, double TimeDifference, boolean NotifyBooking, boolean RequireAcceptance, boolean Cancelled, boolean allowOverlap, ArrayList<String> dates){
+    public Event(String Name, String Description, String Location, int MaxNumber, int CurrentNumber, int Fees, double Duration, boolean NotifyBooking, boolean RequireAcceptance, boolean Cancelled, ArrayList<String> dates){
         this.name = Name;
         this.desc = Description;
         this.loc = Location;
+        this.key = "";
         this.maxN = MaxNumber;
         this.curN = CurrentNumber;
         this.fees = Fees;
-        this.timD = TimeDifference;
         this.dur = Duration;
         this.notB = NotifyBooking;
         this.reqA = RequireAcceptance;
         this.canc = Cancelled;
-        this.allO = allowOverlap;
         this.dates = new ArrayList<>(dates);
+    }
+
+    @Override
+    protected Object clone(){
+        try {
+            return super.clone();
+        }catch (CloneNotSupportedException e){
+            return null;
+        }
     }
 
     public int getMaxN() {
@@ -111,28 +117,12 @@ public class Appointment {
         this.reqA = reqA;
     }
 
-    public double getTimD() {
-        return timD;
-    }
-
-    public void setTimD(double timD) {
-        this.timD = timD;
-    }
-
     public boolean isCanc() {
         return canc;
     }
 
     public void setCanc(boolean canc) {
         this.canc = canc;
-    }
-
-    public boolean isAllO() {
-        return allO;
-    }
-
-    public void setAllO(boolean allO) {
-        this.allO = allO;
     }
 
     @Exclude
@@ -145,4 +135,13 @@ public class Appointment {
         this.dates = new ArrayList<>(dates);
     }
 
+    @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    @Exclude
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

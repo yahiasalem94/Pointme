@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
-                this.finish();
+                onLoginSuccess();
             }
         }
         else if (requestCode == FACEBOOK_REQUEST_CODE) {
@@ -206,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         loginButton.setEnabled(true);
-        Intent intent = new Intent(this, testActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }

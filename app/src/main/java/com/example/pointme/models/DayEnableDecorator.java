@@ -1,17 +1,12 @@
-package com.example.pointme.classes;
+package com.example.pointme.models;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
 import org.threeten.bp.DayOfWeek;
-import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
 
 public class DayEnableDecorator implements DayViewDecorator {
     private ArrayList<String> dates;

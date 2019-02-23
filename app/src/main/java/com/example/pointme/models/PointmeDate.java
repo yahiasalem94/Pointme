@@ -1,4 +1,4 @@
-package com.example.pointme.classes;
+package com.example.pointme.models;
 
 public class PointmeDate implements Comparable<PointmeDate>{
 

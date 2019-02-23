@@ -13,9 +13,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.pointme.R;
-import com.example.pointme.classes.DayAdapter;
-import com.example.pointme.classes.Event;
-import com.example.pointme.classes.ScheduleHelper;
+import com.example.pointme.models.DayAdapter;
+import com.example.pointme.models.Event;
+import com.example.pointme.models.ScheduleHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

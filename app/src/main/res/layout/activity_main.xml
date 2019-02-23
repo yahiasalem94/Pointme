@@ -4,7 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.example.pointme.activities.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        style="@style/Toolbar"
+        app:theme="@style/AppTheme.AppBarOverlay"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:elevation="4dp"
+        />
 
     <RelativeLayout
         android:id="@+id/relative_layout"
@@ -19,20 +29,6 @@
         android:layout_above="@+id/navigation"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-   <!--<com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:mcv_showOtherDates="decorated_disabled"
-        app:mcv_selectionColor="@color/white"
-        app:mcv_dateTextAppearance="@style/TextAppearance.CalendarDay"
-        app:mcv_headerTextAppearance="@style/TextAppearance.CalendarMonth"
-        app:mcv_rightArrowMask="@drawable/ic_arrow_right_24dp"
-        app:mcv_leftArrowMask="@drawable/ic_arrow_left_24dp"
-        app:mcv_weekDayTextAppearance="@style/TextAppearance.CalendarWeek"
-        />-->
-
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
@@ -42,9 +38,10 @@
         android:background="@color/black"
         app:itemBackground="@color/black"
         android:foreground="?attr/selectableItemBackground"
-        app:itemIconTint="@android:color/white"
+        app:itemIconTint="@drawable/selector_bottombar_item"
         app:itemTextColor="@android:color/white"
-        app:menu="@menu/navigation" />
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/navigationbar" />
 
     </RelativeLayout>
 
