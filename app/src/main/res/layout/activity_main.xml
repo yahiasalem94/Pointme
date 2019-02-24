@@ -41,6 +41,7 @@
         app:itemIconTint="@drawable/selector_bottombar_item"
         app:itemTextColor="@android:color/white"
         app:labelVisibilityMode="unlabeled"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         app:menu="@menu/navigationbar" />
 
     </RelativeLayout>

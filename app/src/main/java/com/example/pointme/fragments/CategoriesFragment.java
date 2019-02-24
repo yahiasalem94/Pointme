@@ -47,7 +47,7 @@ public class CategoriesFragment extends Fragment implements AdapterCallback {
     private DatabaseReference mDatabase;
 
     private CategoriesAdapter categoriesAdapter;
-    private HashMap<String, ArrayList<String>> serviceProviders;
+    private ArrayList<String> serviceProviders;
     private String TAG = "CategoriesFragment";
     private static final String ARG_PARAM1 = "param1";
 
@@ -57,13 +57,17 @@ public class CategoriesFragment extends Fragment implements AdapterCallback {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        serviceProviders = new ArrayList<>();
         initializeList();
 
         mDatabase.child("ServiceProviders").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                serviceProviders = (HashMap<String, ArrayList<String>>)dataSnapshot.getValue();
+//                serviceProviders = (ArrayList <String>)dataSnapshot.getKey();
+                for (DataSnapshot dataSnap1 : dataSnapshot.getChildren()) {
+                    Log.i(TAG, dataSnap1.getKey());
+                    serviceProviders.add(dataSnap1.getKey());
+                }
             }
 
             @Override
@@ -71,7 +75,6 @@ public class CategoriesFragment extends Fragment implements AdapterCallback {
 
             }
         });
-
         categoriesAdapter = new CategoriesAdapter(categoriesList, this);
     }
 
@@ -105,8 +108,8 @@ public class CategoriesFragment extends Fragment implements AdapterCallback {
             categoriesList = new ArrayList<CategoriesItem>();
             categoriesList.add(new CategoriesItem("Crossfit", R.drawable.crossfit));
             categoriesList.add(new CategoriesItem("Yoga", R.drawable.yoga));
-            categoriesList.add(new CategoriesItem("Hairdresser", R.drawable.hairdresser));
-            categoriesList.add(new CategoriesItem("Makeup Artists", R.drawable.makeup));
+            categoriesList.add(new CategoriesItem("Hairdressers", R.drawable.hairdresser));
+            categoriesList.add(new CategoriesItem("Makeup", R.drawable.makeup));
             categoriesList.add(new CategoriesItem("Swimming", R.drawable.swimming));
         }
     }
@@ -118,7 +121,6 @@ public class CategoriesFragment extends Fragment implements AdapterCallback {
         Log.d(TAG, "hi0");
         Bundle bundle = new Bundle();
         bundle.putString(ARG_PARAM1,title);
-        bundle.putSerializable("Hashmap", serviceProviders);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);

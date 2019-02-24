@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.pointme.R;
+import com.example.pointme.fragments.FavoritesFragment;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Booking;
 import com.example.pointme.models.Event;
@@ -69,7 +70,8 @@ public class MainActivity extends AppCompatActivity{
                                     loadFragment(categoriesFragment);
                                     return true;
                                 case R.id.favorites:
-                                    //TODO
+                                    FavoritesFragment favoritesFragment = new FavoritesFragment();
+                                    loadFragment(favoritesFragment);
                                     return true;
                                 case R.id.search:
                                     //TODO
