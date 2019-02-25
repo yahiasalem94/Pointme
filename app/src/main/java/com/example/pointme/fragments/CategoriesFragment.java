@@ -24,9 +24,11 @@ import android.view.ViewGroup;
 
 
 import com.example.pointme.Interfaces.AdapterCallback;
+import com.example.pointme.Interfaces.CategoriesFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.CategoriesAdapter;
 import com.example.pointme.adapters.CategoriesItem;
+import com.example.pointme.backend.CategoriesFragmentDB;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,13 +40,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CategoriesFragment extends Fragment implements AdapterCallback {
+public class CategoriesFragment extends Fragment implements AdapterCallback, CategoriesFragmentDBInt {
 
     private Toolbar toolbar;
 
     private List<CategoriesItem> categoriesList = null;
-    private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
 
     private CategoriesAdapter categoriesAdapter;
     private ArrayList<String> serviceProviders;
@@ -54,28 +54,9 @@ public class CategoriesFragment extends Fragment implements AdapterCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         serviceProviders = new ArrayList<>();
         initializeList();
-
-        mDatabase.child("ServiceProviders").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                serviceProviders = (ArrayList <String>)dataSnapshot.getKey();
-                for (DataSnapshot dataSnap1 : dataSnapshot.getChildren()) {
-                    Log.i(TAG, dataSnap1.getKey());
-                    serviceProviders.add(dataSnap1.getKey());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        categoriesAdapter = new CategoriesAdapter(categoriesList, this);
+        CategoriesFragmentDB.getCategoriesList(this);
     }
 
     @Override
@@ -127,5 +108,11 @@ public class CategoriesFragment extends Fragment implements AdapterCallback {
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void setCategoriesList(ArrayList<String> servicesList) {
+        Log.e(TAG, servicesList.get(0));
+        //categoriesAdapter = new CategoriesAdapter(servicesList, this);
     }
 }
