@@ -7,20 +7,24 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
 
 import com.example.pointme.Interfaces.AdapterCallback;
+import com.example.pointme.Interfaces.ProfileFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.adapters.ProfileEventInfo;
+import com.example.pointme.backend.DBCom;
+import com.example.pointme.models.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragment extends Fragment implements AdapterCallback {
+public class ProfileFragment extends Fragment implements AdapterCallback, ProfileFragmentDBInt {
 
     private Toolbar toolbar;
     private ProfileAdapter adapter;
@@ -39,6 +43,8 @@ public class ProfileFragment extends Fragment implements AdapterCallback {
         }
 
         adapter = new ProfileAdapter(createList(), this);
+
+        DBCom.getProfile(this, title);
     }
 
     @Override
@@ -98,5 +104,14 @@ public class ProfileFragment extends Fragment implements AdapterCallback {
         }
 
         return result;
+    }
+
+    @Override
+    public void setProfile(Profile profile) {
+        Log.d("ramy", profile.getEmail());
+        Log.d("ramy", profile.getIg());
+        Log.d("ramy", profile.getImage());
+        Log.d("ramy", profile.getName());
+        Log.d("ramy", profile.getTel());
     }
 }

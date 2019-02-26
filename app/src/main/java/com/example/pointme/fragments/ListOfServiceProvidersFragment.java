@@ -16,10 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pointme.Interfaces.AdapterCallback;
+import com.example.pointme.Interfaces.ListOfSPFragmentDBInt;
 import com.example.pointme.Interfaces.MyCallback;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProvidersAdapter;
 import com.example.pointme.adapters.ProvidersInfo;
+import com.example.pointme.backend.DBCom;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class ListOfServiceProvidersFragment extends Fragment implements AdapterCallback
+public class ListOfServiceProvidersFragment extends Fragment implements AdapterCallback, ListOfSPFragmentDBInt
 {
     private static final String ARG_PARAM1 = "param1";
     private String TAG = "ListOfServiceProvidersFragment";
@@ -56,15 +58,7 @@ public class ListOfServiceProvidersFragment extends Fragment implements AdapterC
             title = "Pointme";
         }
         context = getContext();
-
-        readData(new MyCallback() {
-            @Override
-            public void onCallback(ArrayList<String> value) {
-                setAdapter(value);
-            }
-        });
-        // Create recycler view data adapter with car item list.
-//        providersAdapter = new ProvidersAdapter(createList(), this);
+        DBCom.getSPList(this, title);
     }
 
     public void setAdapter(ArrayList<String> value) {
@@ -102,25 +96,6 @@ public class ListOfServiceProvidersFragment extends Fragment implements AdapterC
 
         // Set data adapter.
         list.setAdapter(providersAdapter);
-    }
-
-    public void readData(final MyCallback myCallback) {
-        mDatabase.child("ServiceProviders").child(title).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                serviceProviders = (ArrayList <String>)dataSnapshot.getKey();
-                for (DataSnapshot dataSnap1 : dataSnapshot.getChildren()) {
-                    Log.i(TAG, dataSnap1.getKey());
-                    serviceProviders.add(dataSnap1.getKey());
-                }
-                myCallback.onCallback(serviceProviders);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
@@ -173,4 +148,8 @@ public class ListOfServiceProvidersFragment extends Fragment implements AdapterC
         return result;
     }
 
+    @Override
+    public void setSPList(ArrayList<String> sPList) {
+        setAdapter(sPList);
+    }
 }
