@@ -83,7 +83,7 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = nameText.getText().toString();
+        final String name = nameText.getText().toString();
         final String email = emailText.getText().toString();
         final String password = passwordText.getText().toString();
 
@@ -93,7 +93,8 @@ public class SignupActivity extends AppCompatActivity {
                 String user_id = mAuth.getCurrentUser().getUid();
                 DatabaseReference current_user_db = mDatabase.child(user_id);
                 current_user_db.child("email").setValue(email);
-                current_user_db.child("Image").setValue("Default");
+                current_user_db.child("image").setValue("Default");
+                current_user_db.child("name").setValue(name);
                 Toast.makeText(SignupActivity.this, "Registeration Succesful", Toast.LENGTH_SHORT).show();
                 new android.os.Handler().postDelayed(
                         new Runnable() {
