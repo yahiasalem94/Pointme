@@ -21,6 +21,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesItemHolder
         this.mAdapterCallback = callback;
     }
 
+    public void newList(List<CategoriesItem> itemList) {
+        if (this.itemList != null) {
+            this.itemList.clear();
+        }
+        this.itemList = itemList;
+    }
     @Override
     public CategoriesItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Get LayoutInflater object.

@@ -15,8 +15,6 @@ import java.util.ArrayList;
 
 public class CategoriesFragmentDB {
 
-    //CategoriesFragmentDBInt categoriesFragmentDBInt;
-
     public static void getCategoriesList(final CategoriesFragmentDBInt categoriesFragmentDBInt){
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 

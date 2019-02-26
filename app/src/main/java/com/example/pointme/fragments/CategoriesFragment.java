@@ -51,11 +51,14 @@ public class CategoriesFragment extends Fragment implements AdapterCallback, Cat
     private String TAG = "CategoriesFragment";
     private static final String ARG_PARAM1 = "param1";
 
+    private RecyclerView categoriesView;
+    private GridLayoutManager gridLayoutManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         serviceProviders = new ArrayList<>();
-        initializeList();
+        categoriesAdapter = new CategoriesAdapter(null, this);
+//        initializeList();
         CategoriesFragmentDB.getCategoriesList(this);
     }
 
@@ -72,9 +75,9 @@ public class CategoriesFragment extends Fragment implements AdapterCallback, Cat
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the recyclerview.
-        RecyclerView categoriesView = view.findViewById(R.id.card_view_recycler_list);
+        categoriesView = view.findViewById(R.id.card_view_recycler_list);
         // Create the grid layout manager with 2 columns.
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
+        gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
         categoriesView.setLayoutManager(gridLayoutManager);
 
         // Set data adapter.
@@ -112,7 +115,32 @@ public class CategoriesFragment extends Fragment implements AdapterCallback, Cat
 
     @Override
     public void setCategoriesList(ArrayList<String> servicesList) {
-        Log.e(TAG, servicesList.get(0));
-        //categoriesAdapter = new CategoriesAdapter(servicesList, this);
+        categoriesList = new ArrayList<>();
+        for (int i = 0; i < servicesList.size(); i++) {
+            switch (servicesList.get(i)) {
+                case "Crossfit":
+                    Log.i(TAG, "Adding category crossfit");
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.crossfit));
+                    break;
+                case "Yoga":
+                    Log.i(TAG, "Adding category yoga");
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.yoga));
+                    break;
+                case "Hairdressers":
+                    Log.i(TAG, "Adding category hairdressers");
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.hairdresser));
+                    break;
+                case "Makeup":
+                    Log.i(TAG, "Adding category makeup");
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.makeup));
+                    break;
+                case "Swimming":
+                    Log.i(TAG, "Adding category swimming");
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.swimming));
+                    break;
+            }
+        }
+        categoriesAdapter.newList(categoriesList);
+        categoriesView.getAdapter().notifyDataSetChanged();
     }
 }
