@@ -80,7 +80,9 @@ public class DBCom {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()){
-                                    eventsList.add(dataSnap.getValue(Event.class));
+                                    Event event = dataSnap.getValue(Event.class);
+                                    event.setKey(dataSnap.getKey());
+                                    eventsList.add(event);
                                 }
                                 profileFragmentDBInt.setProfile(profile, eventsList);
                             }

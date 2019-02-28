@@ -115,5 +115,6 @@ public class ProfileFragment extends Fragment implements AdapterCallback, Profil
         Log.d("ramy", profile.getName());
         Log.d("ramy", profile.getTel());
         Log.d("ramy", eventsList.get(0).getName());
+        Log.d("ramy", eventsList.get(0).getKey());
     }
 }
