@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.pointme.Interfaces.CategoriesFragmentDBInt;
 import com.example.pointme.Interfaces.ListOfSPFragmentDBInt;
 import com.example.pointme.Interfaces.ProfileFragmentDBInt;
+import com.example.pointme.models.Event;
 import com.example.pointme.models.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -69,11 +70,26 @@ public class DBCom {
                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                     uid = dataSnap.getKey();
                 }
+                final String uid2 = uid;
                 mDatabase.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Profile profile = dataSnapshot.getValue(Profile.class);
-                        profileFragmentDBInt.setProfile(profile);
+                        final Profile profile = dataSnapshot.getValue(Profile.class);
+                        final ArrayList<Event> eventsList = new ArrayList<>();
+                        mDatabase.child("Events").child(uid2).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot dataSnap : dataSnapshot.getChildren()){
+                                    eventsList.add(dataSnap.getValue(Event.class));
+                                }
+                                profileFragmentDBInt.setProfile(profile, eventsList);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override

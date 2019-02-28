@@ -19,6 +19,7 @@ import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.adapters.ProfileEventInfo;
 import com.example.pointme.backend.DBCom;
+import com.example.pointme.models.Event;
 import com.example.pointme.models.Profile;
 
 import java.util.ArrayList;
@@ -107,11 +108,12 @@ public class ProfileFragment extends Fragment implements AdapterCallback, Profil
     }
 
     @Override
-    public void setProfile(Profile profile) {
+    public void setProfile(Profile profile, ArrayList<Event> eventsList) {
         Log.d("ramy", profile.getEmail());
         Log.d("ramy", profile.getIg());
         Log.d("ramy", profile.getImage());
         Log.d("ramy", profile.getName());
         Log.d("ramy", profile.getTel());
+        Log.d("ramy", eventsList.get(0).getName());
     }
 }
