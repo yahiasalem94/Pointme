@@ -1,4 +1,4 @@
-package com.example.pointme.adapters;
+package com.example.pointme.models;
 
 public class ProvidersInfo {
     private String name;

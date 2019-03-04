@@ -7,18 +7,17 @@ import android.widget.TextView;
 
 import com.example.pointme.R;
 
-public class ProfileEventItemHolder extends RecyclerView.ViewHolder {
+public class FavoritesEventItemHolder extends RecyclerView.ViewHolder {
 
-    private TextView description;
+    private TextView title = null;
     private TextView name;
 
-    public ProfileEventItemHolder(View itemView) {
+    public FavoritesEventItemHolder(View itemView) {
         super(itemView);
 
-        if(itemView != null)
-        {
+        if (itemView != null) {
             name = itemView.findViewById(R.id.name);
-            description = itemView.findViewById(R.id.description);
+            title = itemView.findViewById(R.id.title);
         }
     }
 
@@ -26,7 +25,7 @@ public class ProfileEventItemHolder extends RecyclerView.ViewHolder {
         return name;
     }
 
-    public TextView getDescriptionText() {
-        return description;
+    public TextView getTitleText() {
+        return title;
     }
 }

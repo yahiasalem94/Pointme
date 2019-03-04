@@ -36,5 +36,4 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
-    implementation 'com.aurelhubert:ahbottomnavigation:0.1.3'
 }

@@ -1,4 +1,4 @@
-package com.example.pointme.backend;
+package com.example.pointme.backendCommunications;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -7,7 +7,7 @@ import com.example.pointme.Interfaces.CategoriesFragmentDBInt;
 import com.example.pointme.Interfaces.ListOfSPFragmentDBInt;
 import com.example.pointme.Interfaces.ProfileFragmentDBInt;
 import com.example.pointme.models.Event;
-import com.example.pointme.models.Profile;
+import com.example.pointme.models.ProfileInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,7 +74,7 @@ public class DBCom {
                 mDatabase.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        final Profile profile = dataSnapshot.getValue(Profile.class);
+                        final ProfileInfo profile = dataSnapshot.getValue(ProfileInfo.class);
                         final ArrayList<Event> eventsList = new ArrayList<>();
                         mDatabase.child("Events").child(uid2).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

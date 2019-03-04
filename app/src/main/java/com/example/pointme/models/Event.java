@@ -4,7 +4,7 @@ import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
 
-public class Event implements Cloneable{
+public class Event {
 
     private String name;
     private String desc;
@@ -34,15 +34,6 @@ public class Event implements Cloneable{
         this.reqA = RequireAcceptance;
         this.canc = Cancelled;
         this.dates = new ArrayList<>(dates);
-    }
-
-    @Override
-    protected Object clone(){
-        try {
-            return super.clone();
-        }catch (CloneNotSupportedException e){
-            return null;
-        }
     }
 
     public int getMaxN() {

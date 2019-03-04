@@ -9,7 +9,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="android:windowBackground">@color/colorBackground</item>
     </style>
 
@@ -18,9 +18,9 @@
         </style>
 
     <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:background">@color/colorBackground</item>
+        <item name="android:background">@color/darkBlue</item>
     </style>
 
     <style name="TextAppearance.CalendarDay" parent="android:TextAppearance.DeviceDefault.Small">
