@@ -1,4 +1,4 @@
-package com.example.pointme.backend;
+package com.example.pointme.backendCommunications;
 
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -16,7 +16,7 @@ import com.example.pointme.models.Constants;
 import com.example.pointme.models.Event;
 import com.example.pointme.models.Helper;
 import com.example.pointme.models.PointmeDate;
-import com.example.pointme.models.Profile;
+import com.example.pointme.models.ProfileInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -84,14 +84,14 @@ public class DBCom {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String uid = "";
-                Profile profile = null;
+                ProfileInfo profile = null;
                 for(DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                     uid = dataSnap.getKey();
-                    profile = dataSnapshot.getValue(Profile.class);
+                    profile = dataSnapshot.getValue(ProfileInfo.class);
                     profile.setKey(uid);
                 }
                 final ArrayList<Event> eventsList = new ArrayList<>();
-                final Profile profile2 = profile;
+                final ProfileInfo profile2 = profile;
                 mDatabase.child(Constants.EVENTS).orderByChild("spId").equalTo(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -1,9 +1,8 @@
 package com.example.pointme.models;
 
-public class ProfileInfo {
 import com.google.firebase.database.Exclude;
 
-public class Profile {
+public class ProfileInfo {
 
     private String email;
     private String name;
