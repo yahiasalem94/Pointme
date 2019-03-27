@@ -1,4 +1,4 @@
-package com.example.pointme.adapters;
+package com.example.pointme.models;
 
 public class CategoriesItem {
 

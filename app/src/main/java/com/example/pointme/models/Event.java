@@ -6,7 +6,7 @@ import com.google.firebase.database.Exclude;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Event implements Cloneable{
+public class Event {
 
     private String name;
     private String desc;
@@ -45,15 +45,6 @@ public class Event implements Cloneable{
         this.sdate = StartDate;
         this.edate = EndDate;
         this.dates = DBCom.convertDateListToMap(dates);
-    }
-
-    @Override
-    protected Object clone(){
-        try {
-            return super.clone();
-        }catch (CloneNotSupportedException e){
-            return null;
-        }
     }
 
     public int getMaxN() {

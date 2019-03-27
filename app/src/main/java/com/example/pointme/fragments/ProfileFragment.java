@@ -1,5 +1,9 @@
 package com.example.pointme.fragments;
+
+import android.animation.ValueAnimator;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -12,26 +16,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.example.pointme.Interfaces.AdapterCallback;
+import com.example.pointme.Interfaces.ProfileAdapterCallback;
 import com.example.pointme.Interfaces.ProfileFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
-import com.example.pointme.adapters.ProfileEventInfo;
-import com.example.pointme.backend.DBCom;
+import com.example.pointme.backendCommunications.DBCom;
 import com.example.pointme.models.Event;
-import com.example.pointme.models.Profile;
+import com.example.pointme.models.ProfileInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragment extends Fragment implements AdapterCallback, ProfileFragmentDBInt {
+public class ProfileFragment extends Fragment implements ProfileAdapterCallback, ProfileFragmentDBInt {
 
     private Toolbar toolbar;
-    private ProfileAdapter adapter;
+    private ProfileAdapter profileAdapter;
     private static final String ARG_PARAM1 = "param1";
     private String title;
 
+    /*Views*/
+    private TextView email;
+    private TextView phoneNumber;
+    private RecyclerView recyclerList;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +50,10 @@ public class ProfileFragment extends Fragment implements AdapterCallback, Profil
         if (getArguments() != null) {
             title = getArguments().getString(ARG_PARAM1);
         } else {
-            title = "Pointme";
+            title = "Yahia";
         }
 
-        adapter = new ProfileAdapter(createList(), this);
+        profileAdapter = new ProfileAdapter(null, this);
 
         DBCom.getProfile(this, title);
     }
@@ -56,31 +66,25 @@ public class ProfileFragment extends Fragment implements AdapterCallback, Profil
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        toolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) view.findViewById(R.id.toolbar));
+        CollapsingToolbarLayout collapsingToolbar = view.findViewById(R.id.toolbar_layout);
+        collapsingToolbar.setTitle(title);
 
+        phoneNumber = view.findViewById(R.id.phoneNumber);
+        email = view.findViewById(R.id.email);
 
-        RecyclerView list = view.findViewById(R.id.card_view_list);
+        recyclerList = view.findViewById(R.id.card_view_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        list.setLayoutManager(linearLayoutManager);
+        recyclerList.setLayoutManager(linearLayoutManager);
         // Set data adapter.
-        list.setAdapter(adapter);
+        recyclerList.setAdapter(profileAdapter);
     }
 
     @Override
-    public void onMethodCallback(String title) {
-        ProfileFragment fragment = new ProfileFragment();
+    public void onMethodCallback(View v, int minHeight, int h) {
+       /* ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_PARAM1,title);
         fragment.setArguments(bundle);
@@ -88,17 +92,66 @@ public class ProfileFragment extends Fragment implements AdapterCallback, Profil
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
-        transaction.commit();
+        transaction.commit();*/
+        toggleCardViewnHeight(v, minHeight, h);
     }
 
-    private List<ProfileEventInfo> createList() {
+    private void toggleCardViewnHeight(View v, int minHeight, int height) {
 
-        List<ProfileEventInfo> result = new ArrayList<ProfileEventInfo>();
+        if (v.getHeight() == minHeight) {
+            // expand
+
+            expandView(v, height); //'height' is the height of screen which we have measured already.
+
+        } else {
+            // collapse
+            collapseView(v, minHeight);
+
+        }
+    }
+
+    public void collapseView(final View v, int minHeight) {
+
+        ValueAnimator anim = ValueAnimator.ofInt(v.getMeasuredHeightAndState(),
+                minHeight);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
+                layoutParams.height = val;
+                v.setLayoutParams(layoutParams);
+
+            }
+        });
+        anim.start();
+    }
+
+    public void expandView(final View v, int height) {
+
+        ValueAnimator anim = ValueAnimator.ofInt(v.getMeasuredHeightAndState(),
+                height);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
+                layoutParams.height = val;
+                v.setLayoutParams(layoutParams);
+            }
+        });
+        anim.start();
+
+    }
+
+    private List<ProfileInfo> createList() {
+
+        List<ProfileInfo> result = new ArrayList<>();
         ArrayList<String> y = new ArrayList<String>();
 
         for (int i = 0; i < 5; i++)
         {
-            ProfileEventInfo info = new ProfileEventInfo();
+            ProfileInfo info = new ProfileInfo();
             info.setName("yahia");
             info.setTitle(title);
             result.add(info);
@@ -107,14 +160,25 @@ public class ProfileFragment extends Fragment implements AdapterCallback, Profil
         return result;
     }
 
+    public void Expanding() {
+
+        final int height = 20;
+    }
+
+
     @Override
-    public void setProfile(Profile profile, ArrayList<Event> eventsList) {
-        Log.d("ramy", profile.getEmail());
+    public void setProfile(ProfileInfo profile, ArrayList<Event> eventsList) {
+        phoneNumber.setText(profile.getTel());
+        email.setText(profile.getEmail());
+
         Log.d("ramy", profile.getIg());
         Log.d("ramy", profile.getImage());
+        /*TODO: Can be removed name is already passed on from previous activity*/
         Log.d("ramy", profile.getName());
-        Log.d("ramy", profile.getTel());
         Log.d("ramy", eventsList.get(0).getName());
         Log.d("ramy", eventsList.get(0).getKey());
+
+        profileAdapter.newList(eventsList);
+        recyclerList.getAdapter().notifyDataSetChanged();
     }
 }

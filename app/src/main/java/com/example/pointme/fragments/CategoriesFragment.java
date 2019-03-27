@@ -17,8 +17,8 @@ import com.example.pointme.Interfaces.AdapterCallback;
 import com.example.pointme.Interfaces.CategoriesFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.CategoriesAdapter;
-import com.example.pointme.adapters.CategoriesItem;
-import com.example.pointme.backend.DBCom;
+import com.example.pointme.models.CategoriesItem;
+import com.example.pointme.backendCommunications.DBCom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,20 +65,6 @@ public class CategoriesFragment extends Fragment implements AdapterCallback, Cat
 
         // Set data adapter.
         categoriesView.setAdapter(categoriesAdapter);
-    }
-
-    /* Initialise car items in list. */
-    private void initializeList()
-    {
-        if(categoriesList == null)
-        {
-            categoriesList = new ArrayList<CategoriesItem>();
-            categoriesList.add(new CategoriesItem("Crossfit", R.drawable.crossfit));
-            categoriesList.add(new CategoriesItem("Yoga", R.drawable.yoga));
-            categoriesList.add(new CategoriesItem("Hairdressers", R.drawable.hairdresser));
-            categoriesList.add(new CategoriesItem("Makeup", R.drawable.makeup));
-            categoriesList.add(new CategoriesItem("Swimming", R.drawable.swimming));
-        }
     }
 
 

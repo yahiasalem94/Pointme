@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.pointme.Interfaces.AdapterCallback;
 import com.example.pointme.R;
+import com.example.pointme.models.CategoriesItem;
 
 import java.util.List;
 

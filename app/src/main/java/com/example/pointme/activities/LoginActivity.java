@@ -51,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton fbButton;
     private TextView signupLink;
     private ImageView iv;
+
+    private ProgressDialog progressDialog;
     CallbackManager mCallbackManager;
 
     @Override
@@ -66,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         iv = findViewById(R.id.iv);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mCallbackManager = CallbackManager.Factory.create();
 
         fbButton.setReadPermissions("email", "public_profile");
@@ -127,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Log.d(TAG, "check existence");
-                            onLoginSuccess();
+                            onLoginSuccess(false);
                         }
 
 
@@ -140,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+        progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
@@ -188,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
-                onLoginSuccess();
+                onLoginSuccess(false);
             }
         }
         else if (requestCode == FACEBOOK_REQUEST_CODE) {
@@ -204,11 +206,16 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSuccess() {
-        loginButton.setEnabled(true);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+    public void onLoginSuccess(boolean isProvider) {
+        if (isProvider) {
+            Intent intent = new Intent(this, ServiceProviderMainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void onLoginFailed() {
@@ -230,22 +237,52 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-    public void checkUserExistence(){
+    public void checkUserExistence() {
         final String user_id = mAuth.getCurrentUser().getUid();
-        mDatabase.addValueEventListener(new ValueEventListener() {
+
+        mDatabase.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.hasChild(user_id)){
-                   // startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    new android.os.Handler().postDelayed(
-                            new Runnable() {
-                                public void run() {
-                                    onLoginSuccess();
-                                }
-                            }, 3000);
-                }else {
+                    // startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    checkServiceProvider(user_id);
+                } else {
                     Toast.makeText(LoginActivity.this, "User not registered!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void checkServiceProvider(final String user_id) {
+        final boolean result;
+        mDatabase.child("Names").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChild(user_id)) {
+//                    new android.os.Handler().postDelayed(
+//                            new Runnable() {
+//                                public void run() {
+//                                    onLoginSuccess(true);
+//                                }
+//                            }, 300);
+                    progressDialog.dismiss();
+                    onLoginSuccess(true);
+                } else {
+//                    new android.os.Handler().postDelayed(
+//                            new Runnable() {
+//                                public void run() {
+//                                    onLoginSuccess(false);
+//                                }
+//                            }, 300);
+                    progressDialog.dismiss();
+                    onLoginSuccess(true);
                 }
             }
 

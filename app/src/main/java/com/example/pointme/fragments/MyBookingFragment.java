@@ -21,24 +21,20 @@ import com.example.pointme.models.ProfileInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesFragment extends Fragment implements AdapterCallback {
+public class MyBookingFragment extends Fragment implements AdapterCallback {
 
+    private String title = "Bookings";
     private Toolbar toolbar;
     private FavoritesAdapter adapter;
     private static final String ARG_PARAM1 = "param1";
-    private String title;
+    private String TAG = "BookingsFragment";
+    /*views*/
+    RecyclerView list;
+    LinearLayoutManager linearLayoutManager;
 
-    private String TAG = "FavoriteFragment";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM1);
-        } else {
-            title = "Pointme";
-        }
 
         adapter = new FavoritesAdapter(createList(), this);
     }
@@ -46,18 +42,19 @@ public class FavoritesFragment extends Fragment implements AdapterCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        return inflater.inflate(R.layout.fragment_favorites, parent, false);
+        return inflater.inflate(R.layout.fragment_my_booking, parent, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favorites");
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
 
-        RecyclerView list = view.findViewById(R.id.cardList);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
+        list = view.findViewById(R.id.cardList);
+        linearLayoutManager = new LinearLayoutManager(view.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         list.setLayoutManager(linearLayoutManager);
+
         // Set data adapter.
         list.setAdapter(adapter);
     }
@@ -73,7 +70,7 @@ public class FavoritesFragment extends Fragment implements AdapterCallback {
         Log.d(TAG, "resume");
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setTitle("Favorites");
+        actionBar.setTitle("Bookings");
     }
 
     private List<ProfileInfo> createList() {
@@ -81,9 +78,9 @@ public class FavoritesFragment extends Fragment implements AdapterCallback {
         List<ProfileInfo> result = new ArrayList<>();
         ArrayList<String> y = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 5; i++) {
             ProfileInfo info = new ProfileInfo();
-            info.setName("yahia" + i);
+            info.setName("yahia");
             info.setTitle(title);
             result.add(info);
         }

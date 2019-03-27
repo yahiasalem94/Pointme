@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import com.example.pointme.R;
 import com.example.pointme.backend.DBCom;
 import com.example.pointme.fragments.FavoritesFragment;
+import com.example.pointme.fragments.MyBookingFragment;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Booking;
 import com.example.pointme.models.Event;
@@ -88,18 +89,24 @@ public class MainActivity extends AppCompatActivity{
                             switch (item.getItemId()) {
                                 case R.id.home:
                                     Log.i(TAG, "Loading categories fragment");
+                                    actionBar.hide();
                                     CategoriesFragment categoriesFragment = new CategoriesFragment();
-                                    loadFragment(categoriesFragment);
+                                    loadFragment(categoriesFragment, "Home");
                                     return true;
                                 case R.id.favorites:
+                                    actionBar.show();
+                                    Log.i(TAG, "Loading favorites fragment");
                                     FavoritesFragment favoritesFragment = new FavoritesFragment();
-                                    loadFragment(favoritesFragment);
+                                    loadFragment(favoritesFragment, "Favorites");
                                     return true;
                                 case R.id.search:
                                     //TODO
                                     return true;
                                 case R.id.booking:
-                                    //TODO
+                                    actionBar.show();
+                                    Log.i(TAG, "Loading booking fragment");
+                                    MyBookingFragment bookingFragment = new MyBookingFragment();
+                                    loadFragment(bookingFragment, "Bookings");
                                     return true;
                                 case R.id.more:
                                     return true;
@@ -140,12 +147,13 @@ public class MainActivity extends AppCompatActivity{
        return super.onOptionsItemSelected(item);
    }
 
-    public void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment, String title) {
         // load fragment
-        actionBar.hide();
+        Log.d(TAG, "loading fragment");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+        getSupportActionBar().setTitle(title);
     }
 }

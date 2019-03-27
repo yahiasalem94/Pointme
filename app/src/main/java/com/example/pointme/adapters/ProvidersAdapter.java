@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.pointme.Interfaces.AdapterCallback;
 import com.example.pointme.R;
+import com.example.pointme.models.ProvidersInfo;
 
 import java.util.List;
 
@@ -21,9 +22,11 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
         this.mAdapterCallback = mAdapterCallback;
     }
 
-    @Override
-    public int getItemCount() {
-        return providersInfoList.size();
+    public void newList(List<ProvidersInfo> providersInfoList) {
+        if (this.providersInfoList != null) {
+            this.providersInfoList.clear();
+        }
+        this.providersInfoList = providersInfoList;
     }
 
     @Override
@@ -50,5 +53,14 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
             }
         });
         return new ProvidersItemHolder(itemView);
+    }
+
+    @Override
+    public int getItemCount() {
+        int ret = 0;
+        if (providersInfoList != null) {
+            ret = providersInfoList.size();
+        }
+        return ret;
     }
 }
