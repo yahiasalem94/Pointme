@@ -114,9 +114,9 @@ public class DayPickerFragment extends Fragment implements DayAdapter.OnDayClick
                 if(mDays.isEmpty()){
                     Toast.makeText(getContext(), "Please choose the event timings.", Toast.LENGTH_LONG).show();
                 }else {
-                    Event event = new Event(mBundle.getString("EventName"), mBundle.getString("EventDescription"), "No loc",
-                            mBundle.getInt("MaxNum"), 0, mBundle.getInt("Fees"), 0, true, true, false, mDays);
-                    ScheduleHelper.uploadEvent(mAuth, mDatabase, event);
+                    /*Event event = new Event(mBundle.getString("EventName"), mBundle.getString("EventDescription"), "No loc",
+                            mBundle.getInt("MaxNum"), 0, mBundle.getInt("Fees"), "0", true, true, false, mDays);
+                    ScheduleHelper.uploadEvent(mAuth, mDatabase, event);*/
                 }
             }
         });

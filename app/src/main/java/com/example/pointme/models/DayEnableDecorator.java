@@ -7,21 +7,17 @@ import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import org.threeten.bp.DayOfWeek;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DayEnableDecorator implements DayViewDecorator {
-    private ArrayList<String> dates;
-    private int mode;
+    private HashMap<Integer, ArrayList<String>> scheduleDB;
+    private HashMap<String, ArrayList<String>> scheduleWB;
     private int minPeriod;
 
-    public DayEnableDecorator(ArrayList<String> dates, int minPeriod) {
-        this.dates = new ArrayList<>(dates);
+    public DayEnableDecorator(HashMap<Integer, ArrayList<String>> scheduleDB, HashMap<String, ArrayList<String>> scheduleWB, int minPeriod) {
+        this.scheduleDB = scheduleDB;
+        this.scheduleWB = scheduleWB;
         this.minPeriod = minPeriod;
-        char c = this.dates.get(0).charAt(0);
-        if (c >= 'F' && c <= 'W'){
-            mode = 1;
-        }else{
-            mode = 2;
-        }
     }
 
     @Override
@@ -30,49 +26,11 @@ public class DayEnableDecorator implements DayViewDecorator {
         if(day.isBefore(minDate)){
             return false;
         }
-        String aday = "";
-        if(mode == 1) {
-            DayOfWeek dayOfWeek = day.getDate().getDayOfWeek();
-            switch (dayOfWeek) {
-                case FRIDAY:
-                    aday = "Fr";
-                    break;
-                case SATURDAY:
-                    aday = "Sa";
-                    break;
-                case SUNDAY:
-                    aday = "Su";
-                    break;
-                case MONDAY:
-                    aday = "Mo";
-                    break;
-                case TUESDAY:
-                    aday = "Tu";
-                    break;
-                case WEDNESDAY:
-                    aday = "We";
-                    break;
-                case THURSDAY:
-                    aday = "Th";
-                    break;
-                default:
-                    break;
-            }
-            for (String s : dates) {
-                if (s.contains(aday)) {
-                    return true;
-                }
-            }
-        }else {
-            PointmeDate pointmeDate = new PointmeDate(day.getDay(), day.getMonth(), day.getYear(), 0, 0);
-            aday = pointmeDate.toString().substring(0,8);
-            for (String s : dates) {
-                if (s.contains(aday)) {
-                    return true;
-                }
-            }
+        if(!scheduleDB.isEmpty() && scheduleDB.containsKey(day.getDay())){
+            return true;
         }
-        return false;
+        String weekDay = Helper.getWeekDay(day);
+        return scheduleWB.containsKey(weekDay);
     }
 
     @Override

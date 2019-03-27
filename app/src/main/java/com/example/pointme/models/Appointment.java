@@ -9,42 +9,29 @@ public class Appointment {
     private String name;
     private String desc;
     private String loc;
-    private int maxN;
-    private int curN;
+    private String dur;
+    private String timD;
     private int fees;
-    private double dur;
-    private double timD;
+    private int minP;
     private boolean notB;
     private boolean reqA;
     private boolean canc;
-    private boolean allO;
-    private ArrayList<String> dates;
 
     public Appointment()
     {}
 
-    public Appointment(String Name, String Description, String Location, int MaxNumber, int CurrentNumber, int Fees, double Duration, double TimeDifference, boolean NotifyBooking, boolean RequireAcceptance, boolean Cancelled, boolean allowOverlap, ArrayList<String> dates){
+    public Appointment(String Name, String Description, String Location, int Fees, int minPeriod, String Duration, String TimeDifference, boolean NotifyBooking,
+                       boolean RequireAcceptance, boolean Cancelled){
         this.name = Name;
         this.desc = Description;
         this.loc = Location;
-        this.maxN = MaxNumber;
-        this.curN = CurrentNumber;
         this.fees = Fees;
+        this.minP = minPeriod;
         this.timD = TimeDifference;
         this.dur = Duration;
         this.notB = NotifyBooking;
         this.reqA = RequireAcceptance;
         this.canc = Cancelled;
-        this.allO = allowOverlap;
-        this.dates = new ArrayList<>(dates);
-    }
-
-    public int getMaxN() {
-        return maxN;
-    }
-
-    public void setMaxN(int maxN) {
-        this.maxN = maxN;
     }
 
     public String getName() {
@@ -71,27 +58,27 @@ public class Appointment {
         this.loc = location;
     }
 
-    public int getCurN() {
-        return curN;
-    }
-
-    public void setCurN(int curN) {
-        this.curN = curN;
-    }
-
     public int getFees() {
         return fees;
+    }
+
+    public int getMinP() {
+        return minP;
+    }
+
+    public void setMinP(int minP) {
+        this.minP = minP;
     }
 
     public void setFees(int fees) {
         this.fees = fees;
     }
 
-    public double getDur() {
+    public String getDur() {
         return dur;
     }
 
-    public void setDur(double dur) {
+    public void setDur(String dur) {
         this.dur = dur;
     }
 
@@ -111,11 +98,11 @@ public class Appointment {
         this.reqA = reqA;
     }
 
-    public double getTimD() {
+    public String getTimD() {
         return timD;
     }
 
-    public void setTimD(double timD) {
+    public void setTimD(String timD) {
         this.timD = timD;
     }
 
@@ -126,23 +113,4 @@ public class Appointment {
     public void setCanc(boolean canc) {
         this.canc = canc;
     }
-
-    public boolean isAllO() {
-        return allO;
-    }
-
-    public void setAllO(boolean allO) {
-        this.allO = allO;
-    }
-
-    @Exclude
-    public ArrayList<String> getDates() {
-        return dates;
-    }
-
-    @Exclude
-    public void setDates(ArrayList<String> dates) {
-        this.dates = new ArrayList<>(dates);
-    }
-
 }

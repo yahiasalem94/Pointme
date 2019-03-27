@@ -1,23 +1,35 @@
 package com.example.pointme.models;
 
+import com.example.pointme.backend.DBCom;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Booking {
 
     private String loc;
-    private boolean appr;
+    private String crId;
+    private String spId;
+    private String type;
+    private String evId;
+    private @Constants.ApprovalStatus int appr;
     private boolean canc;
-    private ArrayList<String> dates;
+    private String date;
+    private String spId_date;
 
     public Booking(){}
 
-    public Booking(String Location, boolean Approved, boolean Cancelled, ArrayList<String> dates){
+    public Booking(String Location, String CreatorID, String SpID, String Type, String EventID, @Constants.ApprovalStatus int Approved, boolean Cancelled, String date){
         this.loc = Location;
+        this.crId = CreatorID;
+        this.spId = SpID;
+        this.type = Type;
+        this.evId = EventID;
         this.appr = Approved;
         this.canc = Cancelled;
-        this.dates = new ArrayList<>(dates);
+        this.date = date;
+        this.spId_date = this.spId + "_" + this.date;
     }
 
     public String getLoc() {
@@ -28,11 +40,43 @@ public class Booking {
         this.loc = loc;
     }
 
-    public boolean isAppr() {
+    public String getCrId() {
+        return crId;
+    }
+
+    public void setCrId(String crId) {
+        this.crId = crId;
+    }
+
+    public String getSpId() {
+        return spId;
+    }
+
+    public void setSpId(String spId) {
+        this.spId = spId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getEvId() {
+        return evId;
+    }
+
+    public void setEvId(String evId) {
+        this.evId = evId;
+    }
+
+    public @Constants.ApprovalStatus int getAppr() {
         return appr;
     }
 
-    public void setAppr(boolean appr) {
+    public void setAppr(@Constants.ApprovalStatus int appr) {
         this.appr = appr;
     }
 
@@ -44,13 +88,19 @@ public class Booking {
         this.canc = canc;
     }
 
-    @Exclude
-    public ArrayList<String> getDates() {
-        return dates;
+    public String getDate() {
+        return date;
     }
 
-    @Exclude
-    public void setDates(ArrayList<String> dates) {
-        this.dates = new ArrayList<>(dates);
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getSpId_date() {
+        return spId_date;
+    }
+
+    public void setSpId_date(String spId_date) {
+        this.spId_date = spId_date;
     }
 }

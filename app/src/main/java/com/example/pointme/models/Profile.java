@@ -1,5 +1,7 @@
 package com.example.pointme.models;
 
+import com.google.firebase.database.Exclude;
+
 public class Profile {
 
     private String email;
@@ -7,6 +9,7 @@ public class Profile {
     private String tel;
     private String ig;
     private String image;
+    private String key;
 
     public Profile(){}
 
@@ -16,6 +19,7 @@ public class Profile {
         this.tel = tel;
         this.image = image;
         this.ig = ig;
+        this.key = null;
     }
 
     public String getEmail() {
@@ -56,5 +60,15 @@ public class Profile {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    @Exclude
+    public void setKey(String key) {
+        this.key = key;
     }
 }

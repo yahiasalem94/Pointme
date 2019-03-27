@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import com.example.pointme.Interfaces.DatePickerDBInt;
 import com.example.pointme.R;
+import com.example.pointme.backend.DBCom;
 import com.example.pointme.models.AllDaysDisabledDecorator;
 import com.example.pointme.models.DayEnableDecorator;
+import com.example.pointme.models.Helper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -27,24 +31,29 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import org.threeten.bp.DayOfWeek;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class DatePickerFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class DatePickerFragment extends Fragment implements DatePickerDBInt, DatePickerDialog.OnDateSetListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private ArrayList<CalendarDay> enabledDates;
-    private ArrayList<String> dates;
-    private ArrayList<String> pickedDates;
-    private  String pickedDate;
-    private ArrayList<String> dayDates;
+    private HashMap<Integer, ArrayList<String>> mScheduleDBMap;
+    private HashMap<String, ArrayList<String>> mScheduleWBMap;
+    private ArrayList<String> mAppSchedule;
+    private ArrayList<String> mScheduleWB;
+    private ArrayList<String> mPickedList;
+    private String mPickedDate;
     private Animation slideUp;
     private Animation slideDown;
 
     private Button mCalendarButton;
+    private MaterialCalendarView mMaterialCalendarView;
+
+    private DatePickerDBInt mDatePickerDBInt;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -89,19 +98,8 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_date_picker, container, false);
-        enabledDates = new ArrayList<>();
-        pickedDates = new ArrayList<>();
-        String[] array = {"Su12301330", "Th110013001500170018002000"};
-        //dayDates = new ArrayList<>(Arrays.asList(array));
-        dates = getArguments().getStringArrayList("Dates");
 
-        /*for (String date: dates){
-            PointmeDate pointmeDate = PointmeDate.StringToDate(date);
-            CalendarDay day = CalendarDay.from(pointmeDate.getYear(), pointmeDate.getMonth(), pointmeDate.getDay());
-            if(!day.isBefore(CalendarDay.today())){
-                enabledDates.add(day);
-            }
-        }*/
+        mDatePickerDBInt = this;
 
         mCalendarButton = (Button) view.findViewById(R.id.calendar_button);
         mCalendarButton.setVisibility(View.GONE);
@@ -109,19 +107,18 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
         slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
         slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
 
-        MaterialCalendarView materialCalendarView=(MaterialCalendarView) view.findViewById (R.id.calendarView);
-        materialCalendarView.setAllowClickDaysOutsideCurrentMonth(false);
-        //materialCalendarView.setCurrentDate(enabledDates.get(0), true);
+        mMaterialCalendarView =(MaterialCalendarView) view.findViewById (R.id.calendarView);
+        mMaterialCalendarView.setAllowClickDaysOutsideCurrentMonth(false);
+        //mMaterialCalendarView.setCurrentDate(enabledDates.get(0), true);
 
-        materialCalendarView.addDecorator(new AllDaysDisabledDecorator());
-        materialCalendarView.addDecorator(new DayEnableDecorator(dates, 8));
+        DBCom.getAppScheduleAndScheduleWB(mDatePickerDBInt, "uid");
 
-        materialCalendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
+        mMaterialCalendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
                 materialCalendarView.removeDecorators();
-                materialCalendarView.addDecorator(new AllDaysDisabledDecorator());
-                materialCalendarView.addDecorator(new DayEnableDecorator(dates, 8));
+                String yearMonth = Helper.dateToString(calendarDay.getYear(), calendarDay.getMonth() + 1, 0);
+                DBCom.getAppBookingSlots(mDatePickerDBInt, "uid", yearMonth, mAppSchedule, mScheduleWB, "dur", "timeD");
                 CalendarDay day = materialCalendarView.getSelectedDate();
                 if (mCalendarButton.getVisibility() == View.VISIBLE) {
                     mCalendarButton.startAnimation(slideDown);
@@ -133,56 +130,19 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
                 }
             }
         });
-        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+        mMaterialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
                 if(mCalendarButton.getVisibility() == View.GONE){
                     mCalendarButton.startAnimation(slideUp);
                     mCalendarButton.setVisibility(View.VISIBLE);
                 }
-                pickedDates = new ArrayList<>();
-                char c = dates.get(0).charAt(0);
-                String aday = "";
-                if (c >= 'F' && c <= 'W'){
-                    DayOfWeek dayOfWeek = calendarDay.getDate().getDayOfWeek();
-                    switch (dayOfWeek) {
-                        case FRIDAY:
-                            aday = "Fr";
-                            break;
-                        case SATURDAY:
-                            aday = "Sa";
-                            break;
-                        case SUNDAY:
-                            aday = "Su";
-                            break;
-                        case MONDAY:
-                            aday = "Mo";
-                            break;
-                        case TUESDAY:
-                            aday = "Tu";
-                            break;
-                        case WEDNESDAY:
-                            aday = "We";
-                            break;
-                        case THURSDAY:
-                            aday = "Th";
-                            break;
-                        default:
-                            break;
-                    }
-                    for (String s : dates) {
-                        if (s.contains(aday)) {
-                            pickedDate = s;
-                            break;
-                        }
-                    }
-                }
-                String date = calendarDayToString(calendarDay);
-                Log.d("Ramy", date);
-                for(String dateTime: dates){
-                    if(dateTime.startsWith(date)){
-                        pickedDates.add(dateTime);
-                    }
+                mPickedDate = Helper.dateToString(calendarDay.getYear(), calendarDay.getMonth() + 1, 0);
+                if(mScheduleDBMap.containsKey(calendarDay.getDay())){
+                    mPickedList = mScheduleDBMap.get(calendarDay.getDay());
+                }else{
+                    String weekDay = Helper.getWeekDay(calendarDay);
+                    mPickedList = mScheduleWBMap.get(weekDay);
                 }
             }
         });
@@ -191,8 +151,8 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putStringArrayList("Dates", pickedDates);
-                bundle.putString("Date", pickedDate);
+                bundle.putString("PickedDate", mPickedDate);
+                bundle.putStringArrayList("PickedList", mPickedList);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
                 TimePickerFragment fragment = new TimePickerFragment();
@@ -234,21 +194,21 @@ public class DatePickerFragment extends Fragment implements DatePickerDialog.OnD
 
     }
 
-    public static String calendarDayToString(CalendarDay day){
-        String string = "", temp;
-        temp = String.valueOf(day.getYear());
-        string+=temp;
-        temp = String.valueOf(day.getMonth());
-        if(temp.length() == 1){
-            temp = "0" + temp;
-        }
-        string+=temp;
-        temp = String.valueOf(day.getDay());
-        if(temp.length() == 1){
-            temp = "0" + temp;
-        }
-        string+=temp;
-        return string;
+    @Override
+    public void setAppScheduleAndScheduleWB(ArrayList<String> appSchedule, ArrayList<String> scheduleWB) {
+        mAppSchedule = appSchedule;
+        mScheduleWB = scheduleWB;
+        CalendarDay day = CalendarDay.today();
+        String yearMonth = Helper.dateToString(day.getYear(), day.getMonth() + 1, 0);
+        DBCom.getAppBookingSlots(mDatePickerDBInt, "uid", yearMonth, mAppSchedule, mScheduleWB, "dur", "timeD");
+    }
+
+    @Override
+    public void setAppBookingSlots(HashMap<Integer, ArrayList<String>> scheduleDBMap, HashMap<String, ArrayList<String>> scheduleWBMap) {
+        mScheduleDBMap = scheduleDBMap;
+        mScheduleWBMap = scheduleWBMap;
+        mMaterialCalendarView.addDecorator(new AllDaysDisabledDecorator());
+        mMaterialCalendarView.addDecorator(new DayEnableDecorator(scheduleDBMap, scheduleWBMap, 8));
     }
 
     /**

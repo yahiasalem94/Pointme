@@ -49,7 +49,12 @@ public class TimeAdapter extends Adapter<TimeAdapter.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull final Holder viewHolder, final int i) {
-        viewHolder.mTimeTextView.setText(list.get(i));
+        String stHour = list.get(i).substring(0, 2);
+        String stMin = list.get(i).substring(2, 4);
+        String endHour = list.get(i).substring(4, 6);
+        String endMin = list.get(i).substring(6, 8);
+        String time = stHour + ":" + stMin + " - " + endHour + ":" + endMin;
+        viewHolder.mTimeTextView.setText(time);
         viewHolder.mTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

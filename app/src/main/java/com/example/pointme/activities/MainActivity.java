@@ -10,14 +10,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Range;
 import android.view.MenuItem;
 
 import com.example.pointme.R;
+import com.example.pointme.backend.DBCom;
 import com.example.pointme.fragments.FavoritesFragment;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Booking;
 import com.example.pointme.models.Event;
 import com.example.pointme.fragments.CategoriesFragment;
+import com.example.pointme.models.Helper;
+import com.example.pointme.models.PointmeDate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -59,6 +63,24 @@ public class MainActivity extends AppCompatActivity{
         }
         else
         {
+            /*ArrayList<String> trial = new ArrayList<>();
+            String date1 = "201903061830";
+            PointmeDate date2 = PointmeDate.StringToDate(date1);
+            date2.addDuration("0130");
+            trial.add(date2.toString());
+            Booking booking = new Booking("loca", "01234", "56789", "Event", false, false, trial);
+            DBCom.uploadBooking1(null, booking);
+            DBCom.fetchBooking("-L_JcghK26gFRGqo0pKM");
+            DBCom.fetchBookingByCreatorID("01234");*/
+            Range<String> x = new Range<>("1700", "9999");
+            //Log.d("ramy", "yeah5" + x.intersect("1800", "2200").toString());
+            ArrayList<String> arrayList = new ArrayList<>();
+            String db = "201903171200140015001700";
+            String app = "Su0900143016002200";
+            String wb = "Su1200140015001700";
+            arrayList = Helper.getBookingSlots(db, null, app, "0200", "0030");
+            //Log.d("ramy", "yeah" + arrayList);
+            DBCom.getProfile(null, "Farah Nofal");
             bottomNavigationView.setOnNavigationItemSelectedListener(
                     new BottomNavigationView.OnNavigationItemSelectedListener() {
                         @Override

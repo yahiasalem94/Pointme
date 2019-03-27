@@ -19,8 +19,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import com.example.pointme.Interfaces.CheckBookerFreeDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.TimeAdapter;
+import com.example.pointme.backend.DBCom;
 
 import java.util.ArrayList;
 
@@ -34,7 +36,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Use the {@link TimePickerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemClicked {
+public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemClicked, CheckBookerFreeDBInt {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -44,17 +46,18 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
     private String mParam1;
     private String mParam2;
 
-    //private String[] array = { "JAN", "FEB", "MAR", "APR", "MAY", "JUNE", "JULY",
-     //       "AUG", "SEPT", "OCT", "NOV", "DEC" , "ramy", "ramy1", "ramy2", "ramy3", "ramy4", "ramy5"};
     private ArrayList<String> dates;
-    private ArrayList<String> times;
+    private ArrayList<String> mPickedList;
+    private String mPickedDate;
+    private String mDateTime;
     private String time;
     private String date;
 
     private RecyclerView mTimeRecView;
     private ArrayAdapter mArrayAdapter;
-    private TimeAdapter adapter;
+    private TimeAdapter mAdapter;
     private Button mTimeButton;
+    private CheckBookerFreeDBInt mCheckBookerFreeDBInt;
 
     private Animation slideUp;
 
@@ -99,8 +102,12 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
         slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
         mTimeRecView = (RecyclerView) view.findViewById(R.id.time_rec_view);
         mTimeButton = (Button) view.findViewById(R.id.time_button);
-        times = new ArrayList<>();
-        dates = getArguments().getStringArrayList("Dates");
+
+        mCheckBookerFreeDBInt = this;
+
+        mPickedDate = getArguments().getString("PickedDate");
+        mPickedList = getArguments().getStringArrayList("PickedList");
+        /*dates = getArguments().getStringArrayList("Dates");
         if(!dates.isEmpty()) {
             for (String date : dates) {
                 String hours = date.substring(8, 10);
@@ -116,24 +123,17 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
                 String enMinutes = date.substring(i+6, i+8);
                 times.add(stHours + ":" + stMinutes + " - " + enHours + ":" + enMinutes);
             }
-        }
+        }*/
 
-        adapter = new TimeAdapter(times, getContext());
-        adapter.setOnClick(this);
+        mAdapter = new TimeAdapter(mPickedList, getContext());
+        mAdapter.setOnClick(this);
         mTimeRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mTimeRecView.setAdapter(adapter);
+        mTimeRecView.setAdapter(mAdapter);
 
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String datetime = "";
-                for(String date: dates){
-                    if(date.contains(time)){
-                        datetime = date;
-                        break;
-                    }
-                }
-                Log.d("Ramy", datetime);
+                DBCom.checkBookerFree(mCheckBookerFreeDBInt, mDateTime);
             }
         });
         return view;
@@ -171,6 +171,7 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
                 holder.mCheckImageView.setVisibility(View.VISIBLE);
                 TimeAdapter.selPos = position;
                 TimeAdapter.isSelected = true;
+                mDateTime = mPickedDate + mPickedList.get(position);
             } else {
                 holder.mCheckImageView.setVisibility(View.GONE);
                 if (holder.mTimeTextView.getCurrentTextColor() == Color.WHITE){
@@ -187,7 +188,12 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
             mTimeButton.setVisibility(View.VISIBLE);
         }
 
-        time = viewHolder.mTimeTextView.getText().toString().replace(":","");
+        //time = viewHolder.mTimeTextView.getText().toString().replace(":","");
+
+    }
+
+    @Override
+    public void isBookerFree(boolean free) {
 
     }
 
