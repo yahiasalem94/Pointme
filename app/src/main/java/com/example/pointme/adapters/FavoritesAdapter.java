@@ -6,9 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.pointme.Interfaces.AdapterCallback;
+import com.example.pointme.Interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
-import com.example.pointme.models.Event;
 import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.models.ProvidersInfo;
 
@@ -16,15 +15,15 @@ import java.util.List;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesEventItemHolder> {
 
-    private List<ProfileInfo> itemList;
-    private AdapterCallback mAdapterCallback;
+    private List<ProvidersInfo> itemList;
+    private RecyclerViewClickListener mRecyclerViewListener;
 
-    public FavoritesAdapter(List<ProfileInfo> itemList, AdapterCallback callback) {
+    public FavoritesAdapter(List<ProvidersInfo> itemList, RecyclerViewClickListener callback) {
         this.itemList = itemList;
-        mAdapterCallback = callback;
+        mRecyclerViewListener = callback;
     }
 
-    public void newList(List<ProfileInfo> itemList) {
+    public void newList(List<ProvidersInfo> itemList) {
         if (this.itemList != null) {
             this.itemList.clear();
         }
@@ -38,9 +37,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesEventItemHol
 
     @Override
     public void onBindViewHolder(FavoritesEventItemHolder contactViewHolder, int i) {
-        ProfileInfo info = itemList.get(i);
-        contactViewHolder.geNameText().setText(info.getName());
-        contactViewHolder.getTitleText().setText(info.getTitle());
+        ProvidersInfo info = itemList.get(i);
+        contactViewHolder.getNameText().setText(info.getName());
     }
 
     @Override
@@ -49,12 +47,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesEventItemHol
                 from(viewGroup.getContext()).
                 inflate(R.layout.favorites_card_layout, viewGroup, false);
 
-        final TextView titleView = itemView.findViewById(R.id.title);
+        final TextView titleView = itemView.findViewById(R.id.txtName);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapterCallback.onMethodCallback(titleView.getText().toString());
+                mRecyclerViewListener.onClick(titleView.getText().toString());
             }
         });
         return new FavoritesEventItemHolder(itemView);

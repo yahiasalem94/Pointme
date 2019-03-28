@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.example.pointme.R;
+import com.example.pointme.fragments.NewEventFragment;
 import com.example.pointme.fragments.ProvidersEventsFragment;
 import com.example.pointme.fragments.ProvidersStats;
 import com.example.pointme.fragments.ScheduleFragment;
@@ -32,8 +33,6 @@ public class ServiceProviderMainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
@@ -45,7 +44,7 @@ public class ServiceProviderMainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new ScheduleFragment(), "Schedule");
         adapter.addFragment(new ProvidersEventsFragment(), "Events");
-        adapter.addFragment(new ProvidersStats(), "Stats");
+        adapter.addFragment(new NewEventFragment(), "Stats");
         viewPager.setAdapter(adapter);
     }
 

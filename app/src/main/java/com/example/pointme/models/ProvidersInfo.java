@@ -43,4 +43,14 @@ public class ProvidersInfo {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public boolean equals(Object that) {
+        /*TODO needs to be fixed*/
+        if (this == that) return false; //return false if the same address
+
+        if (!(that instanceof ProvidersInfo)) return true; //return true if not the same
+        ProvidersInfo thatInfo = (ProvidersInfo) that;
+        return this.name.equals(thatInfo.name); //return false if the same name.
+    }
 }
