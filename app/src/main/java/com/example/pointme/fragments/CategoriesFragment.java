@@ -3,7 +3,7 @@ package com.example.pointme.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,17 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.example.pointme.Interfaces.AdapterCallback;
+import com.example.pointme.Interfaces.RecyclerViewClickListener;
 import com.example.pointme.Interfaces.CategoriesFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.CategoriesAdapter;
+import com.example.pointme.decorator.GridSpacingItemDecorator;
 import com.example.pointme.models.CategoriesItem;
 import com.example.pointme.backendCommunications.DBCom;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriesFragment extends Fragment implements AdapterCallback, CategoriesFragmentDBInt {
+public class CategoriesFragment extends Fragment implements RecyclerViewClickListener, CategoriesFragmentDBInt {
 
     private Toolbar toolbar;
 
@@ -34,7 +35,7 @@ public class CategoriesFragment extends Fragment implements AdapterCallback, Cat
     private String TAG = "CategoriesFragment";
     private static final String ARG_PARAM1 = "param1";
 
-    private RecyclerView categoriesView;
+    private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,27 +54,25 @@ public class CategoriesFragment extends Fragment implements AdapterCallback, Cat
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the recyclerview.
-        categoriesView = view.findViewById(R.id.card_view_recycler_list);
+        recyclerView = view.findViewById(R.id.card_view_recycler_list);
         // Create the grid layout manager with 2 columns.
         gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
-        categoriesView.setLayoutManager(gridLayoutManager);
+        recyclerView.setLayoutManager(gridLayoutManager);
+
+        recyclerView.addItemDecoration(new GridSpacingItemDecorator(getActivity(), 2, 10, true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         // Set data adapter.
-        categoriesView.setAdapter(categoriesAdapter);
+        recyclerView.setAdapter(categoriesAdapter);
     }
 
-
     @Override
-    public void onMethodCallback(String title) {
+    public void onClick(String title) {
         ListOfServiceProvidersFragment fragment = new ListOfServiceProvidersFragment();
-        Log.d(TAG, "hi0");
+        Log.d(TAG, title);
         Bundle bundle = new Bundle();
-        bundle.putString(ARG_PARAM1,title);
+        bundle.putString(ARG_PARAM1, title);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
@@ -89,27 +88,27 @@ public class CategoriesFragment extends Fragment implements AdapterCallback, Cat
             switch (servicesList.get(i)) {
                 case "Crossfit":
                     Log.i(TAG, "Adding category crossfit");
-                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.crossfit));
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.crossfit_1));
                     break;
                 case "Yoga":
                     Log.i(TAG, "Adding category yoga");
-                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.yoga));
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.yoga_1));
                     break;
                 case "Hairdressers":
                     Log.i(TAG, "Adding category hairdressers");
-                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.hairdresser));
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.hairdresser_1));
                     break;
                 case "Makeup":
                     Log.i(TAG, "Adding category makeup");
-                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.makeup));
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.makeup_1));
                     break;
                 case "Swimming":
                     Log.i(TAG, "Adding category swimming");
-                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.swimming));
+                    categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.swimming_pool_1));
                     break;
             }
         }
         categoriesAdapter.newList(categoriesList);
-        categoriesView.getAdapter().notifyDataSetChanged();
+        //recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

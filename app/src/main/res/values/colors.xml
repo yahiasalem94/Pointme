@@ -19,5 +19,9 @@
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
     <color name="purple">#573b81</color>
+    <color name="deep_purple">#4527a0</color>
+    <color name="orange">#FFA500</color>
+    <color name="transparentWhite">#59FFFFFF</color>
+    <color name="transparent">#00000000</color>
 </resources>
 

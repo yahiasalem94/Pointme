@@ -1,6 +1,6 @@
 package com.example.pointme.models;
 
-import com.example.pointme.backend.DBCom;
+import com.example.pointme.backendCommunications.DBCom;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;

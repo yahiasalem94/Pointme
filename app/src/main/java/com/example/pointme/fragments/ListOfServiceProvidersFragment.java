@@ -1,22 +1,21 @@
 package com.example.pointme.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pointme.Interfaces.AdapterCallback;
+import com.example.pointme.Interfaces.RecyclerViewClickListener;
 import com.example.pointme.Interfaces.ListOfSPFragmentDBInt;
 import com.example.pointme.R;
+import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProvidersAdapter;
 import com.example.pointme.models.ProvidersInfo;
 import com.example.pointme.backendCommunications.DBCom;
@@ -26,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListOfServiceProvidersFragment extends Fragment implements AdapterCallback, ListOfSPFragmentDBInt
+public class ListOfServiceProvidersFragment extends Fragment implements RecyclerViewClickListener, ListOfSPFragmentDBInt
 {
     private static final String ARG_PARAM1 = "param1";
     private String TAG = "ListOfServiceProvidersFragment";
@@ -45,26 +44,24 @@ public class ListOfServiceProvidersFragment extends Fragment implements AdapterC
 
         if (getArguments() != null) {
             title = getArguments().getString(ARG_PARAM1);
+            setTitle(title.toUpperCase());
             serviceProviders = new ArrayList<>();
         } else {
             title = "Pointme";
         }
-        providersAdapter = new ProvidersAdapter(null, this);
+        providersAdapter = new ProvidersAdapter(null, this, getActivity());
         DBCom.getSPList(this, title);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        return inflater.inflate(R.layout.activity_list_of_service_providers, parent, false);
+        return inflater.inflate(R.layout.fragment_list_of_service_providers, parent, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar((Toolbar) view.findViewById(R.id.toolbar));
-        CollapsingToolbarLayout collapsingToolbar = view.findViewById(R.id.collapsingToolbarLayout);
-        collapsingToolbar.setTitle(title);
         list = view.findViewById(R.id.cardList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -74,8 +71,15 @@ public class ListOfServiceProvidersFragment extends Fragment implements AdapterC
         list.setAdapter(providersAdapter);
     }
 
+    public void setTitle(String title) {
+        Activity myactivity = getActivity();
+        if (myactivity instanceof MainActivity) {
+            ((MainActivity) myactivity).setTitle(title);
+        }
+    }
+
     @Override
-    public void onMethodCallback(String title) {
+    public void onClick(String title) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_PARAM1,title);

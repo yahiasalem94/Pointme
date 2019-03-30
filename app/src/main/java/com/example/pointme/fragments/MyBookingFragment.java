@@ -12,16 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
 
-import com.example.pointme.Interfaces.AdapterCallback;
+import com.example.pointme.Interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.adapters.FavoritesAdapter;
-import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.models.ProvidersInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyBookingFragment extends Fragment implements AdapterCallback {
+public class MyBookingFragment extends Fragment implements RecyclerViewClickListener {
 
     private String title = "Bookings";
     private Toolbar toolbar;
@@ -60,7 +60,7 @@ public class MyBookingFragment extends Fragment implements AdapterCallback {
     }
 
     @Override
-    public void onMethodCallback(String title) {
+    public void onClick(String title) {
 
     }
 
@@ -73,15 +73,14 @@ public class MyBookingFragment extends Fragment implements AdapterCallback {
         actionBar.setTitle("Bookings");
     }
 
-    private List<ProfileInfo> createList() {
+    private List<ProvidersInfo> createList() {
 
-        List<ProfileInfo> result = new ArrayList<>();
+        List<ProvidersInfo> result = new ArrayList<>();
         ArrayList<String> y = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            ProfileInfo info = new ProfileInfo();
+            ProvidersInfo info = new ProvidersInfo();
             info.setName("yahia");
-            info.setTitle(title);
             result.add(info);
         }
 

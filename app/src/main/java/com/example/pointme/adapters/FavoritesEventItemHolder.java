@@ -9,23 +9,20 @@ import com.example.pointme.R;
 
 public class FavoritesEventItemHolder extends RecyclerView.ViewHolder {
 
-    private TextView title = null;
     private TextView name;
+    private TextView title;
 
     public FavoritesEventItemHolder(View itemView) {
         super(itemView);
 
         if (itemView != null) {
-            name = itemView.findViewById(R.id.name);
+            name = itemView.findViewById(R.id.txtName);
             title = itemView.findViewById(R.id.title);
         }
     }
 
-    public TextView geNameText() {
+    public TextView getNameText() {
         return name;
     }
 
-    public TextView getTitleText() {
-        return title;
-    }
 }
