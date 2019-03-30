@@ -19,7 +19,7 @@ import android.widget.DatePicker;
 
 import com.example.pointme.Interfaces.DatePickerDBInt;
 import com.example.pointme.R;
-import com.example.pointme.backend.DBCom;
+import com.example.pointme.backendCommunications.DBCom;
 import com.example.pointme.models.AllDaysDisabledDecorator;
 import com.example.pointme.models.DayEnableDecorator;
 import com.example.pointme.models.Helper;

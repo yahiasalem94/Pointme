@@ -22,7 +22,7 @@ import android.widget.Button;
 import com.example.pointme.Interfaces.CheckBookerFreeDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.TimeAdapter;
-import com.example.pointme.backend.DBCom;
+import com.example.pointme.backendCommunications.DBCom;
 
 import java.util.ArrayList;
 

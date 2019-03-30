@@ -117,6 +117,27 @@ public class DBCom {
         });
     }
 
+    public static void getEventsBySPID(String spID){
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final ArrayList<Event> eventsList = new ArrayList<>();
+
+        mDatabase.child(Constants.EVENTS).orderByChild("spId").equalTo(spID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnap: dataSnapshot.getChildren()){
+                    Event event = dataSnap.getValue(Event.class);
+                    event.setKey(dataSnap.getKey());
+                    eventsList.add(event);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public static void checkBookerFree(final CheckBookerFreeDBInt checkBookerFreeDBInt, final String datetime){
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
