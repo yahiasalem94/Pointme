@@ -1,10 +1,9 @@
 package com.example.pointme.models;
 
+import com.example.pointme.utils.Helper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
-
-import org.threeten.bp.DayOfWeek;
 
 import java.util.ArrayList;
 import java.util.HashMap;

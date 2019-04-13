@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
-import com.example.pointme.Interfaces.CheckBookerFreeDBInt;
+import com.example.pointme.interfaces.CheckBookerFreeDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.TimeAdapter;
 import com.example.pointme.backendCommunications.DBCom;

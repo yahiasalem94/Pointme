@@ -1,6 +1,4 @@
-package com.example.pointme.Interfaces;
-
-import android.view.View;
+package com.example.pointme.interfaces;
 
 public interface RecyclerViewClickListener {
 

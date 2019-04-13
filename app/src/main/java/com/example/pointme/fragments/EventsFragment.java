@@ -9,14 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.example.pointme.Interfaces.ProfileAdapterCallback;
-import com.example.pointme.Interfaces.ProfileFragmentDBInt;
+import com.example.pointme.interfaces.ProfileAdapterCallback;
+import com.example.pointme.interfaces.ProfileFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.backendCommunications.DBCom;
+import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Event;
 import com.example.pointme.models.ProfileInfo;
 
@@ -120,5 +119,10 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         eventsList.add(e1);
         profileAdapter.newList(eventsList);
         recyclerList.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void setSPEventsAndAppointments(int serverResult, ArrayList<Event> eventsList, ArrayList<Appointment> appointmentsList) {
+
     }
 }

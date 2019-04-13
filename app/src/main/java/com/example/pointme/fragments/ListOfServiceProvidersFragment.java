@@ -12,11 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pointme.Interfaces.RecyclerViewClickListener;
-import com.example.pointme.Interfaces.ListOfSPFragmentDBInt;
+import com.example.pointme.interfaces.RecyclerViewClickListener;
+import com.example.pointme.interfaces.ListOfSPFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProvidersAdapter;
+import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.models.ProvidersInfo;
 import com.example.pointme.backendCommunications.DBCom;
 import com.google.firebase.database.DatabaseReference;
@@ -104,5 +105,10 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
         }
         providersAdapter.newList(result);
         list.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void setSPList(int serverResult, ArrayList<ProfileInfo> profilesList) {
+
     }
 }

@@ -12,10 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
 
-import com.example.pointme.Interfaces.RecyclerViewClickListener;
+import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.adapters.FavoritesAdapter;
-import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.models.ProvidersInfo;
 
 import java.util.ArrayList;

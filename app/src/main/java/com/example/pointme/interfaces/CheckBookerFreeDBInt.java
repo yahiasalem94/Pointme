@@ -1,4 +1,4 @@
-package com.example.pointme.Interfaces;
+package com.example.pointme.interfaces;
 
 public interface CheckBookerFreeDBInt {
     void isBookerFree(boolean free);

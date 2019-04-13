@@ -1,21 +1,24 @@
 package com.example.pointme.backendCommunications;
 
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Range;
 
-import com.example.pointme.Interfaces.BookingFragmentDBInt;
-import com.example.pointme.Interfaces.CategoriesFragmentDBInt;
-import com.example.pointme.Interfaces.CheckBookerFreeDBInt;
-import com.example.pointme.Interfaces.DatePickerDBInt;
-import com.example.pointme.Interfaces.ListOfSPFragmentDBInt;
-import com.example.pointme.Interfaces.ProfileFragmentDBInt;
+import com.example.pointme.interfaces.BookingFragmentDBInt;
+import com.example.pointme.interfaces.CategoriesFragmentDBInt;
+import com.example.pointme.interfaces.CheckBookerFreeDBInt;
+import com.example.pointme.interfaces.DatePickerDBInt;
+import com.example.pointme.interfaces.FavoritesFragmentDBInt;
+import com.example.pointme.interfaces.ListOfSPFragmentDBInt;
+import com.example.pointme.interfaces.ProfileFragmentDBInt;
+import com.example.pointme.interfaces.WriteDBInt;
+import com.example.pointme.constants.DBWriteType;
+import com.example.pointme.constants.ServerResult;
+import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Booking;
-import com.example.pointme.models.Constants;
+import com.example.pointme.constants.Constants;
 import com.example.pointme.models.Event;
-import com.example.pointme.models.Helper;
-import com.example.pointme.models.PointmeDate;
+import com.example.pointme.utils.Helper;
 import com.example.pointme.models.ProfileInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,11 +27,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,6 +118,72 @@ public class DBCom {
         });
     }
 
+    public static void getProfilesByService(final ListOfSPFragmentDBInt listOfSPFragmentDBInt, String service){
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final ArrayList<ProfileInfo> profilesList = new ArrayList<>();
+
+        mDatabase.child(Constants.USERS).orderByChild("ser").equalTo(service).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnap : dataSnapshot.getChildren()){
+                        ProfileInfo profile = dataSnap.getValue(ProfileInfo.class);
+                        profile.setKey(dataSnap.getKey());
+                        profilesList.add(profile);
+                    }
+                }
+                listOfSPFragmentDBInt.setSPList(ServerResult.SUCCESS, profilesList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                listOfSPFragmentDBInt.setSPList(ServerResult.FAILURE, null);
+            }
+        });
+    }
+
+    public static void getSPEventsAndAppointments(final ProfileFragmentDBInt profileFragmentDBInt, final String spID){
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final ArrayList<Event> eventsList = new ArrayList<>();
+        final ArrayList<Appointment> appointmentsList = new ArrayList<>();
+
+        mDatabase.child(Constants.EVENTS).orderByChild("spId").equalTo(spID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
+                        Event event = dataSnap.getValue(Event.class);
+                        event.setKey(dataSnap.getKey());
+                        eventsList.add(event);
+                    }
+                }
+                mDatabase.child(Constants.APPOINTMENTS).orderByChild("spId").equalTo(spID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
+                                Appointment appointment = dataSnap.getValue(Appointment.class);
+                                appointment.setKey(dataSnap.getKey());
+                                appointmentsList.add(appointment);
+                            }
+                        }
+                        profileFragmentDBInt.setSPEventsAndAppointments(ServerResult.SUCCESS, eventsList, appointmentsList);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        profileFragmentDBInt.setSPEventsAndAppointments(ServerResult.FAILURE, null, null);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                profileFragmentDBInt.setSPEventsAndAppointments(ServerResult.FAILURE, null, null);
+            }
+        });
+    }
+
     public static void getEventsBySPID(String spID){
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         final ArrayList<Event> eventsList = new ArrayList<>();
@@ -138,11 +205,91 @@ public class DBCom {
         });
     }
 
+    public static void addFavorite(final WriteDBInt writeDBInt, String spID){
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        mDatabase.child(Constants.FAVORITES).child(mAuth.getCurrentUser().getUid()).child(spID).setValue(true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        writeDBInt.writeToDBResult(ServerResult.SUCCESS, DBWriteType.FAVORITES);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        writeDBInt.writeToDBResult(ServerResult.FAILURE, DBWriteType.FAVORITES);
+                    }
+                });
+    }
+
+    public static void removeFavorite(final WriteDBInt writeDBInt, String spID){
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        mDatabase.child(Constants.FAVORITES).child(mAuth.getCurrentUser().getUid()).child(spID).removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        writeDBInt.writeToDBResult(ServerResult.SUCCESS, DBWriteType.FAVORITES);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                writeDBInt.writeToDBResult(ServerResult.FAILURE, DBWriteType.FAVORITES);
+            }
+        });
+    }
+
+    public static void getUserFavorites(final FavoritesFragmentDBInt favoritesFragmentDBInt, final WriteDBInt writeDBInt){
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final ArrayList<ProfileInfo> profilesList = new ArrayList<>();
+
+        mDatabase.child(Constants.FAVORITES).child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final ArrayList<String> spIDList = new ArrayList<>();
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot dataSnap : dataSnapshot.getChildren()){
+                        spIDList.add(dataSnap.getKey());
+                    }
+                    final String lastSpID = spIDList.get(spIDList.size() - 1);
+                    for(final String spID : spIDList){
+                        mDatabase.child(Constants.USERS).child(spID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ProfileInfo profile = dataSnapshot.getValue(ProfileInfo.class);
+                                profile.setKey(dataSnapshot.getKey());
+                                profilesList.add(profile);
+                                if(spID.equals(lastSpID)){
+                                    favoritesFragmentDBInt.setFavorites(ServerResult.SUCCESS, profilesList);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                favoritesFragmentDBInt.setFavorites(ServerResult.FAILURE, null);
+                            }
+                        });
+                    }
+                }else{
+                    favoritesFragmentDBInt.setFavorites(ServerResult.SUCCESS, profilesList);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                favoritesFragmentDBInt.setFavorites(ServerResult.FAILURE, null);
+            }
+        });
+    }
+
     public static void checkBookerFree(final CheckBookerFreeDBInt checkBookerFreeDBInt, final String datetime){
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-        mDatabase.child(Constants.BOOKERSCHEDULE).child(mAuth.getCurrentUser().getUid()).orderByKey()
+        mDatabase.child(Constants.BOOKER_SCHEDULE).child(mAuth.getCurrentUser().getUid()).orderByKey()
                 .startAt(datetime.substring(0, 8)).endAt(datetime.substring(0, 8) + Constants.UNICODE_END_CHARACTER)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -175,7 +322,7 @@ public class DBCom {
         final ArrayList<String> appSchedule = new ArrayList<>();
         final ArrayList<String> scheduleWB = new ArrayList<>();
 
-        mDatabase.child(Constants.APPOINTMENTSCHEDULE).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Constants.APPOINTMENT_SCHEDULE).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
@@ -183,7 +330,7 @@ public class DBCom {
                         appSchedule.add(dataSnap.getKey());
                     }
                 }
-                mDatabase.child(Constants.SCHEDULEWB).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabase.child(Constants.SCHEDULE_WB).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()){
@@ -208,14 +355,14 @@ public class DBCom {
         });
     }
 
-    public static void getAppBookingSlots(final DatePickerDBInt datePickerDBInt, final String spID, final String yyyymm,
+    public static void getAppBookingSlots(final DatePickerDBInt datePickerDBInt, final String spID, final String yearMonth,
                                           final ArrayList<String> appSchedule, final ArrayList<String> scheduleWB, final String duration, final String timeD){
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         final ArrayList<String> monthDates = new ArrayList<>();
         final HashMap<Integer, ArrayList<String>> scheduleDBMap = new HashMap<>();
         final HashMap<String, ArrayList<String>> scheduleWBMap = new HashMap<>();
 
-        mDatabase.child(Constants.SCHEDULEDB).child(spID).orderByKey().startAt(yyyymm).endAt(yyyymm + Constants.UNICODE_END_CHARACTER)
+        mDatabase.child(Constants.SCHEDULE_DB).child(spID).orderByKey().startAt(yearMonth).endAt(yearMonth + Constants.UNICODE_END_CHARACTER)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -265,7 +412,7 @@ public class DBCom {
                                               final String duration, final String timeD) {
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child(Constants.SCHEDULEDB).child(spID).orderByKey().startAt(date).endAt(date + Constants.UNICODE_END_CHARACTER)
+        mDatabase.child(Constants.SCHEDULE_DB).child(spID).orderByKey().startAt(date).endAt(date + Constants.UNICODE_END_CHARACTER)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -279,7 +426,7 @@ public class DBCom {
                             CalendarDay day = CalendarDay.from(Integer.parseInt(date.substring(0, 4)),
                                     Integer.parseInt(date.substring(4, 6)) - 1, Integer.parseInt(date.substring(6, 8)));
                             final String weekDay = Helper.getWeekDay(day);
-                            mDatabase.child(Constants.SCHEDULEWB).child(spID).orderByKey().startAt(weekDay)
+                            mDatabase.child(Constants.SCHEDULE_WB).child(spID).orderByKey().startAt(weekDay)
                                     .endAt(weekDay + Constants.UNICODE_END_CHARACTER).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -478,15 +625,4 @@ public class DBCom {
         });
     }*/
 
-    public static HashMap<String, Boolean> convertDateListToMap(ArrayList<String> dates) {
-        HashMap<String, Boolean> map = new HashMap<>();
-        for (String date : dates) {
-            map.put(date, true);
-        }
-        return map;
-    }
-
-    public static ArrayList<String> convertMapToDateList(HashMap<String, Boolean> map) {
-        return new ArrayList<>(map.keySet());
-    }
 }

@@ -1,6 +1,6 @@
 package com.example.pointme.models;
 
-import com.example.pointme.backendCommunications.DBCom;
+import com.example.pointme.utils.Helper;
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class Event {
         this.canc = Cancelled;
         this.sdate = StartDate;
         this.edate = EndDate;
-        this.dates = DBCom.convertDateListToMap(dates);
+        this.dates = Helper.convertDateListToMap(dates);
     }
 
     public int getMaxN() {
@@ -171,12 +171,12 @@ public class Event {
 
     @Exclude
     public ArrayList<String> getDatesAsList(){
-        return DBCom.convertMapToDateList(dates);
+        return Helper.convertMapToDateList(dates);
     }
 
     @Exclude
     public void setDatesFromList(ArrayList<String> dates){
-        this.dates = DBCom.convertDateListToMap(dates);
+        this.dates = Helper.convertDateListToMap(dates);
     }
 
     @Exclude

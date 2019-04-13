@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.example.pointme.Interfaces.RecyclerViewClickListener;
-import com.example.pointme.Interfaces.CategoriesFragmentDBInt;
+import com.example.pointme.interfaces.RecyclerViewClickListener;
+import com.example.pointme.interfaces.CategoriesFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.CategoriesAdapter;
 import com.example.pointme.decorator.GridSpacingItemDecorator;

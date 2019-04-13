@@ -1,4 +1,4 @@
-package com.example.pointme.Interfaces;
+package com.example.pointme.interfaces;
 
 import android.view.View;
 

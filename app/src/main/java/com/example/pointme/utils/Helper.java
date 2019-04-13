@@ -1,4 +1,4 @@
-package com.example.pointme.models;
+package com.example.pointme.utils;
 
 import android.util.Range;
 
@@ -7,6 +7,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import org.threeten.bp.DayOfWeek;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Helper {
 
@@ -172,5 +173,17 @@ public class Helper {
             date += temp;
         }
         return date;
+    }
+
+    public static HashMap<String, Boolean> convertDateListToMap(ArrayList<String> dates) {
+        HashMap<String, Boolean> map = new HashMap<>();
+        for (String date : dates) {
+            map.put(date, true);
+        }
+        return map;
+    }
+
+    public static ArrayList<String> convertMapToDateList(HashMap<String, Boolean> map) {
+        return new ArrayList<>(map.keySet());
     }
 }

@@ -10,7 +10,8 @@ public class Appointment {
     private String desc;
     private String loc;
     private String dur;
-    private String timD;
+    private String key;
+    private String spId;
     private int fees;
     private int minP;
     private boolean notB;
@@ -20,14 +21,15 @@ public class Appointment {
     public Appointment()
     {}
 
-    public Appointment(String Name, String Description, String Location, int Fees, int minPeriod, String Duration, String TimeDifference, boolean NotifyBooking,
+    public Appointment(String Name, String Description, String Location, String SpID, int Fees, int minPeriod, String Duration, boolean NotifyBooking,
                        boolean RequireAcceptance, boolean Cancelled){
         this.name = Name;
         this.desc = Description;
         this.loc = Location;
+        this.key = null;
+        this.spId = SpID;
         this.fees = Fees;
         this.minP = minPeriod;
-        this.timD = TimeDifference;
         this.dur = Duration;
         this.notB = NotifyBooking;
         this.reqA = RequireAcceptance;
@@ -56,6 +58,14 @@ public class Appointment {
 
     public void setLoc(String location) {
         this.loc = location;
+    }
+
+    public String getSpId() {
+        return spId;
+    }
+
+    public void setSpId(String spId) {
+        this.spId = spId;
     }
 
     public int getFees() {
@@ -98,19 +108,21 @@ public class Appointment {
         this.reqA = reqA;
     }
 
-    public String getTimD() {
-        return timD;
-    }
-
-    public void setTimD(String timD) {
-        this.timD = timD;
-    }
-
     public boolean isCanc() {
         return canc;
     }
 
     public void setCanc(boolean canc) {
         this.canc = canc;
+    }
+
+    @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    @Exclude
+    public void setKey(String key) {
+        this.key = key;
     }
 }

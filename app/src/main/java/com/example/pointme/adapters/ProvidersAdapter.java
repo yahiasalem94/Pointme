@@ -12,7 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pointme.Interfaces.RecyclerViewClickListener;
+import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.models.ProvidersInfo;
 import com.example.pointme.utils.SharedPreference;

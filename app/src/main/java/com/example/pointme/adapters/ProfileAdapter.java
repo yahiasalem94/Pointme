@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alespero.expandablecardview.ExpandableCardView;
-import com.example.pointme.Interfaces.ProfileAdapterCallback;
+import com.example.pointme.interfaces.ProfileAdapterCallback;
 import com.example.pointme.R;
 import com.example.pointme.models.Event;
 

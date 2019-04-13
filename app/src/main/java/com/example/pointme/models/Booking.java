@@ -1,10 +1,7 @@
 package com.example.pointme.models;
 
-import com.example.pointme.backendCommunications.DBCom;
-import com.google.firebase.database.Exclude;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.example.pointme.constants.ApprovalStatus;
+import com.example.pointme.constants.Constants;
 
 public class Booking {
 
@@ -13,14 +10,14 @@ public class Booking {
     private String spId;
     private String type;
     private String evId;
-    private @Constants.ApprovalStatus int appr;
+    private @ApprovalStatus int appr;
     private boolean canc;
     private String date;
     private String spId_date;
 
     public Booking(){}
 
-    public Booking(String Location, String CreatorID, String SpID, String Type, String EventID, @Constants.ApprovalStatus int Approved, boolean Cancelled, String date){
+    public Booking(String Location, String CreatorID, String SpID, String Type, String EventID, @ApprovalStatus int Approved, boolean Cancelled, String date){
         this.loc = Location;
         this.crId = CreatorID;
         this.spId = SpID;
@@ -72,11 +69,11 @@ public class Booking {
         this.evId = evId;
     }
 
-    public @Constants.ApprovalStatus int getAppr() {
+    public @ApprovalStatus int getAppr() {
         return appr;
     }
 
-    public void setAppr(@Constants.ApprovalStatus int appr) {
+    public void setAppr(@ApprovalStatus int appr) {
         this.appr = appr;
     }
 
