@@ -134,20 +134,8 @@ public class ProfileFragment extends Fragment implements ProfileAdapterCallback,
     }
 
     @Override
-    public void onMethodCallback(View v, int minHeight, int h) {
-        toggleCardViewnHeight(v, minHeight, h);
-    }
-
-    private void toggleCardViewnHeight(View v, int minHeight, int height) {
-
-        if (v.getHeight() == minHeight) {
-            // expand
-            expandView(v, height); //'height' is the height of screen which we have measured already.
-        } else {
-            // collapse
-            collapseView(v, minHeight);
-
-        }
+    public void onMethodCallback() {
+        //toggleCardViewnHeight(v, minHeight, h);
     }
 
     private List<ProfileInfo> createList() {
@@ -189,10 +177,10 @@ public class ProfileFragment extends Fragment implements ProfileAdapterCallback,
     }
 
     public void loadFragment() {
+        /* TODO Event fragment is being loaded from here */
         // load fragment
         Log.d(TAG, "loading fragment");
-//        EventsFragment fragment = new EventsFragment();
-        DatePickerFragment fragment = new DatePickerFragment();
+        EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_PARAM1, name);
         fragment.setArguments(bundle);

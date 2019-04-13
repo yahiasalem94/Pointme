@@ -3,9 +3,11 @@ package com.example.pointme.adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.alespero.expandablecardview.ExpandableCardView;
 import com.example.pointme.Interfaces.ProfileAdapterCallback;
@@ -55,7 +57,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
         cardView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         contactViewHolder.getEventTitle().setText(info.getDesc());
         contactViewHolder.getDescription().setText(info.getDesc());
-
+        contactViewHolder.getBook().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAdapterCallback.onMethodCallback();
+            }
+        });
         //  contactViewHolder.getLinearLayout().setVisibility(View.GONE);
 
         //if the position is equals to the item position which is to be expanded
@@ -81,6 +88,14 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
                 notifyDataSetChanged();
             }
         });*/
+        cardView.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+            @Override
+            public void onExpandChanged(View v, boolean isExpanded) {
+                if (isExpanded) {
+                    Log.i("PROFILE ADAPTER", "Exapnded");
+                }
+            }
+        });
     }
 
     @Override

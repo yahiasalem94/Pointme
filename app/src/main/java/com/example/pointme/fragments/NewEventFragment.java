@@ -45,15 +45,6 @@ public class NewEventFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewEventFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static NewEventFragment newInstance(String param1, String param2) {
         NewEventFragment fragment = new NewEventFragment();
         Bundle args = new Bundle();
@@ -77,11 +68,11 @@ public class NewEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_event, container, false);
-        mEventName = (EditText) view.findViewById(R.id.et_event_name);
-        mEventDescription = (EditText) view.findViewById(R.id.et_event_description);
-        mMaxNum = (EditText) view.findViewById(R.id.et_max_number);
-        mFees = (EditText) view.findViewById(R.id.et_fees);
-        mButton = (Button) view.findViewById(R.id.btn_event_proceed);
+        mEventName = view.findViewById(R.id.et_event_name);
+        mEventDescription = view.findViewById(R.id.et_event_description);
+        mMaxNum = view.findViewById(R.id.et_max_number);
+        mFees = view.findViewById(R.id.et_fees);
+        mButton = view.findViewById(R.id.btn_event_proceed);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

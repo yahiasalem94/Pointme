@@ -30,21 +30,21 @@ public class ServiceProviderMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_provider_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new ScheduleFragment(), "Schedule");
-        adapter.addFragment(new ProvidersEventsFragment(), "Events");
-        adapter.addFragment(new NewEventFragment(), "Stats");
+        adapter.addFragment(new NewEventFragment(), "Events");
+        adapter.addFragment(new ProvidersEventsFragment(), "Stats");
         viewPager.setAdapter(adapter);
     }
 

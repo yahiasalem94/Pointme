@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pointme.R;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 public class ScheduleFragment extends Fragment {
+
+    private MaterialCalendarView mMaterialCalendarView;
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -25,5 +28,15 @@ public class ScheduleFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_schedule, container, false);
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        /* TODO Needs to be linked with backend to get schedule for a specific service providor */
+        mMaterialCalendarView = view.findViewById(R.id.calendarView);
+        mMaterialCalendarView.setAllowClickDaysOutsideCurrentMonth(false);
+
+    }
+
 
 }

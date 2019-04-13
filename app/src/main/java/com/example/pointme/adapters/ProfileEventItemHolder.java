@@ -3,6 +3,7 @@ package com.example.pointme.adapters;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,6 +15,7 @@ public class ProfileEventItemHolder extends RecyclerView.ViewHolder {
 
     private ImageView imageView;
     private TextView name, eventTitle, description;
+    private Button book;
     private LinearLayout linearLayout;
     private CardView cardView;
 
@@ -26,6 +28,7 @@ public class ProfileEventItemHolder extends RecyclerView.ViewHolder {
             imageView = itemView.findViewById(R.id.card_view_image);
             eventTitle = itemView.findViewById(R.id.eventTitle);
             description = itemView.findViewById(R.id.description);
+            book = itemView.findViewById(R.id.bookNow);
         }
     }
 
@@ -51,5 +54,9 @@ public class ProfileEventItemHolder extends RecyclerView.ViewHolder {
 
     public CardView getCardView() {
         return cardView;
+    }
+
+    public Button getBook() {
+        return book;
     }
 }

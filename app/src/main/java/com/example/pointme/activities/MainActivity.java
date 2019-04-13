@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.pointme.R;
 import com.example.pointme.fragments.FavoritesFragment;
 import com.example.pointme.fragments.MyBookingFragment;
+import com.example.pointme.fragments.SearchFragment;
 import com.example.pointme.fragments.SettingsFragment;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Booking;
@@ -108,7 +109,10 @@ public class MainActivity extends AppCompatActivity{
                                     loadFragment(favoritesFragment, getString(R.string.favorites));
                                     return true;
                                 case R.id.search:
-                                    //TODO
+                                    actionBar.show();
+                                    Log.i(TAG, "Loading favorites fragment");
+                                    SearchFragment searchFragment = new SearchFragment();
+                                    loadFragment(searchFragment, getString(R.string.search));
                                     return true;
                                 case R.id.booking:
                                     actionBar.show();

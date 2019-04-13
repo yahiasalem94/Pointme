@@ -101,13 +101,13 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
 
         mDatePickerDBInt = this;
 
-        mCalendarButton = (Button) view.findViewById(R.id.calendar_button);
+        mCalendarButton = view.findViewById(R.id.calendar_button);
         mCalendarButton.setVisibility(View.GONE);
 
         slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
         slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
 
-        mMaterialCalendarView =(MaterialCalendarView) view.findViewById (R.id.calendarView);
+        mMaterialCalendarView = view.findViewById(R.id.calendarView);
         mMaterialCalendarView.setAllowClickDaysOutsideCurrentMonth(false);
         //mMaterialCalendarView.setCurrentDate(enabledDates.get(0), true);
 
