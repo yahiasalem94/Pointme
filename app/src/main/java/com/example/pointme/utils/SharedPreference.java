@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.example.pointme.models.ProvidersInfo;
+import com.example.pointme.models.ProfileInfo;
 import com.google.gson.Gson;
 
 public class SharedPreference {
@@ -21,7 +21,7 @@ public class SharedPreference {
     }
 
     // This four methods are used for maintaining favorites.
-    public void saveFavorites(Context context, List<ProvidersInfo> favorites) {
+    public void saveFavorites(Context context, List<ProfileInfo> favorites) {
         SharedPreferences settings;
         Editor editor;
 
@@ -36,25 +36,25 @@ public class SharedPreference {
         editor.commit();
     }
 
-    public void addFavorite(Context context, ProvidersInfo info) {
-        List<ProvidersInfo> favorites = getFavorites(context);
+    public void addFavorite(Context context, ProfileInfo info) {
+        List<ProfileInfo> favorites = getFavorites(context);
         if (favorites == null)
-            favorites = new ArrayList<ProvidersInfo>();
+            favorites = new ArrayList<>();
         favorites.add(info);
         saveFavorites(context, favorites);
     }
 
-    public void removeFavorite(Context context, ProvidersInfo info) {
-        ArrayList<ProvidersInfo> favorites = getFavorites(context);
+    public void removeFavorite(Context context, ProfileInfo info) {
+        ArrayList<ProfileInfo> favorites = getFavorites(context);
         if (favorites != null) {
             favorites.remove(info);
             saveFavorites(context, favorites);
         }
     }
 
-    public ArrayList<ProvidersInfo> getFavorites(Context context) {
+    public ArrayList<ProfileInfo> getFavorites(Context context) {
         SharedPreferences settings;
-        List<ProvidersInfo> favorites;
+        List<ProfileInfo> favorites;
 
         settings = context.getSharedPreferences(PREFS_NAME,
                 Context.MODE_PRIVATE);
@@ -62,14 +62,14 @@ public class SharedPreference {
         if (settings.contains(FAVORITES)) {
             String jsonFavorites = settings.getString(FAVORITES, null);
             Gson gson = new Gson();
-            ProvidersInfo[] favoriteItems = gson.fromJson(jsonFavorites,
-                    ProvidersInfo[].class);
+            ProfileInfo[] favoriteItems = gson.fromJson(jsonFavorites,
+                    ProfileInfo[].class);
 
             favorites = Arrays.asList(favoriteItems);
-            favorites = new ArrayList<ProvidersInfo>(favorites);
+            favorites = new ArrayList<>(favorites);
         } else
             return null;
 
-        return (ArrayList<ProvidersInfo>) favorites;
+        return (ArrayList<ProfileInfo>) favorites;
     }
 }

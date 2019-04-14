@@ -105,19 +105,20 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.CoordinatorLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:fillViewport="true">
 
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

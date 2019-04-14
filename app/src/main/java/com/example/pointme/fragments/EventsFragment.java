@@ -3,19 +3,22 @@ package com.example.pointme.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.example.pointme.interfaces.ProfileAdapterCallback;
-import com.example.pointme.interfaces.ProfileFragmentDBInt;
+import com.example.pointme.Interfaces.ProfileAdapterCallback;
+import com.example.pointme.Interfaces.ProfileFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.backendCommunications.DBCom;
-import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Event;
 import com.example.pointme.models.ProfileInfo;
 
@@ -32,7 +35,7 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
     private String name;
     /*Views*/
     private RecyclerView recyclerList;
-
+    private Button book;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,18 +66,35 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         recyclerList.setLayoutManager(linearLayoutManager);
         // recyclerList.addItemDecoration(new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
 
+        book = view.findViewById(R.id.bookNow);
+        //  book.setOnClickListener(this);
         // Set data adapter.
         recyclerList.setAdapter(profileAdapter);
     }
 
     @Override
     public void onClick(View v) {
-
+        if (v == book) {
+            loadFragment();
+        }
     }
 
+    public void loadFragment() {
+        /* TODO Date Picker fragment is being loaded from here */
+//        Log.d(TAG, "loading fragment");
+        DatePickerFragment fragment = new DatePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_PARAM1, name);
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
     @Override
-    public void onMethodCallback(View v, int minHeight, int h) {
-        toggleCardViewnHeight(v, minHeight, h);
+    public void onMethodCallback() {
+        loadFragment();
     }
 
     private void toggleCardViewnHeight(View v, int minHeight, int height) {
@@ -119,10 +139,5 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         eventsList.add(e1);
         profileAdapter.newList(eventsList);
         recyclerList.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    public void setSPEventsAndAppointments(int serverResult, ArrayList<Event> eventsList, ArrayList<Appointment> appointmentsList) {
-
     }
 }

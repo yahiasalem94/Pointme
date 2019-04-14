@@ -7,7 +7,5 @@ import java.util.ArrayList;
 
 public interface ListOfSPFragmentDBInt {
 
-    void setSPList(ArrayList<String> sPList);
-
     void setSPList(@ServerResult int serverResult, ArrayList<ProfileInfo> profilesList);
 }

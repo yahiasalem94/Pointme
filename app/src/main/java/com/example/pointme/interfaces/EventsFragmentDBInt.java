@@ -7,9 +7,7 @@ import com.example.pointme.models.ProfileInfo;
 
 import java.util.ArrayList;
 
-public interface ProfileFragmentDBInt {
-
-    void setProfile(ProfileInfo profile, ArrayList<Event> eventsList);
+public interface EventsFragmentDBInt {
 
     void setSPEventsAndAppointments(@ServerResult int serverResult, ArrayList<Event> eventsList, ArrayList<Appointment> appointmentsList);
 }
