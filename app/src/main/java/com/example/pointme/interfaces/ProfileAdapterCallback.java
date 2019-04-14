@@ -2,7 +2,9 @@ package com.example.pointme.interfaces;
 
 import android.view.View;
 
+import com.example.pointme.constants.Type;
+
 public interface ProfileAdapterCallback {
 
-    void onMethodCallback();
+    void onBookPressed(Object object, @Type int type);
 }

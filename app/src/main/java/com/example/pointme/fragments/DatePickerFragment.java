@@ -16,11 +16,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import com.example.pointme.constants.Type;
 import com.example.pointme.interfaces.DatePickerDBInt;
 import com.example.pointme.R;
 import com.example.pointme.backendCommunications.DBCom;
 import com.example.pointme.models.AllDaysDisabledDecorator;
+import com.example.pointme.models.Appointment;
 import com.example.pointme.models.DayEnableDecorator;
+import com.example.pointme.models.Event;
+import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.utils.Helper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -44,6 +48,8 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
     private ArrayList<String> mScheduleWB;
     private ArrayList<String> mPickedList;
     private String mPickedDate;
+    private String mDuration;
+    private int mMinPeriod;
     private Animation slideUp;
     private Animation slideDown;
 
@@ -51,6 +57,10 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
     private MaterialCalendarView mMaterialCalendarView;
 
     private DatePickerDBInt mDatePickerDBInt;
+
+    private ProfileInfo mProfileInfo;
+    private Event mEvent;
+    private Appointment mAppointment;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -84,6 +94,17 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mProfileInfo = (ProfileInfo) getArguments().getSerializable("ProfileInfo");
+            int type = getArguments().getInt("Type");
+            if (type == Type.EVENT){
+                mEvent = (Event) getArguments().getSerializable("Event");
+                mDuration = mEvent.getDur();
+                mMinPeriod = mEvent.getMinP();
+            }else{
+                mAppointment = (Appointment) getArguments().getSerializable("Appointment");
+                mDuration = mAppointment.getDur();
+                mMinPeriod = mAppointment.getMinP();
+            }
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
@@ -108,14 +129,14 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
         mMaterialCalendarView.setAllowClickDaysOutsideCurrentMonth(false);
         //mMaterialCalendarView.setCurrentDate(enabledDates.get(0), true);
 
-        DBCom.getAppScheduleAndScheduleWB(mDatePickerDBInt, "uid");
+        DBCom.getAppScheduleAndScheduleWB(mDatePickerDBInt, mProfileInfo.getKey());
 
         mMaterialCalendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
                 materialCalendarView.removeDecorators();
                 String yearMonth = Helper.dateToString(calendarDay.getYear(), calendarDay.getMonth() + 1, 0);
-                DBCom.getAppBookingSlots(mDatePickerDBInt, "uid", yearMonth, mAppSchedule, mScheduleWB, "dur", "timeD");
+                DBCom.getAppBookingSlots(mDatePickerDBInt, mProfileInfo.getKey(), yearMonth, mAppSchedule, mScheduleWB, mDuration, mProfileInfo.getTimeD());
                 CalendarDay day = materialCalendarView.getSelectedDate();
                 if (mCalendarButton.getVisibility() == View.VISIBLE) {
                     mCalendarButton.startAnimation(slideDown);
@@ -197,7 +218,7 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
         mScheduleWB = scheduleWB;
         CalendarDay day = CalendarDay.today();
         String yearMonth = Helper.dateToString(day.getYear(), day.getMonth() + 1, 0);
-        DBCom.getAppBookingSlots(mDatePickerDBInt, "uid", yearMonth, mAppSchedule, mScheduleWB, "dur", "timeD");
+        DBCom.getAppBookingSlots(mDatePickerDBInt, mProfileInfo.getKey(), yearMonth, mAppSchedule, mScheduleWB, mDuration, mProfileInfo.getTimeD());
     }
 
     @Override
@@ -205,7 +226,7 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
         mScheduleDBMap = scheduleDBMap;
         mScheduleWBMap = scheduleWBMap;
         mMaterialCalendarView.addDecorator(new AllDaysDisabledDecorator());
-        mMaterialCalendarView.addDecorator(new DayEnableDecorator(scheduleDBMap, scheduleWBMap, 8));
+        mMaterialCalendarView.addDecorator(new DayEnableDecorator(scheduleDBMap, scheduleWBMap, mMinPeriod));
     }
 
     /**

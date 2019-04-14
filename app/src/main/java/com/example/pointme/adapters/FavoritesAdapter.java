@@ -8,21 +8,22 @@ import android.widget.TextView;
 
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
+import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.models.ProvidersInfo;
 
 import java.util.List;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesEventItemHolder> {
 
-    private List<ProvidersInfo> itemList;
+    private List<ProfileInfo> itemList;
     private RecyclerViewClickListener mRecyclerViewListener;
 
-    public FavoritesAdapter(List<ProvidersInfo> itemList, RecyclerViewClickListener callback) {
+    public FavoritesAdapter(List<ProfileInfo> itemList, RecyclerViewClickListener callback) {
         this.itemList = itemList;
         mRecyclerViewListener = callback;
     }
 
-    public void newList(List<ProvidersInfo> itemList) {
+    public void newList(List<ProfileInfo> itemList) {
         if (this.itemList != null) {
             this.itemList.clear();
         }
@@ -36,7 +37,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesEventItemHol
 
     @Override
     public void onBindViewHolder(FavoritesEventItemHolder contactViewHolder, int i) {
-        ProvidersInfo info = itemList.get(i);
+        ProfileInfo info = itemList.get(i);
         contactViewHolder.getNameText().setText(info.getName());
     }
 

@@ -16,27 +16,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pointme.interfaces.ProfileAdapterCallback;
-import com.example.pointme.interfaces.ProfileFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProfileAdapter;
-import com.example.pointme.backendCommunications.DBCom;
-import com.example.pointme.models.Appointment;
-import com.example.pointme.models.Event;
 import com.example.pointme.models.ProfileInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.pointme.decorator.CardViewAnimation.*;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class ProfileFragment extends Fragment implements ProfileAdapterCallback, ProfileFragmentDBInt, View.OnClickListener {
+public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private String TAG = "ProfileFragment";
     private ProfileAdapter profileAdapter;
     private static final String ARG_PARAM1 = "param1";
     private String name;
+    private ProfileInfo profileInfo;
     private String phoneNumber = "tel:";
     private String instagramLink;
     /*Views*/
@@ -50,15 +46,11 @@ public class ProfileFragment extends Fragment implements ProfileAdapterCallback,
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            name = getArguments().getString(ARG_PARAM1);
+            profileInfo = (ProfileInfo) getArguments().getSerializable("ProfileInfo");
         } else {
             name = "Yahia";
         }
         setTitle();
-        profileAdapter = new ProfileAdapter(null, this, getActivity());
-
-        DBCom.getProfile(this, name);
-
 
     }
 
@@ -80,7 +72,9 @@ public class ProfileFragment extends Fragment implements ProfileAdapterCallback,
 
         phoneLinearLayout.setOnClickListener(this);
         instagramLinearLayout.setOnClickListener(this);
-        nameView.setText(name);
+        nameView.setText(profileInfo.getName());
+        phoneNumber += profileInfo.getTel();
+        instagramLink = profileInfo.getIg();
 
 //        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        recyclerList.setLayoutManager(linearLayoutManager);
@@ -134,11 +128,6 @@ public class ProfileFragment extends Fragment implements ProfileAdapterCallback,
         }
     }
 
-    @Override
-    public void onMethodCallback() {
-        //toggleCardViewnHeight(v, minHeight, h);
-    }
-
     private List<ProfileInfo> createList() {
 
         List<ProfileInfo> result = new ArrayList<>();
@@ -155,40 +144,14 @@ public class ProfileFragment extends Fragment implements ProfileAdapterCallback,
         return result;
     }
 
-    @Override
-    public void setProfile(ProfileInfo profile, ArrayList<Event> eventsList) {
-        phoneNumber += profile.getTel();
-        instagramLink = profile.getIg();
-//        Log.d("ramy", profile.getIg());
-        //      Log.d("ramy", profile.getImage());
-        /*TODO: Can be removed name is already passed on from previous activity*/
-        //   Log.d("ramy", profile.getName());
-//        Log.d("ramy", eventsList.get(0).getName());
-//        Log.d("ramy", eventsList.get(0).getKey());
-//        Event e = new Event();
-//        e.setName("workshop");
-//        e.setDesc("this is a workshop");
-//        Event e1 = new Event();
-//        e1.setName("workshop");
-//        e1.setDesc("this is a workshop");
-//        eventsList.add(e);
-//        eventsList.add(e1);
-//        profileAdapter.newList(eventsList);
-//        recyclerList.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    public void setSPEventsAndAppointments(int serverResult, ArrayList<Event> eventsList, ArrayList<Appointment> appointmentsList) {
-
-    }
-
     public void loadFragment() {
         /* TODO Event fragment is being loaded from here */
         // load fragment
         Log.d(TAG, "loading fragment");
         EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(ARG_PARAM1, name);
+        bundle.putSerializable("ProfileInfo", profileInfo);
+        //bundle.putString("SpId", profileInfo.getKey());
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);

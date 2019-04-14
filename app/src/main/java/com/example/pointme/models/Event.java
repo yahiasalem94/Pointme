@@ -3,10 +3,11 @@ package com.example.pointme.models;
 import com.example.pointme.utils.Helper;
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Event {
+public class Event implements Serializable {
 
     private String name;
     private String desc;

@@ -10,7 +10,7 @@ import com.example.pointme.interfaces.CheckBookerFreeDBInt;
 import com.example.pointme.interfaces.DatePickerDBInt;
 import com.example.pointme.interfaces.FavoritesFragmentDBInt;
 import com.example.pointme.interfaces.ListOfSPFragmentDBInt;
-import com.example.pointme.interfaces.ProfileFragmentDBInt;
+import com.example.pointme.interfaces.EventsFragmentDBInt;
 import com.example.pointme.interfaces.WriteDBInt;
 import com.example.pointme.constants.DBWriteType;
 import com.example.pointme.constants.ServerResult;
@@ -68,7 +68,7 @@ public class DBCom {
                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                     sPList.add(dataSnap.getKey());
                 }
-                listOfSPFragmentDBInt.setSPList(sPList);
+                //listOfSPFragmentDBInt.setSPList(sPList);
             }
 
             @Override
@@ -78,7 +78,7 @@ public class DBCom {
         });
     }
 
-    public static void getProfile(final ProfileFragmentDBInt profileFragmentDBInt, String name) {
+    public static void getProfile(final EventsFragmentDBInt eventsFragmentDBInt, String name) {
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.child(Constants.USERS).orderByChild("name").equalTo(name).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -101,7 +101,7 @@ public class DBCom {
                             event.setKey(dataSnap.getKey());
                             eventsList.add(event);
                         }
-                        profileFragmentDBInt.setProfile(profile2, eventsList);
+                        //eventsFragmentDBInt.setProfile(profile2, eventsList);
                     }
 
                     @Override
@@ -142,7 +142,7 @@ public class DBCom {
         });
     }
 
-    public static void getSPEventsAndAppointments(final ProfileFragmentDBInt profileFragmentDBInt, final String spID){
+    public static void getSPEventsAndAppointments(final EventsFragmentDBInt eventsFragmentDBInt, final String spID){
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         final ArrayList<Event> eventsList = new ArrayList<>();
         final ArrayList<Appointment> appointmentsList = new ArrayList<>();
@@ -167,19 +167,19 @@ public class DBCom {
                                 appointmentsList.add(appointment);
                             }
                         }
-                        profileFragmentDBInt.setSPEventsAndAppointments(ServerResult.SUCCESS, eventsList, appointmentsList);
+                        eventsFragmentDBInt.setSPEventsAndAppointments(ServerResult.SUCCESS, eventsList, appointmentsList);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        profileFragmentDBInt.setSPEventsAndAppointments(ServerResult.FAILURE, null, null);
+                        eventsFragmentDBInt.setSPEventsAndAppointments(ServerResult.FAILURE, null, null);
                     }
                 });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                profileFragmentDBInt.setSPEventsAndAppointments(ServerResult.FAILURE, null, null);
+                eventsFragmentDBInt.setSPEventsAndAppointments(ServerResult.FAILURE, null, null);
             }
         });
     }

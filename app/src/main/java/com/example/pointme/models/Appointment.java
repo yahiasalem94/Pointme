@@ -2,9 +2,10 @@ package com.example.pointme.models;
 
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Appointment {
+public class Appointment implements Serializable {
 
     private String name;
     private String desc;

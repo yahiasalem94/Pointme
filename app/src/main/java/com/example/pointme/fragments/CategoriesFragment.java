@@ -20,6 +20,7 @@ import com.example.pointme.adapters.CategoriesAdapter;
 import com.example.pointme.decorator.GridSpacingItemDecorator;
 import com.example.pointme.models.CategoriesItem;
 import com.example.pointme.backendCommunications.DBCom;
+import com.example.pointme.models.ProfileInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,11 @@ public class CategoriesFragment extends Fragment implements RecyclerViewClickLis
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onClickPI(ProfileInfo profileInfo) {
+
     }
 
     @Override

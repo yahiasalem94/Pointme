@@ -32,7 +32,7 @@ public class FavoritesFragment extends Fragment implements RecyclerViewClickList
     private static final String ARG_PARAM1 = "param1";
     private String title;
     private SharedPreference sharedPreference;
-    private List<ProvidersInfo> favorites;
+    private List<ProfileInfo> favorites;
     private String TAG = "FavoriteFragment";
 
     private RecyclerView list;
@@ -113,6 +113,11 @@ public class FavoritesFragment extends Fragment implements RecyclerViewClickList
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onClickPI(ProfileInfo profileInfo) {
+
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.adapters.FavoritesAdapter;
+import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.models.ProvidersInfo;
 
 import java.util.ArrayList;
@@ -64,6 +65,11 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
     }
 
     @Override
+    public void onClickPI(ProfileInfo profileInfo) {
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "resume");
@@ -72,13 +78,13 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
         actionBar.setTitle("Bookings");
     }
 
-    private List<ProvidersInfo> createList() {
+    private List<ProfileInfo> createList() {
 
-        List<ProvidersInfo> result = new ArrayList<>();
+        List<ProfileInfo> result = new ArrayList<>();
         ArrayList<String> y = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            ProvidersInfo info = new ProvidersInfo();
+            ProfileInfo info = new ProfileInfo();
             info.setName("yahia");
             result.add(info);
         }

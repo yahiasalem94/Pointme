@@ -51,7 +51,7 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
             title = "Pointme";
         }
         providersAdapter = new ProvidersAdapter(null, this, getActivity());
-        DBCom.getSPList(this, title);
+        DBCom.getProfilesByService(this, title);
     }
 
     @Override
@@ -81,9 +81,14 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
 
     @Override
     public void onClick(String title) {
+
+    }
+
+    @Override
+    public void onClickPI(ProfileInfo info) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(ARG_PARAM1,title);
+        bundle.putSerializable("ProfileInfo", info);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
@@ -93,22 +98,8 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
     }
 
     @Override
-    public void setSPList(ArrayList<String> sPList) {
-        List<ProvidersInfo> result = new ArrayList<>();
-        for (int i = 0; i < sPList.size(); i++) {
-            ProvidersInfo info = new ProvidersInfo();
-            Log.d(TAG, sPList.get(i) + "");
-            info.setName(sPList.get(i));
-            info.setSurname("todo");
-            info.setEmail("email" + "@test.com");
-            result.add(info);
-        }
-        providersAdapter.newList(result);
-        list.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
     public void setSPList(int serverResult, ArrayList<ProfileInfo> profilesList) {
-
+        providersAdapter.newList(profilesList);
+        list.getAdapter().notifyDataSetChanged();
     }
 }

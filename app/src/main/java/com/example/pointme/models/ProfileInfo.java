@@ -2,7 +2,9 @@ package com.example.pointme.models;
 
 import com.google.firebase.database.Exclude;
 
-public class ProfileInfo {
+import java.io.Serializable;
+
+public class ProfileInfo implements Serializable {
 
     private String email;
     private String name;

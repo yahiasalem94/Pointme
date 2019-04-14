@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
+import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.models.ProvidersInfo;
 import com.example.pointme.utils.SharedPreference;
 
@@ -21,28 +22,28 @@ import java.util.List;
 
 public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> {
 
-    private List<ProvidersInfo> providersInfoList;
+    private List<ProfileInfo> profileInfosList;
     private RecyclerViewClickListener mRecyclerViewListener;
     private SharedPreference sharedPreference;
     private Context context;
 
-    public ProvidersAdapter(List<ProvidersInfo> providersInfoList, RecyclerViewClickListener mRecyclerViewListener, Context context) {
-        this.providersInfoList = providersInfoList;
+    public ProvidersAdapter(List<ProfileInfo> profileInfosList, RecyclerViewClickListener mRecyclerViewListener, Context context) {
+        this.profileInfosList = profileInfosList;
         this.mRecyclerViewListener = mRecyclerViewListener;
         this.context = context;
         sharedPreference = new SharedPreference();
     }
 
-    public void newList(List<ProvidersInfo> providersInfoList) {
-        if (this.providersInfoList != null) {
-            this.providersInfoList.clear();
+    public void newList(List<ProfileInfo> profileInfosList) {
+        if (this.profileInfosList != null) {
+            this.profileInfosList.clear();
         }
-        this.providersInfoList = providersInfoList;
+        this.profileInfosList = profileInfosList;
     }
 
     @Override
     public void onBindViewHolder(ProvidersItemHolder contactViewHolder, int i) {
-        final ProvidersInfo info = providersInfoList.get(i);
+        final ProfileInfo info = profileInfosList.get(i);
         contactViewHolder.getNameText().setText(info.getName());
 
         if (checkFavoriteItem(info)) {
@@ -73,11 +74,11 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
     }
 
     /*Checks whether a particular product exists in SharedPreferences*/
-    public boolean checkFavoriteItem(ProvidersInfo checkInfo) {
+    public boolean checkFavoriteItem(ProfileInfo checkInfo) {
         boolean check = false;
-        List<ProvidersInfo> favorites = sharedPreference.getFavorites(context);
+        List<ProfileInfo> favorites = sharedPreference.getFavorites(context);
         if (favorites != null) {
-            for (ProvidersInfo info : favorites) {
+            for (ProfileInfo info : favorites) {
                 if (info.equals(checkInfo)) {
                     check = true;
                     break;
@@ -88,7 +89,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
     }
 
     @Override
-    public ProvidersItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ProvidersItemHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.list_of_providers_card_layout, viewGroup, false);
@@ -98,7 +99,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecyclerViewListener.onClick(titleView.getText().toString());
+                mRecyclerViewListener.onClickPI(profileInfosList.get(i));
             }
         });
         return new ProvidersItemHolder(itemView);
@@ -107,8 +108,8 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
     @Override
     public int getItemCount() {
         int ret = 0;
-        if (providersInfoList != null) {
-            ret = providersInfoList.size();
+        if (profileInfosList != null) {
+            ret = profileInfosList.size();
         }
         return ret;
     }
