@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
@@ -182,6 +184,10 @@ public class DBCom {
                 eventsFragmentDBInt.setSPEventsAndAppointments(ServerResult.FAILURE, null, null);
             }
         });
+    }
+
+    public static StorageReference getProfilePicRef(String spID){
+        return FirebaseStorage.getInstance().getReference().child(Constants.USERS).child(spID + Constants.JPG_EXT);
     }
 
     public static void getEventsBySPID(String spID){

@@ -24,6 +24,7 @@ public class Constants {
     public static final String APPOINTMENTSPATH = "/Appointments/";
     public static final String BOOKINGSPATH = "/Bookings/";
     public static final String DATESPATH = "/Dates/";
+    public static final String JPG_EXT = ".jpg";
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({EVENTTYPE, APPOINTMENTTYPE})

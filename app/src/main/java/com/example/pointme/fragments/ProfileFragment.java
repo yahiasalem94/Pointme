@@ -17,11 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.pointme.backendCommunications.DBCom;
+import com.example.pointme.constants.Constants;
 import com.example.pointme.interfaces.ProfileAdapterCallback;
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.utils.GlideApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +82,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         nameView.setText(profileInfo.getName());
         phoneNumber += profileInfo.getTel();
         instagramLink = profileInfo.getIg();
-        String url = "https://firebasestorage.googleapis.com/v0/b/pointme-dbd0b.appspot.com/o/n.jpg?alt=media&token=e2d9125b-ddb5-4376-b6b0-ec86ca096db0";//Retrieved url as mentioned above
-        Glide.with(getApplicationContext()).load(url).into(profileImage);
+        StorageReference storage = DBCom.getProfilePicRef(profileInfo.getKey());
+        GlideApp.with(getApplicationContext()).load(storage).into(profileImage);
 //        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        recyclerList.setLayoutManager(linearLayoutManager);
         // recyclerList.addItemDecoration(new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
