@@ -48,20 +48,18 @@
     </style>
 
     <style name="TextAppearance.CalendarDay" parent="android:TextAppearance.DeviceDefault.Small">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/calendar_day</item>
     </style>
 
     <style name="TextAppearance.CalendarWeek" parent="android:TextAppearance.DeviceDefault.Small">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextAppearance.CalendarMonth" parent="android:TextAppearance.DeviceDefault.Small">
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -83,5 +81,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="AppTheme.Dark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.Dark.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

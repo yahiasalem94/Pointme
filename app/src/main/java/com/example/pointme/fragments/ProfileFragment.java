@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.pointme.interfaces.ProfileAdapterCallback;
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
@@ -36,20 +38,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private String phoneNumber = "tel:";
     private String instagramLink;
     /*Views*/
+    private ImageView profileImage;
     private LinearLayout phoneLinearLayout;
     private LinearLayout instagramLinearLayout;
     private RecyclerView recyclerList;
     private TextView nameView;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             profileInfo = (ProfileInfo) getArguments().getSerializable("ProfileInfo");
-        } else {
-            name = "Yahia";
         }
+
         setTitle();
 
     }
@@ -66,6 +67,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
 //        recyclerList = view.findViewById(R.id.card_view_list);
+        profileImage = (de.hdodenhof.circleimageview.CircleImageView) view.findViewById(R.id.ivProfile);
         nameView = view.findViewById(R.id.tvName);
         phoneLinearLayout = view.findViewById(R.id.callLayout);
         instagramLinearLayout = view.findViewById(R.id.instagramLayout);
@@ -75,7 +77,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         nameView.setText(profileInfo.getName());
         phoneNumber += profileInfo.getTel();
         instagramLink = profileInfo.getIg();
-
+        String url = "https://firebasestorage.googleapis.com/v0/b/pointme-dbd0b.appspot.com/o/n.jpg?alt=media&token=e2d9125b-ddb5-4376-b6b0-ec86ca096db0";//Retrieved url as mentioned above
+        Glide.with(getApplicationContext()).load(url).into(profileImage);
 //        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        recyclerList.setLayoutManager(linearLayoutManager);
         // recyclerList.addItemDecoration(new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
@@ -128,30 +131,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private List<ProfileInfo> createList() {
-
-        List<ProfileInfo> result = new ArrayList<>();
-        ArrayList<String> y = new ArrayList<String>();
-
-        for (int i = 0; i < 5; i++)
-        {
-            ProfileInfo info = new ProfileInfo();
-            info.setName("yahia");
-            info.setTitle(name);
-            result.add(info);
-        }
-
-        return result;
-    }
-
     public void loadFragment() {
-        /* TODO Event fragment is being loaded from here */
-        // load fragment
         Log.d(TAG, "loading fragment");
         EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("ProfileInfo", profileInfo);
-        //bundle.putString("SpId", profileInfo.getKey());
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);

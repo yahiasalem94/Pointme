@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +18,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 
 import com.example.pointme.constants.Type;
+import com.example.pointme.decorator.AllDaysDisabledDecorator;
 import com.example.pointme.interfaces.DatePickerDBInt;
 import com.example.pointme.R;
 import com.example.pointme.backendCommunications.DBCom;
-import com.example.pointme.models.AllDaysDisabledDecorator;
 import com.example.pointme.models.Appointment;
-import com.example.pointme.models.DayEnableDecorator;
+import com.example.pointme.decorator.DayEnableDecorator;
 import com.example.pointme.models.Event;
 import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.utils.Helper;
@@ -68,19 +69,6 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
     private String TAG = "DatePickerFragment";
     private OnFragmentInteractionListener mListener;
 
-    public DatePickerFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DatePickerFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DatePickerFragment newInstance(String param1, String param2) {
         DatePickerFragment fragment = new DatePickerFragment();
         Bundle args = new Bundle();
@@ -151,10 +139,7 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
         mMaterialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
-                if(mCalendarButton.getVisibility() == View.GONE){
-                    mCalendarButton.startAnimation(slideUp);
-                    mCalendarButton.setVisibility(View.VISIBLE);
-                }
+
                 mPickedDate = Helper.dateToString(calendarDay.getYear(), calendarDay.getMonth() + 1, 0);
                 if(mScheduleDBMap.containsKey(calendarDay.getDay())){
                     mPickedList = mScheduleDBMap.get(calendarDay.getDay());
@@ -162,6 +147,18 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
                     String weekDay = Helper.getWeekDay(calendarDay);
                     mPickedList = mScheduleWBMap.get(weekDay);
                 }
+
+                Bundle bundle = new Bundle();
+                bundle.putString("PickedDate", mPickedDate);
+                bundle.putStringArrayList("PickedList", mPickedList);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+                TimePickerFragment fragment = new TimePickerFragment();
+                fragment.setArguments(bundle);
+                transaction.replace(R.id.container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
             }
         });
 
@@ -175,7 +172,7 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
                 transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
                 TimePickerFragment fragment = new TimePickerFragment();
                 fragment.setArguments(bundle);
-                transaction.replace(R.id.frame_container, fragment);
+                transaction.replace(R.id.container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -225,8 +222,9 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
     public void setAppBookingSlots(HashMap<Integer, ArrayList<String>> scheduleDBMap, HashMap<String, ArrayList<String>> scheduleWBMap) {
         mScheduleDBMap = scheduleDBMap;
         mScheduleWBMap = scheduleWBMap;
+
         mMaterialCalendarView.addDecorator(new AllDaysDisabledDecorator());
-        mMaterialCalendarView.addDecorator(new DayEnableDecorator(scheduleDBMap, scheduleWBMap, mMinPeriod));
+        mMaterialCalendarView.addDecorator(new DayEnableDecorator(scheduleDBMap, scheduleWBMap, mMinPeriod, ContextCompat.getDrawable(getActivity(), R.drawable.circle_border)));
     }
 
     /**

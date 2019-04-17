@@ -26,6 +26,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:textSize="22sp"
+        android:textColor="@color/white"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -50,7 +51,7 @@
                 android:id="@+id/iv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_phone_black"
+                android:src="@drawable/phone"
                 android:gravity="center" />
 
             <TextView
@@ -59,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:text="Call"
                 android:textSize="18sp"
+                android:textColor="@color/white"
                 android:textStyle="bold" />
 
             <View
@@ -92,6 +94,7 @@
                 android:layout_height="wrap_content"
                 android:text="Instagram"
                 android:textSize="18sp"
+                android:textColor="@color/white"
                 android:textStyle="bold" />
 
             <View

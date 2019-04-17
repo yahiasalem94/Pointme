@@ -1,4 +1,4 @@
-package com.example.pointme.models;
+package com.example.pointme.decorator;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;

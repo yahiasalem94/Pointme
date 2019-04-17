@@ -29,7 +29,7 @@ import java.util.List;
 import static com.example.pointme.decorator.CardViewAnimation.collapseView;
 import static com.example.pointme.decorator.CardViewAnimation.expandView;
 
-public class EventsFragment extends Fragment implements ProfileAdapterCallback, EventsFragmentDBInt, View.OnClickListener {
+public class EventsFragment extends Fragment implements ProfileAdapterCallback, EventsFragmentDBInt {
 
     private static final String ARG_PARAM1 = "param1";
     private ProfileAdapter profileAdapter;
@@ -49,8 +49,6 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         profileAdapter = new ProfileAdapter(null, null,this, getActivity());
 
         DBCom.getSPEventsAndAppointments(this, profileInfo.getKey());
-        //DBCom.getProfile(this, name);
-
     }
 
 
@@ -66,29 +64,16 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         recyclerList = view.findViewById(R.id.card_view_list);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerList.setLayoutManager(linearLayoutManager);
-        // recyclerList.addItemDecoration(new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
 
         book = view.findViewById(R.id.bookNow);
-        //  book.setOnClickListener(this);
+
         // Set data adapter.
         recyclerList.setAdapter(profileAdapter);
     }
 
     @Override
-    public void onClick(View v) {
-        if (v == book) {
-            //loadFragment();
-        }
-    }
-
-    public void loadFragment() {
-        /* TODO Date Picker fragment is being loaded from here */
-//        Log.d(TAG, "loading fragment");
-
-    }
-    @Override
     public void onBookPressed(Object object, @Type int type) {
-        //loadFragment();
+        /* loadFragment */
         DatePickerFragment fragment = new DatePickerFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("ProfileInfo", profileInfo);
@@ -104,33 +89,6 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-
-    private void toggleCardViewnHeight(View v, int minHeight, int height) {
-
-        if (v.getHeight() == minHeight) {
-            // expand
-            expandView(v, height); //'height' is the height of screen which we have measured already.
-        } else {
-            // collapse
-            collapseView(v, minHeight);
-
-        }
-    }
-
-    private List<ProfileInfo> createList() {
-
-        List<ProfileInfo> result = new ArrayList<>();
-        ArrayList<String> y = new ArrayList<String>();
-
-        for (int i = 0; i < 5; i++) {
-            ProfileInfo info = new ProfileInfo();
-            info.setName("yahia");
-            //info.setTitle(name);
-            result.add(info);
-        }
-
-        return result;
     }
 
     @Override
