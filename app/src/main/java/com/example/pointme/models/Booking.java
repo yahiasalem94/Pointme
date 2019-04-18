@@ -3,7 +3,7 @@ package com.example.pointme.models;
 import com.example.pointme.constants.ApprovalStatus;
 import com.example.pointme.constants.Constants;
 
-public class Booking {
+public class Booking implements Comparable<Booking>{
 
     private String loc;
     private String crId;
@@ -99,5 +99,10 @@ public class Booking {
 
     public void setSpId_date(String spId_date) {
         this.spId_date = spId_date;
+    }
+
+    @Override
+    public int compareTo(Booking o) {
+        return this.date.compareTo(o.date);
     }
 }

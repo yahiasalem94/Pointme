@@ -7,6 +7,7 @@ import android.util.Range;
 import com.example.pointme.interfaces.BookingFragmentDBInt;
 import com.example.pointme.interfaces.CategoriesFragmentDBInt;
 import com.example.pointme.interfaces.CheckBookerFreeDBInt;
+import com.example.pointme.interfaces.ClientBookingsDBInt;
 import com.example.pointme.interfaces.DatePickerDBInt;
 import com.example.pointme.interfaces.FavoritesFragmentDBInt;
 import com.example.pointme.interfaces.ListOfSPFragmentDBInt;
@@ -33,6 +34,7 @@ import com.google.firebase.storage.StorageReference;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -520,7 +522,7 @@ public class DBCom {
         });
     }
 
-    public static void fetchBookingByCreatorID(String creatorID) {
+    public static void getClientBookings(final ClientBookingsDBInt clientBookingsDBInt, String creatorID) {
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.child(Constants.BOOKINGS).orderByChild("crId").equalTo(creatorID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -530,12 +532,13 @@ public class DBCom {
                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                     bookingsList.add(dataSnap.getValue(Booking.class));
                 }
-                Log.d("romeo", bookingsList.get(0).getEvId());
+                Collections.sort(bookingsList);
+                clientBookingsDBInt.setClientBookings(ServerResult.SUCCESS, bookingsList);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                clientBookingsDBInt.setClientBookings(ServerResult.FAILURE, null);
             }
         });
     }
