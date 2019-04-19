@@ -33,7 +33,12 @@ public class BookingsAdapter extends RecyclerView.Adapter<BookingsItemHolder> {
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        int ret = 0;
+        if(itemList!=null)
+        {
+            ret = itemList.size();
+        }
+        return ret;
     }
 
     @Override
