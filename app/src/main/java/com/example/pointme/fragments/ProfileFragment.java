@@ -70,8 +70,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
-//        recyclerList = view.findViewById(R.id.card_view_list);
         profileImage = (de.hdodenhof.circleimageview.CircleImageView) view.findViewById(R.id.ivProfile);
         nameView = view.findViewById(R.id.tvName);
         phoneLinearLayout = view.findViewById(R.id.callLayout);
@@ -84,12 +82,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         instagramLink = profileInfo.getIg();
         StorageReference storage = DBCom.getProfilePicRef(profileInfo.getKey());
         GlideApp.with(getApplicationContext()).load(storage).into(profileImage);
-//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        recyclerList.setLayoutManager(linearLayoutManager);
-        // recyclerList.addItemDecoration(new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
-
-        // Set data adapter.
-//        recyclerList.setAdapter(profileAdapter);
     }
 
     @Override

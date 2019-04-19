@@ -12,20 +12,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
 
+import com.example.pointme.adapters.BookingsAdapter;
+import com.example.pointme.backendCommunications.DBCom;
+import com.example.pointme.interfaces.ClientBookingsDBInt;
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.adapters.FavoritesAdapter;
+import com.example.pointme.models.Booking;
 import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.models.ProvidersInfo;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyBookingFragment extends Fragment implements RecyclerViewClickListener {
+public class MyBookingFragment extends Fragment implements RecyclerViewClickListener, ClientBookingsDBInt {
 
     private String title = "Bookings";
+    private String currentUser;
     private Toolbar toolbar;
-    private FavoritesAdapter adapter;
+    private BookingsAdapter adapter;
     private static final String ARG_PARAM1 = "param1";
     private String TAG = "BookingsFragment";
     /*views*/
@@ -35,8 +42,9 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        adapter = new FavoritesAdapter(createList(), this);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        adapter = new BookingsAdapter(null, this);
+        DBCom.getClientBookings(this, currentUser);
     }
 
     @Override
@@ -90,5 +98,11 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
         }
 
         return result;
+    }
+
+    @Override
+    public void setClientBookings(int serverResult, ArrayList<Booking> bookingsList) {
+        adapter.newList(bookingsList);
+        list.getAdapter().notifyDataSetChanged();
     }
 }

@@ -43,7 +43,6 @@ public class CategoriesFragment extends Fragment implements RecyclerViewClickLis
         super.onCreate(savedInstanceState);
         serviceProviders = new ArrayList<>();
         categoriesAdapter = new CategoriesAdapter(null, this);
-//        initializeList();
         DBCom.getCategoriesList(this);
     }
 
