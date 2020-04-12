@@ -1,129 +1,43 @@
 package com.example.pointme.models;
 
-import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Appointment implements Serializable {
+public class Appointment extends Meeting {
 
-    private String name;
-    private String desc;
-    private String loc;
-    private String dur;
-    private String key;
-    private String spId;
-    private int fees;
-    private int minP;
-    private boolean notB;
-    private boolean reqA;
-    private boolean canc;
+    private String timeDiff;
+    private String duration;
+
+
 
     public Appointment()
-    {}
-
-    public Appointment(String Name, String Description, String Location, String SpID, int Fees, int minPeriod, String Duration, boolean NotifyBooking,
-                       boolean RequireAcceptance, boolean Cancelled){
-        this.name = Name;
-        this.desc = Description;
-        this.loc = Location;
-        this.key = null;
-        this.spId = SpID;
-        this.fees = Fees;
-        this.minP = minPeriod;
-        this.dur = Duration;
-        this.notB = NotifyBooking;
-        this.reqA = RequireAcceptance;
-        this.canc = Cancelled;
+    {
+        super();
     }
 
-    public String getName() {
-        return name;
+    public Appointment(String name, String desc, int fees, int minPeriod, String spID, String spName, String meetingID, boolean reqAccept, String startDate,
+                       String endDate, HashMap<String, String> times, String timeDiff, String duration){
+        super(name, desc, fees, minPeriod, spID, spName, meetingID, reqAccept, startDate, endDate, times);
+        this.timeDiff = timeDiff;
+        this.duration = duration;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getTimeDiff() {
+        return timeDiff;
     }
 
-    public String getDesc() {
-        return desc;
+    public void setTimeDiff(String timeDiff) {
+        this.timeDiff = timeDiff;
     }
 
-    public void setDesc(String description) {
-        this.desc = description;
+    public String getDuration() {
+        return duration;
     }
 
-    public String getLoc() {
-        return loc;
-    }
-
-    public void setLoc(String location) {
-        this.loc = location;
-    }
-
-    public String getSpId() {
-        return spId;
-    }
-
-    public void setSpId(String spId) {
-        this.spId = spId;
-    }
-
-    public int getFees() {
-        return fees;
-    }
-
-    public int getMinP() {
-        return minP;
-    }
-
-    public void setMinP(int minP) {
-        this.minP = minP;
-    }
-
-    public void setFees(int fees) {
-        this.fees = fees;
-    }
-
-    public String getDur() {
-        return dur;
-    }
-
-    public void setDur(String dur) {
-        this.dur = dur;
-    }
-
-    public boolean isNotB() {
-        return notB;
-    }
-
-    public void setNotB(boolean notB) {
-        this.notB = notB;
-    }
-
-    public boolean isReqA() {
-        return reqA;
-    }
-
-    public void setReqA(boolean reqA) {
-        this.reqA = reqA;
-    }
-
-    public boolean isCanc() {
-        return canc;
-    }
-
-    public void setCanc(boolean canc) {
-        this.canc = canc;
-    }
-
-    @Exclude
-    public String getKey() {
-        return key;
-    }
-
-    @Exclude
-    public void setKey(String key) {
-        this.key = key;
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

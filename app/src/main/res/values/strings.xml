@@ -21,5 +21,12 @@
     <string name="subtitle">BACK</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="error_message">Try again later</string>
+    <string name="crossfit">Crossfit</string>
+    <string name="Yoga">Yoga</string>
+    <string name="Hairdressers">Hairdressers</string>
+    <string name="Makeup">Makeup</string>
+    <string name="Swimming">Swimming</string>
+    <string name="Pointme">Pointme</string>
 </resources>
 

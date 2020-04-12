@@ -1,6 +1,7 @@
 package com.example.pointme.models;
 
-import com.google.firebase.database.Exclude;
+
+import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
 

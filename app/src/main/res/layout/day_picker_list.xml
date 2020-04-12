@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
-<android.support.v7.widget.CardView
+<androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/purple"
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="fitXY"
-                android:layout_toEndOf="@id/time_text_view"
+                android:layout_toEndOf="@id/day_text_view"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_check_white_24dp"
                 android:visibility="gone"
@@ -55,5 +55,5 @@
                     android:textColor="@color/white"/>
             </RelativeLayout>
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

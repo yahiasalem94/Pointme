@@ -3,7 +3,6 @@
     package="com.example.pointme">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    package="com.example.pointme">
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -45,7 +44,9 @@
 
         <activity
             android:name=".activities.ServiceProviderMainActivity"
-            android:theme="@style/AppTheme.Dark"></activity>
+            android:theme="@style/AppTheme.Dark">
+
+        </activity>
         <activity
             android:name=".activities.Main2Activity"
             android:label="@string/title_activity_main2"

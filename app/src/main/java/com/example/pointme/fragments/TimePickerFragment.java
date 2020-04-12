@@ -6,12 +6,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -22,7 +26,7 @@ import android.widget.Button;
 import com.example.pointme.interfaces.CheckBookerFreeDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.TimeAdapter;
-import com.example.pointme.backendCommunications.DBCom;
+
 
 import java.util.ArrayList;
 
@@ -34,7 +38,7 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private final String TAG = "TimePickerFragment";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -54,7 +58,7 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
 
     private Animation slideUp;
 
-    private OnFragmentInteractionListener mListener;
+    private GestureDetectorCompat mDetector;
 
     public TimePickerFragment() {
         // Required empty public constructor
@@ -76,40 +80,30 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_time_picker, container, false);
+        return inflater.inflate(R.layout.fragment_time_picker, container, false);
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
         slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
-        mTimeRecView = (RecyclerView) view.findViewById(R.id.time_rec_view);
-        mTimeButton = (Button) view.findViewById(R.id.time_button);
+        mTimeRecView = view.findViewById(R.id.time_rec_view);
+        mTimeButton = view.findViewById(R.id.time_button);
 
         mCheckBookerFreeDBInt = this;
 
         mPickedDate = getArguments().getString("PickedDate");
         mPickedList = getArguments().getStringArrayList("PickedList");
-        /*dates = getArguments().getStringArrayList("Dates");
-        if(!dates.isEmpty()) {
-            for (String date : dates) {
-                String hours = date.substring(8, 10);
-                String minutes = date.substring(10);
-                times.add(hours + ":" + minutes);
-            }
-        }else{
-            date = getArguments().getString("Date");
-            for(int i = 2; i + 8 <= date.length(); i = i + 8){
-                String stHours = date.substring(i, i+2);
-                String stMinutes = date.substring(i+2, i+4);
-                String enHours = date.substring(i+4, i+6);
-                String enMinutes = date.substring(i+6, i+8);
-                times.add(stHours + ":" + stMinutes + " - " + enHours + ":" + enMinutes);
-            }
-        }*/
 
-        mAdapter = new TimeAdapter(mPickedList, getContext());
+        mAdapter = new TimeAdapter(mPickedList, getActivity());
         mAdapter.setOnClick(this);
         mTimeRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         mTimeRecView.setAdapter(mAdapter);
@@ -126,14 +120,53 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
                 transaction.commit();
             }
         });
-        return view;
+
+
+        final GestureDetector gesture = new GestureDetector(getActivity(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                           float velocityY) {
+                        Log.i(TAG, "onFling has been called!");
+                        final int SWIPE_MIN_DISTANCE = 120;
+                        final int SWIPE_MAX_OFF_PATH = 250;
+                        final int SWIPE_THRESHOLD_VELOCITY = 200;
+                        try {
+                            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                                return false;
+                            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                                Log.i(TAG, "Right to Left");
+                            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                                Log.i(TAG, "Left to Right");
+                            }
+                        } catch (Exception e) {
+                            // nothing
+                        }
+                        return super.onFling(e1, e2, velocityX, velocityY);
+                    }
+                });
+
+        mTimeRecView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+//        if (mListener != null) {
+//            mListener.onFragmentInteraction(uri);
+
     }
 
     @Override
@@ -150,7 +183,7 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+      //  mListener = null;
     }
 
     @Override
@@ -186,20 +219,4 @@ public class TimePickerFragment extends Fragment implements TimeAdapter.OnItemCl
     public void isBookerFree(boolean free) {
 
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
 }

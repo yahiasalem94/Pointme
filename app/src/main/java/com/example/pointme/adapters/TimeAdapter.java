@@ -2,9 +2,9 @@ package com.example.pointme.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +44,8 @@ public class TimeAdapter extends Adapter<TimeAdapter.Holder> {
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.time_picker_list, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.time_picker_list, viewGroup, false);
+
         return new Holder(view);
     }
 
@@ -62,11 +63,14 @@ public class TimeAdapter extends Adapter<TimeAdapter.Holder> {
                 onClick.onItemClick(viewHolder, i);
             }
         });
+
         if (isSelected){
             if (!holders.get(selPos).equals(viewHolder)){
                 viewHolder.mTimeTextView.setTextColor(Color.GRAY);
             }
         }
+
+
         holders.add(viewHolder);
     }
 

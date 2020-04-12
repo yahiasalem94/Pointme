@@ -3,9 +3,9 @@ package com.example.pointme.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +14,7 @@ import android.widget.Toast;
 
 import com.example.pointme.R;
 import com.example.pointme.models.DayAdapter;
-import com.example.pointme.models.Event;
-import com.example.pointme.models.ScheduleHelper;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +48,6 @@ public class DayPickerFragment extends Fragment implements DayAdapter.OnDayClick
     private Bundle mBundle;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
 
     private OnFragmentInteractionListener mListener;
     private  TimeBottomSheetFragment fragment;
@@ -95,7 +90,7 @@ public class DayPickerFragment extends Fragment implements DayAdapter.OnDayClick
         View view = inflater.inflate(R.layout.fragment_day_picker, container, false);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDayRecView = (RecyclerView) view.findViewById(R.id.day_rec_view);
         mButton = (Button) view.findViewById(R.id.btn_save_event);

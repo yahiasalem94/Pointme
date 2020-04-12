@@ -1,20 +1,14 @@
 package com.example.pointme;
 
 import android.content.Context;
-import android.support.test.runner.AndroidJUnit4;
 
-import com.example.pointme.activities.MainActivity;
 import com.example.pointme.fragments.ListOfServiceProvidersFragment;
 import com.example.pointme.models.ProvidersInfo;
 import com.example.pointme.utils.SharedPreference;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.Before;
+import androidx.test.rule.ActivityTestRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 public class sharedPreferenceUtilTests {
 

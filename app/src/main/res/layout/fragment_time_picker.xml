@@ -4,17 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/transparent"
-    tools:context=".fragments.TimePickerFragment">
+    android:background="@color/transparent">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/time_rec_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="50sp"
         android:textAlignment="center" />
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/time_button"
         android:layout_width="120dp"
         android:layout_height="60dp"

@@ -1,6 +1,6 @@
 package com.example.pointme.constants;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -9,7 +9,7 @@ public class Constants {
 
     public static final int EVENTTYPE = 1;
     public static final int APPOINTMENTTYPE = 2;
-    public static final String USERS = "Users";
+    public static final String USERS_NODE = "Users";
     public static final String EVENTS = "Events";
     public static final String APPOINTMENTS = "Appointments";
     public static final String BOOKINGS = "Bookings";

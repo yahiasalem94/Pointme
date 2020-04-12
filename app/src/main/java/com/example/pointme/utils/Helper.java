@@ -2,9 +2,9 @@ package com.example.pointme.utils;
 
 import android.util.Range;
 
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.threeten.bp.DayOfWeek;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
 import java.util.HashMap;

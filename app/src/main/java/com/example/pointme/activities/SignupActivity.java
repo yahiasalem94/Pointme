@@ -1,10 +1,9 @@
 package com.example.pointme.activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -13,13 +12,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProviders;
+
 import com.example.pointme.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.pointme.backendCommunications.FirestoreViewModel;
+import com.example.pointme.models.User;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import static com.example.pointme.constants.Constants.USERS_NODE;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -33,7 +34,8 @@ public class SignupActivity extends AppCompatActivity {
     private TextView loginLink;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private FirebaseFirestore mDatabase;
+    private FirestoreViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,15 +50,12 @@ public class SignupActivity extends AppCompatActivity {
         signupButton = findViewById(R.id.btn_signup);
         loginLink = findViewById(R.id.link_login);
 
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        viewModel = ViewModelProviders.of(this).get(FirestoreViewModel.class);
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signup();
-            }
-        });
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseFirestore.getInstance();
+
+        signupButton.setOnClickListener(v -> signup());
 
         loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,41 +69,43 @@ public class SignupActivity extends AppCompatActivity {
     public void signup() {
         Log.d(TAG, "Signup");
 
-        if (!validate()) {
+        signupButton.setEnabled(false);
+
+        String name = nameText.getText().toString();
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
+        String mobile = mobileText.getText().toString();
+        String address = addressText.getText().toString();
+
+        if (!validate(name, email, password, mobile, address)) {
             onSignupFailed();
             return;
         }
 
-        signupButton.setEnabled(false);
-
+        /* Move to layout */
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        final String name = nameText.getText().toString();
-        final String email = emailText.getText().toString();
-        final String password = passwordText.getText().toString();
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                String user_id = mAuth.getCurrentUser().getUid();
-                DatabaseReference current_user_db = mDatabase.child(user_id);
-                current_user_db.child("email").setValue(email);
-                current_user_db.child("image").setValue("Default");
-                current_user_db.child("name").setValue(name);
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 Toast.makeText(SignupActivity.this, "Registeration Succesful", Toast.LENGTH_SHORT).show();
-                new android.os.Handler().postDelayed(
-                        new Runnable() {
-                            public void run() {
-                                // On complete call either onSignupSuccess or onSignupFailed
-                                // depending on success
-                                onSignupSuccess();
-                            }
-                        }, 3000);
-            } });
+                /* TODO add last name */
+                User user = new User(name, "", email);
+                mDatabase.collection(USERS_NODE).add(user)
+                        .addOnSuccessListener(documentReference -> {
+                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            onSignupSuccess();
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.w(TAG, "Error adding document", e);
+                            onSignupFailed();
+                        });
+            }
+        });
     }
 
 
@@ -115,19 +116,12 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getBaseContext(), "Signup failed", Toast.LENGTH_LONG).show();
         signupButton.setEnabled(true);
     }
 
-    public boolean validate() {
+    public boolean validate(String name, String email, String password, String mobile, String address) {
         boolean valid = true;
-
-        String name = nameText.getText().toString();
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-        String mobile = mobileText.getText().toString();
-        String address = addressText.getText().toString();
 
         if (TextUtils.isEmpty(name) || name.length() < 3) {
             nameText.setError("at least 3 characters");

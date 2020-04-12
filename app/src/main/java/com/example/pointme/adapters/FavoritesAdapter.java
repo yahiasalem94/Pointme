@@ -1,6 +1,6 @@
 package com.example.pointme.adapters;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.models.ProfileInfo;
-import com.example.pointme.models.ProvidersInfo;
 
 import java.util.List;
 

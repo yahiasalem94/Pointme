@@ -1,6 +1,6 @@
 package com.example.pointme.constants;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 @IntDef({ApprovalStatus.DECLINED, ApprovalStatus.PENDING, ApprovalStatus.APPROVED})
 public @interface ApprovalStatus {

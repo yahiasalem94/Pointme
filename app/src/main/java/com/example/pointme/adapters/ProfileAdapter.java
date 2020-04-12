@@ -1,12 +1,14 @@
 package com.example.pointme.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import com.alespero.expandablecardview.ExpandableCardView;
 import com.example.pointme.constants.Type;
@@ -24,15 +26,17 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
     private ProfileAdapterCallback mAdapterCallback;
 
     private ExpandableCardView cardView;
+    private NestedScrollView scrollView;
     private int minHeight;
     private static int currentPosition = 0;
     private Context context;
 
-    public ProfileAdapter(List<Event> eventsList, List<Appointment> appointmentsList, ProfileAdapterCallback callback, Context context) {
+    public ProfileAdapter(List<Event> eventsList, List<Appointment> appointmentsList, ProfileAdapterCallback callback, Context context, NestedScrollView scrollView) {
         this.eventsList = eventsList;
         this.appointmentsList = appointmentsList;
         mAdapterCallback = callback;
         this.context = context;
+        this.scrollView = scrollView;
     }
 
     public void newList(List<Event> eventsList, List<Appointment> appointmentsList) {
@@ -89,36 +93,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
                 }
             }
         });
-        //  contactViewHolder.getLinearLayout().setVisibility(View.GONE);
 
-        //if the position is equals to the item position which is to be expanded
-      /*  if (currentPosition == position) {
-            //creating an animation
-            Animation anim = AnimationUtils.loadAnimation(context, R.anim.card_anim);
-
-            //toggling visibility
-            contactViewHolder.getLinearLayout().setVisibility(View.VISIBLE);
-
-            //adding sliding effect
-            contactViewHolder.getLinearLayout().startAnimation(anim);
-        }
-
-        contactViewHolder.getCardView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //getting the position of the item to expand it
-                currentPosition = position;
-
-                //reloding the list
-                notifyDataSetChanged();
-            }
-        });*/
         cardView.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
                 if (isExpanded) {
                     Log.i("PROFILE ADAPTER", "Exapnded");
+                    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
                 }
             }
         });
@@ -134,4 +115,5 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
 
         return new ProfileEventItemHolder(itemView);
     }
+
 }

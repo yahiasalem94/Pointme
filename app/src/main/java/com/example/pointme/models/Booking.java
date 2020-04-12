@@ -1,40 +1,39 @@
 package com.example.pointme.models;
 
-import com.example.pointme.constants.ApprovalStatus;
-import com.example.pointme.constants.Constants;
+public class Booking {
 
-public class Booking implements Comparable<Booking>{
-
-    private String loc;
+    private String spID;
     private String crId;
-    private String spId;
-    private String type;
-    private String evId;
-    private @ApprovalStatus int appr;
-    private boolean canc;
+    private String meetingID;
+    private String spName;
+    private String meetingName;
     private String date;
-    private String spId_date;
+    private String time;
+    private String type;
+    private String approvalStatus;
+    private boolean cancelled;
 
     public Booking(){}
 
-    public Booking(String Location, String CreatorID, String SpID, String Type, String EventID, @ApprovalStatus int Approved, boolean Cancelled, String date){
-        this.loc = Location;
+    public Booking(String spID, String CreatorID, String meetingID, String spName, String meetingName,String date, String time, String approvalStatus, boolean cancelled){
+        this.spID = spID;
         this.crId = CreatorID;
-        this.spId = SpID;
-        this.type = Type;
-        this.evId = EventID;
-        this.appr = Approved;
-        this.canc = Cancelled;
+        this.meetingID = meetingID;
+        this.spName = spName;
+        this.meetingName = meetingName;
         this.date = date;
-        this.spId_date = this.spId + "_" + this.date;
+        this.time = time;
+        this.type = type;
+        this.approvalStatus = approvalStatus;
+        this.cancelled = cancelled;
     }
 
-    public String getLoc() {
-        return loc;
+    public String getSpID() {
+        return spID;
     }
 
-    public void setLoc(String loc) {
-        this.loc = loc;
+    public void setSpID(String spID) {
+        this.spID = spID;
     }
 
     public String getCrId() {
@@ -45,44 +44,28 @@ public class Booking implements Comparable<Booking>{
         this.crId = crId;
     }
 
-    public String getSpId() {
-        return spId;
+    public String getMeetingID() {
+        return meetingID;
     }
 
-    public void setSpId(String spId) {
-        this.spId = spId;
+    public void setMeetingID(String meetingID) {
+        this.meetingID = meetingID;
     }
 
-    public String getType() {
-        return type;
+    public String getSpName() {
+        return spName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSpName(String spName) {
+        this.spName = spName;
     }
 
-    public String getEvId() {
-        return evId;
+    public String getMeetingName() {
+        return meetingName;
     }
 
-    public void setEvId(String evId) {
-        this.evId = evId;
-    }
-
-    public @ApprovalStatus int getAppr() {
-        return appr;
-    }
-
-    public void setAppr(@ApprovalStatus int appr) {
-        this.appr = appr;
-    }
-
-    public boolean isCanc() {
-        return canc;
-    }
-
-    public void setCanc(boolean canc) {
-        this.canc = canc;
+    public void setMeetingName(String meetingID) {
+        this.meetingName = meetingName;
     }
 
     public String getDate() {
@@ -93,16 +76,27 @@ public class Booking implements Comparable<Booking>{
         this.date = date;
     }
 
-    public String getSpId_date() {
-        return spId_date;
+    public String getTime() {
+        return time;
     }
 
-    public void setSpId_date(String spId_date) {
-        this.spId_date = spId_date;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    @Override
-    public int compareTo(Booking o) {
-        return this.date.compareTo(o.date);
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

@@ -1,28 +1,25 @@
 package com.example.pointme.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.pointme.adapters.BookingsAdapter;
 import com.example.pointme.backendCommunications.DBCom;
 import com.example.pointme.interfaces.ClientBookingsDBInt;
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
-import com.example.pointme.adapters.FavoritesAdapter;
 import com.example.pointme.models.Booking;
 import com.example.pointme.models.ProfileInfo;
-import com.example.pointme.models.ProvidersInfo;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +56,7 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
 
         list = view.findViewById(R.id.cardList);
-        linearLayoutManager = new LinearLayoutManager(view.getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(linearLayoutManager);
 
         // Set data adapter.

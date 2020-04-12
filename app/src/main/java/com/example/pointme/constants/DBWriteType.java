@@ -1,6 +1,6 @@
 package com.example.pointme.constants;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 @IntDef({DBWriteType.FAVORITES, DBWriteType.BOOKINGS, DBWriteType.EVENTS, DBWriteType.APPOINTMENTS})
 public @interface DBWriteType {

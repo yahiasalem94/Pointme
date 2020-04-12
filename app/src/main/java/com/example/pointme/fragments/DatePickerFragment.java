@@ -4,10 +4,11 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import com.example.pointme.activities.MainActivity;
 import com.example.pointme.constants.Type;
 import com.example.pointme.decorator.AllDaysDisabledDecorator;
 import com.example.pointme.interfaces.DatePickerDBInt;
@@ -86,12 +88,12 @@ public class DatePickerFragment extends Fragment implements DatePickerDBInt, Dat
             int type = getArguments().getInt("Type");
             if (type == Type.EVENT){
                 mEvent = (Event) getArguments().getSerializable("Event");
-                mDuration = mEvent.getDur();
-                mMinPeriod = mEvent.getMinP();
+//                mDuration = mEvent.getDur();
+//                mMinPeriod = mEvent.getMinP();
             }else{
                 mAppointment = (Appointment) getArguments().getSerializable("Appointment");
-                mDuration = mAppointment.getDur();
-                mMinPeriod = mAppointment.getMinP();
+//                mDuration = mAppointment.getDur();
+//                mMinPeriod = mAppointment.getMinP();
             }
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);

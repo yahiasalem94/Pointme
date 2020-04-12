@@ -1,55 +1,68 @@
 package com.example.pointme.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 
+import com.example.pointme.constants.ServerResult;
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.interfaces.ListOfSPFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProvidersAdapter;
 import com.example.pointme.models.ProfileInfo;
-import com.example.pointme.models.ProvidersInfo;
 import com.example.pointme.backendCommunications.DBCom;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import static com.example.pointme.activities.MainActivity.nameOfProvider;
+import static com.example.pointme.activities.MainActivity.profileInfoTag;
 
 public class ListOfServiceProvidersFragment extends Fragment implements RecyclerViewClickListener, ListOfSPFragmentDBInt
 {
-    private static final String ARG_PARAM1 = "param1";
-    private String TAG = "ListOfServiceProvidersFragment";
+    private String TAG = ListOfServiceProvidersFragment.class.getSimpleName();
     private String title;
     private ProvidersAdapter providersAdapter;
     private ArrayList<String> serviceProviders;
     private Context context;
-    private DatabaseReference mDatabase;
-    RecyclerView list;
+//    private DatabaseReference mDatabase;
+
+    private LinearLayoutManager linearLayoutManager;
+    /* View */
+    private View mRootview;
+    private RecyclerView list;
+    private TextView errorTextView;
+    private ProgressBar mProgressBar;
+    private Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        toolbar = ((MainActivity) getActivity()).toolbar;
 
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM1);
-            setTitle(title.toUpperCase());
+            title = getArguments().getString(nameOfProvider);
+            toolbar.setTitle(title.toUpperCase());
             serviceProviders = new ArrayList<>();
         } else {
-            title = "Pointme";
+            title = getString(R.string.Pointme);
         }
+
+
         providersAdapter = new ProvidersAdapter(null, this, getActivity());
         DBCom.getProfilesByService(this, title);
     }
@@ -57,26 +70,42 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        return inflater.inflate(R.layout.fragment_list_of_service_providers, parent, false);
+        mRootview = inflater.inflate(R.layout.fragment_list_of_service_providers, parent, false);
+
+        list = mRootview.findViewById(R.id.cardList);
+        errorTextView = mRootview.findViewById(R.id.tv_error_message_display);
+        mProgressBar = mRootview.findViewById(R.id.pb_loading_indicator);
+
+        setupRecyclerView();
+
+        return mRootview;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
 
-        list = view.findViewById(R.id.cardList);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    private void setupRecyclerView() {
+        linearLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(linearLayoutManager);
-
         // Set data adapter.
         list.setAdapter(providersAdapter);
     }
 
-    public void setTitle(String title) {
-        Activity myactivity = getActivity();
-        if (myactivity instanceof MainActivity) {
-            ((MainActivity) myactivity).setTitle(title);
-        }
+    private void showDataView() {
+        /* First, make sure the error is invisible */
+        errorTextView.setVisibility(View.INVISIBLE);
+        /* Then, make sure the weather data is visible */
+        list.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage() {
+        /* First, hide the currently visible data */
+        list.setVisibility(View.INVISIBLE);
+        /* Then, show the error */
+        errorTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -88,7 +117,7 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
     public void onClickPI(ProfileInfo info) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("ProfileInfo", info);
+        bundle.putSerializable(profileInfoTag, info);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
@@ -99,7 +128,12 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
 
     @Override
     public void setSPList(int serverResult, ArrayList<ProfileInfo> profilesList) {
-        providersAdapter.newList(profilesList);
-        list.getAdapter().notifyDataSetChanged();
+        mProgressBar.setVisibility(View.INVISIBLE);
+        if (serverResult == ServerResult.SUCCESS) {
+            providersAdapter.newList(profilesList);
+            list.getAdapter().notifyDataSetChanged();
+        } else {
+            showErrorMessage();
+        }
     }
 }

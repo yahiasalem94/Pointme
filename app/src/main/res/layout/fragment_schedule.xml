@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
-    tools:context=".fragments.DatePickerFragment">
+    android:padding="5dp">
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:mcv_showOtherDates="decorated_disabled"
         app:mcv_selectionColor="@color/white"
         app:mcv_dateTextAppearance="@style/TextAppearance.CalendarDay"
@@ -18,12 +17,5 @@
         app:mcv_leftArrowMask="@drawable/ic_arrow_left_24dp"
         app:mcv_weekDayTextAppearance="@style/TextAppearance.CalendarWeek" />
 
-    <Button
-        android:id="@+id/calendar_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:textColor="@color/purple"
-        android:text="Select Date" />
+</RelativeLayout>
 
-</FrameLayout>

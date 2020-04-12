@@ -28,7 +28,7 @@
         android:src="@drawable/login" />
 
     <!--  Email Label -->
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -43,10 +43,10 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="Email" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!--  Password Label -->
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -61,9 +61,9 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:hint="Password" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_login"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
         android:text="Login" />
 
     <TextView
-        android:id="@+id/link_signup"
+        android:id="@+id/signupTv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
@@ -86,7 +86,7 @@
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/fbbutton"
-        android:layout_below="@+id/link_signup"
+        android:layout_below="@+id/signupTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
