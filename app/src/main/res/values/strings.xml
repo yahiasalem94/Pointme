@@ -28,5 +28,8 @@
     <string name="Makeup">Makeup</string>
     <string name="Swimming">Swimming</string>
     <string name="Pointme">Pointme</string>
+    <string name="login">Login</string>
+    <string name="facebook">Facebook</string>
+    <string name="no_account">No account yet? Create one</string>
 </resources>
 

@@ -29,9 +29,11 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-
     configurations {
         all*.exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
+    dataBinding {
+        enabled = true
     }
 }
 

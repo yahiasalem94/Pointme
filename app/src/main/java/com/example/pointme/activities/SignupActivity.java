@@ -1,149 +1,173 @@
 package com.example.pointme.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.pointme.R;
-import com.example.pointme.backendCommunications.FirestoreViewModel;
+import com.example.pointme.databinding.ActivitySignupBinding;
 import com.example.pointme.models.User;
+import com.example.pointme.viewModels.LoginViewModel;
+import com.example.pointme.viewModels.addUserViewModel;
+import com.example.pointme.viewModels.addUserViewModelFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import static com.example.pointme.constants.Constants.USERS_NODE;
-
 public class SignupActivity extends AppCompatActivity {
-    private static final String TAG = "SignupActivity";
-    private EditText nameText;
-    private EditText emailText;
-    private EditText passwordText;
-    private EditText reEntryPasswordText;
-    private EditText addressText;
-    private EditText mobileText;
-    private Button signupButton;
-    private TextView loginLink;
+    private static final String TAG = SignupActivity.class.getSimpleName();
+    private ActivitySignupBinding activitySignupBinding;
+    private ProgressDialog progressDialog;
 
+    private addUserViewModel mViewModel;
+    private LoginViewModel mLoginViewModel;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDatabase;
-    private FirestoreViewModel viewModel;
+
+    private String name;
+    private String email;
+    private String password;
+    private String mobile;
+    private String address;
+
+    private User user;
+    boolean isSignupSuccessful = false;
+//    private FirestoreViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        nameText = findViewById(R.id.input_name);
-        emailText = findViewById(R.id.input_email);
-        passwordText = findViewById(R.id.input_password);
-        reEntryPasswordText = findViewById(R.id.input_reEnterPassword);
-        addressText = findViewById(R.id.input_address);
-        mobileText = findViewById(R.id.input_mobile);
-        signupButton = findViewById(R.id.btn_signup);
-        loginLink = findViewById(R.id.link_login);
+        activitySignupBinding = DataBindingUtil.setContentView(this, R.layout.activity_signup);
 
-        viewModel = ViewModelProviders.of(this).get(FirestoreViewModel.class);
+        progressDialog = new ProgressDialog(SignupActivity.this, R.style.AppTheme_Dark_Dialog);
+//        viewModel = ViewModelProviders.of(this).get(FirestoreViewModel.class);
+        mLoginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
 
-        signupButton.setOnClickListener(v -> signup());
 
-        loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
+
+        mLoginViewModel.loginState.observe(this, firebaseUser -> {
+            progressDialog.dismiss();
+            if (firebaseUser != null) {
+                user = new User(name, "", email);
+                final addUserViewModelFactory factory = new addUserViewModelFactory(user);
+                mViewModel = new ViewModelProvider(SignupActivity.this, factory).get(addUserViewModel.class);
+                mViewModel.addRegisteredUser(user);
+                addUserObserver();
+            } else {
+                enableViews(true);
+                onSignupFailed();
+                Toast.makeText(SignupActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addUserObserver() {
+        mViewModel.addUserSuccessful.observe(this, isSuccessful -> {
+            if (isSuccessful) {
+                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
     }
 
-    public void signup() {
-        Log.d(TAG, "Signup");
+    public void signup(View view) {
+        Log.d(TAG, "Signing up");
 
-        signupButton.setEnabled(false);
+        enableViews(false);
 
-        String name = nameText.getText().toString();
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-        String mobile = mobileText.getText().toString();
-        String address = addressText.getText().toString();
+          name = activitySignupBinding.inputName.getText().toString();
+          email= activitySignupBinding.inputEmail.getText().toString();
+          password= activitySignupBinding.inputPassword.getText().toString();
+          mobile= activitySignupBinding.inputMobile.getText().toString();
+          address= activitySignupBinding.inputAddress.getText().toString();
 
-        if (!validate(name, email, password, mobile, address)) {
+        if (!validate()) {
             onSignupFailed();
+            enableViews(true);
+            progressDialog.dismiss();
             return;
         }
 
         /* Move to layout */
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(SignupActivity.this, "Registeration Succesful", Toast.LENGTH_SHORT).show();
-                /* TODO add last name */
-                User user = new User(name, "", email);
-                mDatabase.collection(USERS_NODE).add(user)
-                        .addOnSuccessListener(documentReference -> {
-                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            onSignupSuccess();
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.w(TAG, "Error adding document", e);
-                            onSignupFailed();
-                        });
-            }
-        });
+
+
+
+
+
+//
+//                .addOnSuccessListener(documentReference -> {
+//                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+//                    onSignupSuccess();
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.w(TAG, "Error adding document", e);
+//                    onSignupFailed();
+//                });
+
+        mLoginViewModel.isUserRegistered(email, password);
     }
 
 
+    public void gotologin(View view) {
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void onSignupSuccess() {
-        signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
         finish();
     }
 
     public void onSignupFailed() {
         Toast.makeText(getBaseContext(), "Signup failed", Toast.LENGTH_LONG).show();
-        signupButton.setEnabled(true);
+        enableViews(true);
     }
 
-    public boolean validate(String name, String email, String password, String mobile, String address) {
+    public boolean validate() {
         boolean valid = true;
 
         if (TextUtils.isEmpty(name) || name.length() < 3) {
-            nameText.setError("at least 3 characters");
+            activitySignupBinding.inputName.setError("at least 3 characters");
             valid = false;
-        } else {
-            nameText.setError(null);
         }
 
         if (TextUtils.isEmpty(email)) {
-            emailText.setError("enter a valid email address");
+            activitySignupBinding.inputEmail.setError("enter a valid email address");
             valid = false;
-        } else {
-            emailText.setError(null);
         }
 
         if (TextUtils.isEmpty(password)) {
-            passwordText.setError("between 4 and 10 alphanumeric characters");
+            activitySignupBinding.inputPassword.setError("between 4 and 10 alphanumeric characters");
             valid = false;
-        } else {
-            passwordText.setError(null);
         }
 
         return valid;
+    }
+
+    public void enableViews(boolean toggle) {
+        activitySignupBinding.inputName.setEnabled(toggle);
+        activitySignupBinding.inputEmail.setEnabled(toggle);
+        activitySignupBinding.inputPassword.setEnabled(toggle);
+        activitySignupBinding.inputMobile.setEnabled(toggle);
+        activitySignupBinding.inputAddress.setEnabled(toggle);
     }
 }

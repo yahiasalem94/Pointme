@@ -26,6 +26,9 @@ public class Constants {
     public static final String DATESPATH = "/Dates/";
     public static final String JPG_EXT = ".jpg";
 
+    /* FB Permissions */
+    public static final String FB_EMAIL = "email";
+    public static final String FB_PROFILE = "public_profile";
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({EVENTTYPE, APPOINTMENTTYPE})
     public @interface ScheduleType { }

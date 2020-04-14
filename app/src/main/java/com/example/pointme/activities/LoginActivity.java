@@ -2,74 +2,75 @@ package com.example.pointme.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.text.TextUtils;
 import android.util.Log;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pointme.R;
+import com.example.pointme.databinding.ActivityLoginBinding;
+import com.example.pointme.viewModels.LoginViewModel;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.database.DataSnapshot;
-//import com.google.firebase.database.DatabaseError;
-//import com.google.firebase.database.DatabaseReference;
-//import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseUser;
+
+import static com.example.pointme.constants.Constants.FB_EMAIL;
+import static com.example.pointme.constants.Constants.FB_PROFILE;
 
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private static final int REQUEST_SIGNUP = 0;
     private static int FACEBOOK_REQUEST_CODE;
     private FirebaseAuth mAuth;
 //    private DatabaseReference mDatabase;
 
-    private EditText emailText;
     private EditText passwordText;
-    private Button loginButton;
-    private LoginButton fbButton;
     private TextView signupTv;
     private ImageView iv;
+    private  ActivityLoginBinding activityLoginBinding;
 
     private ProgressDialog progressDialog;
-    CallbackManager mCallbackManager;
+
+    private LoginViewModel mViewModel;
+//    private FirebaseAuthLiveData firebaseUserLiveData;
+
+
+    private String email;
+    private String password;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        loginButton = findViewById(R.id.btn_login);
-        fbButton = findViewById(R.id.fbbutton);
-        emailText = findViewById(R.id.input_email);
-        passwordText = findViewById(R.id.input_password);
-        signupTv = findViewById(R.id.signupTv);
-        iv = findViewById(R.id.iv);
+        activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-//        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mCallbackManager = CallbackManager.Factory.create();
 
-        fbButton.setReadPermissions("email", "public_profile");
-        FACEBOOK_REQUEST_CODE = fbButton.getRequestCode();
+        mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
 
         if (mAuth.getCurrentUser() != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -77,130 +78,90 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        fbButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
+        setupFacebookLogin();
 
-                Log.d(TAG,"Hello"+loginResult.getAccessToken().getToken());
-                //  Toast.makeText(MainActivity.this, "Token:"+loginResult.getAccessToken(), Toast.LENGTH_SHORT).show();
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
+        mViewModel.loginState.observe(this, new Observer<FirebaseUser>() {
             @Override
-            public void onCancel() {
-                Log.d(TAG,"operation cancelled");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(TAG, error.toString());
+            public void onChanged(FirebaseUser firebaseUser) {
+                progressDialog.dismiss();
+                if (firebaseUser != null) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    enableViews(true);
+                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+//        activityLoginBinding.fbButton.setReadPermissions(FB_EMAIL, FB_PROFILE);
+//        FACEBOOK_REQUEST_CODE = activityLoginBinding.fbButton.getRequestCode();
 
-            @Override
-            public void onClick(View v) {
-                login(mAuth);
-            }
-        });
-
-        signupTv.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
-            }
-        });
     }
 
-    private void  handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
+    private void setupFacebookLogin() {
 
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (!task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.d(TAG, "check existence");
-                            onLoginSuccess(false);
-                        }
-
-
-                    }
-                });
     }
 
-    private void login(FirebaseAuth mAuth) {
-        Log.d(TAG, "Login");
+    public void login(View v)  {
 
-        loginButton.setEnabled(false);
+        enableViews(false);
 
-        progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-
-        // TODO: Implement your own authentication logic here.
-        if (validate()){
-
-            mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
-                       checkUserExistence();
-                    }else {
-                        loginButton.setEnabled(true);
-                        progressDialog.dismiss();
-                        Toast.makeText(LoginActivity.this, "Couldn't login, User not found", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }else {
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            // onLoginFailed();
-                            progressDialog.dismiss();
-                        }
-                    }, 3000);
-            Toast.makeText(LoginActivity.this, "Complete all fields", Toast.LENGTH_SHORT).show();
+        email = activityLoginBinding.emailText.getText().toString().trim();
+        password = activityLoginBinding.passwordInput.getText().toString().trim();
+        if (validate()) {
+            mViewModel.SignInWithEmail(email, password);
+        } else {
+            enableViews(true);
+            progressDialog.dismiss();
         }
-
-
     }
 
+    public void gotoSignup(View view) {
+        Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+        startActivity(intent);
+    }
+    public boolean validate() {
+        if (TextUtils.isEmpty(email) )  {
+            activityLoginBinding.emailText.setText("Email is required");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            activityLoginBinding.passwordInput.setText("Password is required");
+            return false;
+        }
+
+        return true;
+    }
+
+    public void fbLogin(View view) {
+        mViewModel.fbLogin(this);
+    }
+
+    public void enableViews(boolean toggle) {
+        activityLoginBinding.loginButton.setEnabled(toggle);
+        activityLoginBinding.loginButton.setClickable(toggle);
+
+        activityLoginBinding.emailText.setEnabled(toggle);
+        activityLoginBinding.emailText.setClickable(toggle);
+
+        activityLoginBinding.passwordInput.setEnabled(toggle);
+        activityLoginBinding.passwordInput.setClickable(toggle);
+    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
-                onLoginSuccess(false);
-            }
-        }
-        else if (requestCode == FACEBOOK_REQUEST_CODE) {
-            Log.d(TAG, "onActivityResult"+ " " + "Facebook request");
-            mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        }
-
+        mViewModel.handleOnActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "request code " + requestCode + " result code " + resultCode);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -208,36 +169,25 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSuccess(boolean isProvider) {
-        if (isProvider) {
-            Intent intent = new Intent(this, ServiceProviderMainActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
+//    public void onLoginSuccess(boolean isProvider) {
+//        if (isProvider) {
+//            Intent intent = new Intent(this, ServiceProviderMainActivity.class);
+//            startActivity(intent);
+//            finish();
+//        } else {
+//            Intent intent = new Intent(this, MainActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
+//    }
 
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+//    public void onLoginFailed() {
+//        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+//
+//        loginButton.setEnabled(true);
+//    }
 
-        loginButton.setEnabled(true);
-    }
 
-    public boolean validate() {
-        boolean valid = true;
-
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-
-        if (TextUtils.isEmpty(email)&& TextUtils.isEmpty(password))
-        {
-            valid = false;
-        }
-        return valid;
-    }
 
     public void checkUserExistence() {
 //        final String user_id = mAuth.getCurrentUser().getUid();
@@ -294,4 +244,6 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 //        });
     }
+
+
 }
