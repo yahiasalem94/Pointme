@@ -1,72 +1,90 @@
 package com.example.pointme.adapters;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
-import com.example.pointme.models.CategoriesItem;
+import com.example.pointme.models.CategoriesModel;
+import com.example.pointme.utils.GlideApp;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesItemHolder> {
 
-    private List<CategoriesItem> itemList;
-    private RecyclerViewClickListener mRecyclerViewListener;
+    private static final String TAG = CategoriesAdapter.class.getSimpleName();
+    private ArrayList<String> itemList;
+    private Context mContext;
+    private CategoriesAdapterOnClickHandler mClickHandler;
 
-    public CategoriesAdapter(List<CategoriesItem> itemList, RecyclerViewClickListener recyclerViewListener) {
-        this.itemList = itemList;
-        this.mRecyclerViewListener = recyclerViewListener;
+    public interface CategoriesAdapterOnClickHandler {
+        void onClick(int position);
     }
 
-    public void newList(List<CategoriesItem> itemList) {
-        if (this.itemList != null) {
-            this.itemList.clear();
-        }
+    public CategoriesAdapter(Context mContext, CategoriesAdapterOnClickHandler clickHandler) {
+        this.mClickHandler = clickHandler;
+        this.mContext = mContext;
+    }
 
+    public void setCategoriesData(ArrayList<String> itemList) {
         this.itemList = itemList;
         notifyDataSetChanged();
     }
 
     @Override
     public CategoriesItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Get LayoutInflater object.
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         // Inflate the RecyclerView item layout xml.
         View itemView = layoutInflater.inflate(R.layout.categories_card_layout, parent, false);
 
         // Create and return our custom item Recycler View Item Holder object.
-        return new CategoriesItemHolder(itemView);
+        return new CategoriesItemHolder(itemView, mClickHandler);
     }
 
     @Override
     public void onBindViewHolder(CategoriesItemHolder holder, final int position) {
-        if(itemList!=null) {
-            // Get item in list.
-            CategoriesItem item = itemList.get(position);
+        GlideApp.with(mContext)
+                .load(itemList.get(position))
+                .apply(new RequestOptions()
+                        .placeholder(new ColorDrawable(Color.BLACK))
+                        .fitCenter()
+                        .dontAnimate())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        Log.d(TAG, "onLoadFailed " + e.getMessage());
+                        return false;
+                    }
 
-            if (item != null) {
-                // Set image resource id.
-                holder.getImageView().setImageResource(item.getImageId());
-            }
-        }
-        holder.getImageView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mRecyclerViewListener.onClick(itemList.get(position).getName());
-            }
-        });
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        Log.d(TAG, "onResourveReady" );
+                        return false;
+                    }
+                })
+                .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        int ret = 0;
-        if(itemList!=null)
-        {
-            ret = itemList.size();
-        }
-        return ret;
+        if (null == itemList) return 0;
+        return itemList.size();
     }
 }

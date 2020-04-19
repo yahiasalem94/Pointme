@@ -6,17 +6,21 @@ import android.widget.ImageView;
 
 import com.example.pointme.R;
 
-public class CategoriesItemHolder extends RecyclerView.ViewHolder {
+public class CategoriesItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView imageView = null;
+        public final ImageView imageView;
+        private final CategoriesAdapter.CategoriesAdapterOnClickHandler mClickHandler;
 
-        public CategoriesItemHolder(View itemView) {
+        public CategoriesItemHolder(View itemView, CategoriesAdapter.CategoriesAdapterOnClickHandler mClickHandler) {
             super(itemView);
             imageView = itemView.findViewById(R.id.card_view_image);
+            this.mClickHandler = mClickHandler;
+            itemView.setOnClickListener(this);
         }
 
-        public ImageView getImageView() {
-            return imageView;
-        }
+    @Override
+    public void onClick(View v) {
+        mClickHandler.onClick(getAdapterPosition());
+    }
 
 }

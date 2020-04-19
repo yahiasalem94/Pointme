@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -14,11 +15,9 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class FirebaseQueryLiveData extends LiveData<QuerySnapshot> {
+public class FirebaseQueryLiveData extends LiveData<DocumentSnapshot> {
     private static final String TAG = FirebaseQueryLiveData.class.getSimpleName();
 
-    private Query query;
-    private FirebaseFirestore mDatabase;
     private DocumentReference documentReference;
 
     private final EventListener listener = new MyValueEventListener();
@@ -28,8 +27,6 @@ public class FirebaseQueryLiveData extends LiveData<QuerySnapshot> {
     private final Handler handler = new Handler();
     
     public FirebaseQueryLiveData(DocumentReference documentReference) {
-        this.mDatabase = mDatabase;
-        this.query = query;
         this.documentReference = documentReference;
     }
 
@@ -66,9 +63,9 @@ public class FirebaseQueryLiveData extends LiveData<QuerySnapshot> {
     }
 
 
-    private class MyValueEventListener implements EventListener<QuerySnapshot> {
+    private class MyValueEventListener implements EventListener<DocumentSnapshot> {
         @Override
-        public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
+        public void onEvent(@Nullable DocumentSnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
             if (e != null) {
                 Log.e(TAG, "Can't listen to query snapshots: " + querySnapshot + ":::" + e.getMessage());
             } else {

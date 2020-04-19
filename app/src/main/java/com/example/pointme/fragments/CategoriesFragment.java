@@ -1,8 +1,14 @@
 package com.example.pointme.fragments;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,29 +20,32 @@ import android.view.ViewGroup;
 
 
 import com.example.pointme.interfaces.RecyclerViewClickListener;
-import com.example.pointme.interfaces.CategoriesFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.CategoriesAdapter;
 import com.example.pointme.decorator.GridSpacingItemDecorator;
-import com.example.pointme.models.CategoriesItem;
-import com.example.pointme.backendCommunications.DBCom;
+import com.example.pointme.models.CategoriesModel;
 import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.viewModels.CategoriesViewModel;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.pointme.activities.MainActivity.nameOfProvider;
 
-public class CategoriesFragment extends Fragment implements RecyclerViewClickListener, CategoriesFragmentDBInt {
+public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoriesAdapterOnClickHandler {
 
     private Toolbar toolbar;
 
-    private List<CategoriesItem> categoriesList = null;
+    private List<CategoriesModel> categoriesList = null;
+    private CategoriesModel categoriesModel;
 
     private CategoriesAdapter categoriesAdapter;
     private ArrayList<String> serviceProviders;
     private String TAG = "CategoriesFragment";
 
+    private CategoriesViewModel categoriesViewModel;
+    private LiveData<DocumentSnapshot> liveData;
 
     /* Views */
     private RecyclerView recyclerView;
@@ -47,8 +56,12 @@ public class CategoriesFragment extends Fragment implements RecyclerViewClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         serviceProviders = new ArrayList<>();
-        categoriesAdapter = new CategoriesAdapter(null, this);
-        DBCom.getCategoriesList(this);
+        categoriesAdapter = new CategoriesAdapter(getActivity(), this);
+//        DBCom.getCategoriesList(this);
+
+        categoriesViewModel = new ViewModelProvider(this).get(CategoriesViewModel.class);
+
+
     }
 
     @Override
@@ -60,7 +73,30 @@ public class CategoriesFragment extends Fragment implements RecyclerViewClickLis
         // Create the recyclerview.
         setupRecyclerView();
 
+
         return mRootview;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        liveData = categoriesViewModel.getDataSnapshotLiveData();
+
+        liveData.observe(getViewLifecycleOwner(), new Observer<DocumentSnapshot>() {
+            @Override
+            public void onChanged(@Nullable DocumentSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    if (dataSnapshot.exists()) {
+                        // update the UI here with values in the snapshot
+                        Log.d(TAG, dataSnapshot.toString());
+                        categoriesModel = dataSnapshot.toObject(CategoriesModel.class);
+                        categoriesAdapter.setCategoriesData(categoriesModel.getImageUrls());
+//                        Log.d(TAG, categoriesModel.getCrossfit());
+                    }
+                }
+            }
+        });
     }
 
     private void setupRecyclerView() {
@@ -76,44 +112,23 @@ public class CategoriesFragment extends Fragment implements RecyclerViewClickLis
     }
 
 
-    @Override
-    public void onClick(String title) {
-        Log.d(TAG, title);
-        ListOfServiceProvidersFragment fragment = new ListOfServiceProvidersFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(nameOfProvider, title);
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
-        transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+//    @Override
+//    public void onClick(String title) {
+//        Log.d(TAG, "CategoryName");
+//        ListOfServiceProvidersFragment fragment = new ListOfServiceProvidersFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putString(nameOfProvider, "CategoryName");
+//        fragment.setArguments(bundle);
+//        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+//        transaction.replace(R.id.frame_container, fragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
+
 
     @Override
-    public void onClickPI(ProfileInfo profileInfo) {
+    public void onClick(int position) {
 
-    }
-
-    @Override
-    public void setCategoriesList(ArrayList<String> servicesList) {
-        categoriesList = new ArrayList<>();
-        for (int i = 0; i < servicesList.size(); i++) {
-            if (servicesList.get(i).equals(getString(R.string.crossfit))) {
-                Log.i(TAG, "Adding category crossfit");
-                categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.crossfit_1));
-            } else if (servicesList.get(i) .equals( getString(R.string.Yoga))) {
-                Log.i(TAG, "Adding category yoga");
-                categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.yoga_1));
-            } else if (servicesList.get(i) .equals( getString(R.string.Hairdressers))) {
-                Log.i(TAG, "Adding category hairdressers");
-                categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.hairdresser_1));
-            } else if (servicesList.get(i) .equals( getString(R.string.Makeup))) {
-                categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.makeup_1));
-            } else if (servicesList.get(i) .equals( getString(R.string.Swimming))) {
-                categoriesList.add(new CategoriesItem(servicesList.get(i), R.drawable.swimming_pool_1));
-            }
-        }
-        categoriesAdapter.newList(categoriesList);
     }
 }
