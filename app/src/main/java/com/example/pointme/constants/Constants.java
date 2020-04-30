@@ -9,7 +9,18 @@ public class Constants {
 
     public static final int EVENTTYPE = 1;
     public static final int APPOINTMENTTYPE = 2;
+
+    /* Firestore Collections */
     public static final String USERS_NODE = "Users";
+    public static final String APP_DATA_NODE = "AppData";
+    public static final String SERVICE_PROVIDERS = "ServiceProviders";
+
+    /* Firestore Documents */
+    public static final String SERVICES = "Services";
+
+    /* Firestore Queries */
+    public static final String SERVICE = "service";
+
     public static final String EVENTS = "Events";
     public static final String APPOINTMENTS = "Appointments";
     public static final String BOOKINGS = "Bookings";
@@ -32,4 +43,5 @@ public class Constants {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({EVENTTYPE, APPOINTMENTTYPE})
     public @interface ScheduleType { }
+
 }

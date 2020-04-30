@@ -5,9 +5,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,30 +17,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.pointme.constants.ServerResult;
-import com.example.pointme.interfaces.RecyclerViewClickListener;
-import com.example.pointme.interfaces.ListOfSPFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProvidersAdapter;
-import com.example.pointme.models.ProfileInfo;
-import com.example.pointme.backendCommunications.DBCom;
+import com.example.pointme.models.ServiceProvider;
+import com.example.pointme.viewModels.ProvidersViewModel;
+import com.example.pointme.viewModels.ProvidersViewModelFactory;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import static com.example.pointme.activities.MainActivity.nameOfProvider;
-import static com.example.pointme.activities.MainActivity.profileInfoTag;
+import static com.example.pointme.activities.MainActivity.NAME_OF_PROVIDER;
 
-public class ListOfServiceProvidersFragment extends Fragment implements RecyclerViewClickListener, ListOfSPFragmentDBInt
-{
+public class ListOfServiceProvidersFragment extends Fragment implements ProvidersAdapter.ProvidersAdapterOnClickHandler {
     private String TAG = ListOfServiceProvidersFragment.class.getSimpleName();
-    private String title;
+    private String service;
     private ProvidersAdapter providersAdapter;
-    private ArrayList<String> serviceProviders;
+    private ArrayList<ServiceProvider> serviceProviders;
     private Context context;
-//    private DatabaseReference mDatabase;
 
     private LinearLayoutManager linearLayoutManager;
+
     /* View */
     private View mRootview;
     private RecyclerView list;
@@ -46,25 +45,32 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
     private ProgressBar mProgressBar;
     private Toolbar toolbar;
 
+    private ServiceProvider serviceProvidersModel;
+
+    private ProvidersViewModelFactory providersViewModelFactory;
+    private ProvidersViewModel providersViewModel;
+    private LiveData<QuerySnapshot> liveData;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-//        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         toolbar = ((MainActivity) getActivity()).toolbar;
 
         if (getArguments() != null) {
-            title = getArguments().getString(nameOfProvider);
-            toolbar.setTitle(title.toUpperCase());
-            serviceProviders = new ArrayList<>();
+            service = getArguments().getString(NAME_OF_PROVIDER);
+            toolbar.setTitle(service.toUpperCase());
+
+            providersViewModelFactory = new ProvidersViewModelFactory(service);
+            providersViewModel = new ViewModelProvider(ListOfServiceProvidersFragment.this, providersViewModelFactory).get(ProvidersViewModel.class);
         } else {
-            title = getString(R.string.Pointme);
+            toolbar.setTitle(getString(R.string.Pointme).toUpperCase());
         }
 
+        serviceProviders = new ArrayList<>();
+        providersAdapter = new ProvidersAdapter(getActivity(), this);
 
-        providersAdapter = new ProvidersAdapter(null, this, getActivity());
-        DBCom.getProfilesByService(this, title);
     }
 
     @Override
@@ -85,6 +91,22 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mProgressBar.setVisibility(View.VISIBLE);
+        liveData = providersViewModel.getDataSnapshotLiveData();
+
+        liveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
+            if (dataSnapshot != null) {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
+                    serviceProvidersModel = dataSnapshot.getDocuments().get(i).toObject(ServiceProvider.class);
+                    serviceProviders.add(serviceProvidersModel);
+                }
+                providersAdapter.setProvidersData(serviceProviders);
+                showDataView();
+            } else {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                showErrorMessage();
+            }
+        });
     }
 
     private void setupRecyclerView() {
@@ -108,32 +130,22 @@ public class ListOfServiceProvidersFragment extends Fragment implements Recycler
         errorTextView.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onClick(String title) {
 
-    }
-
-    @Override
-    public void onClickPI(ProfileInfo info) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(profileInfoTag, info);
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
-        transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+//    @Override
+//    public void onClickPI(ProfileInfo info) {
+//        ProfileFragment fragment = new ProfileFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable(PROFILE_INFO, info);
+//        fragment.setArguments(bundle);
+//        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+//        transaction.replace(R.id.frame_container, fragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 
     @Override
-    public void setSPList(int serverResult, ArrayList<ProfileInfo> profilesList) {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        if (serverResult == ServerResult.SUCCESS) {
-            providersAdapter.newList(profilesList);
-            list.getAdapter().notifyDataSetChanged();
-        } else {
-            showErrorMessage();
-        }
+    public void onClick(int position) {
+
     }
 }

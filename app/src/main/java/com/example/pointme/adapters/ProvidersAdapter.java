@@ -12,41 +12,41 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
-import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.models.ServiceProvider;
 import com.example.pointme.utils.SharedPreference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> {
 
-    private List<ProfileInfo> profileInfosList;
-    private RecyclerViewClickListener mRecyclerViewListener;
+    private List<ServiceProvider> profileInfosList;
     private SharedPreference sharedPreference;
     private Context context;
+    private ProvidersAdapterOnClickHandler mClickHandler;
 
-    public ProvidersAdapter(List<ProfileInfo> profileInfosList, RecyclerViewClickListener mRecyclerViewListener, Context context) {
-        this.profileInfosList = profileInfosList;
-        this.mRecyclerViewListener = mRecyclerViewListener;
+    public interface ProvidersAdapterOnClickHandler {
+        void onClick(int position);
+    }
+
+    public ProvidersAdapter(Context context, ProvidersAdapterOnClickHandler mClickHandler) {
+        this.mClickHandler = mClickHandler;
         this.context = context;
         sharedPreference = new SharedPreference();
     }
 
-    public void newList(List<ProfileInfo> profileInfosList) {
-        if (this.profileInfosList != null) {
-            this.profileInfosList.clear();
-        }
+    public void setProvidersData(ArrayList<ServiceProvider> profileInfosList) {
         this.profileInfosList = profileInfosList;
+        notifyDataSetChanged();
     }
-
     @Override
-    public void onBindViewHolder(ProvidersItemHolder contactViewHolder, int i) {
-        final ProfileInfo info = profileInfosList.get(i);
-        contactViewHolder.getNameText().setText(info.getName());
+    public void onBindViewHolder(ProvidersItemHolder holder, int i) {
+        final ServiceProvider info = profileInfosList.get(i);
+        holder.name.setText(info.getName());
 
         if (checkFavoriteItem(info)) {
-            contactViewHolder.getFavoritesButton().setChecked(true);
+            holder.favoritesButton.setChecked(true);
         }
 
         final ScaleAnimation scaleAnimation = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f,
@@ -54,7 +54,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
         scaleAnimation.setDuration(500);
         BounceInterpolator bounceInterpolator = new BounceInterpolator();
         scaleAnimation.setInterpolator(bounceInterpolator);
-        contactViewHolder.getFavoritesButton().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.favoritesButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 //animation
@@ -73,11 +73,11 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
     }
 
     /*Checks whether a particular product exists in SharedPreferences*/
-    public boolean checkFavoriteItem(ProfileInfo checkInfo) {
+    public boolean checkFavoriteItem(ServiceProvider checkInfo) {
         boolean check = false;
-        List<ProfileInfo> favorites = sharedPreference.getFavorites(context);
+        List<ServiceProvider> favorites = sharedPreference.getFavorites(context);
         if (favorites != null) {
-            for (ProfileInfo info : favorites) {
+            for (ServiceProvider info : favorites) {
                 if (info.equals(checkInfo)) {
                     check = true;
                     break;
@@ -98,10 +98,10 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecyclerViewListener.onClickPI(profileInfosList.get(i));
+//                mRecyclerViewListener.onClickPI(profileInfosList.get(i));
             }
         });
-        return new ProvidersItemHolder(itemView);
+        return new ProvidersItemHolder(itemView, mClickHandler);
     }
 
     @Override
