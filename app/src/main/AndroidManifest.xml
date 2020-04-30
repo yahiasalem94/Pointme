@@ -32,7 +32,8 @@
 
         <activity
             android:name=".activities.SignupActivity"
-            android:theme="@style/AppTheme.Dark" />
+            android:theme="@style/AppTheme.Dark" >
+        </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
