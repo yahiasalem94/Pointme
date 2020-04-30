@@ -18,7 +18,7 @@ import com.example.pointme.interfaces.ClientBookingsDBInt;
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.models.Booking;
-import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.models.ServiceProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
     }
 
     @Override
-    public void onClickPI(ProfileInfo profileInfo) {
+    public void onClickPI(ServiceProvider profileInfo) {
 
     }
 
@@ -82,13 +82,13 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
         actionBar.setTitle("Bookings");
     }
 
-    private List<ProfileInfo> createList() {
+    private List<ServiceProvider> createList() {
 
-        List<ProfileInfo> result = new ArrayList<>();
+        List<ServiceProvider> result = new ArrayList<>();
         ArrayList<String> y = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            ProfileInfo info = new ProfileInfo();
+            ServiceProvider info = new ServiceProvider();
             info.setName("yahia");
             result.add(info);
         }

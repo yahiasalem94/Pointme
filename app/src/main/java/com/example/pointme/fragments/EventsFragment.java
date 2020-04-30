@@ -22,10 +22,9 @@ import com.example.pointme.interfaces.ProfileAdapterCallback;
 import com.example.pointme.interfaces.EventsFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
-import com.example.pointme.backendCommunications.DBCom;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Event;
-import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.models.ServiceProvider;
 
 import java.util.ArrayList;
 
@@ -33,7 +32,7 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
 
     private static final String ARG_PARAM1 = "param1";
     private ProfileAdapter profileAdapter;
-    private ProfileInfo profileInfo;
+    private ServiceProvider profileInfo;
     private final String TAG = "EventFragment";
     /*Views*/
     private RecyclerView recyclerList;
@@ -45,13 +44,13 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            profileInfo = (ProfileInfo) getArguments().getSerializable("ProfileInfo");
+            profileInfo = (ServiceProvider) getArguments().getSerializable("ProfileInfo");
         } else {
             profileInfo = null;
         }
 
 
-        DBCom.getSPEventsAndAppointments(this, profileInfo.getKey());
+//        DBCom.getSPEventsAndAppointments(this, profileInfo.getKey());
     }
 
 
@@ -122,7 +121,7 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         /* loadFragment */
         DatePickerFragment fragment = new DatePickerFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("ProfileInfo", profileInfo);
+        bundle.putParcelable("ProfileInfo", profileInfo);
         if(type == Type.EVENT){
             bundle.putParcelable("Event", (Event) object);
         }else{

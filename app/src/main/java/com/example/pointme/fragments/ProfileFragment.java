@@ -22,9 +22,9 @@ import android.widget.Toast;
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProfileAdapter;
-import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.models.ServiceProvider;
 
-import static com.example.pointme.activities.MainActivity.profileInfoTag;
+import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
@@ -33,7 +33,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private ProfileAdapter profileAdapter;
     private static final String ARG_PARAM1 = "param1";
     private String name;
-    private ProfileInfo profileInfo;
+    private ServiceProvider profileInfo;
 
     private String phoneNumber = "tel:";
     private String instagramLink;
@@ -53,7 +53,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            profileInfo = (ProfileInfo) getArguments().getSerializable(profileInfoTag);
+            profileInfo = (ServiceProvider) getArguments().getSerializable(PROFILE_INFO);
         }
 
         toolbar = ((MainActivity) getActivity()).toolbar;
@@ -163,7 +163,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "loading fragment");
         EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("ProfileInfo", profileInfo);
+        bundle.putParcelable("ProfileInfo", profileInfo);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);

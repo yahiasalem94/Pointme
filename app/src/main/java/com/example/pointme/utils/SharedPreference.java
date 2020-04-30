@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.models.ServiceProvider;
 import com.google.gson.Gson;
 
 public class SharedPreference {
@@ -21,7 +21,7 @@ public class SharedPreference {
     }
 
     // This four methods are used for maintaining favorites.
-    public void saveFavorites(Context context, List<ProfileInfo> favorites) {
+    public void saveFavorites(Context context, List<ServiceProvider> favorites) {
         SharedPreferences settings;
         Editor editor;
 
@@ -36,25 +36,25 @@ public class SharedPreference {
         editor.commit();
     }
 
-    public void addFavorite(Context context, ProfileInfo info) {
-        List<ProfileInfo> favorites = getFavorites(context);
+    public void addFavorite(Context context, ServiceProvider info) {
+        List<ServiceProvider> favorites = getFavorites(context);
         if (favorites == null)
             favorites = new ArrayList<>();
         favorites.add(info);
         saveFavorites(context, favorites);
     }
 
-    public void removeFavorite(Context context, ProfileInfo info) {
-        ArrayList<ProfileInfo> favorites = getFavorites(context);
+    public void removeFavorite(Context context, ServiceProvider info) {
+        ArrayList<ServiceProvider> favorites = getFavorites(context);
         if (favorites != null) {
             favorites.remove(info);
             saveFavorites(context, favorites);
         }
     }
 
-    public ArrayList<ProfileInfo> getFavorites(Context context) {
+    public ArrayList<ServiceProvider> getFavorites(Context context) {
         SharedPreferences settings;
-        List<ProfileInfo> favorites;
+        List<ServiceProvider> favorites;
 
         settings = context.getSharedPreferences(PREFS_NAME,
                 Context.MODE_PRIVATE);
@@ -62,14 +62,14 @@ public class SharedPreference {
         if (settings.contains(FAVORITES)) {
             String jsonFavorites = settings.getString(FAVORITES, null);
             Gson gson = new Gson();
-            ProfileInfo[] favoriteItems = gson.fromJson(jsonFavorites,
-                    ProfileInfo[].class);
+            ServiceProvider[] favoriteItems = gson.fromJson(jsonFavorites,
+                    ServiceProvider[].class);
 
             favorites = Arrays.asList(favoriteItems);
             favorites = new ArrayList<>(favorites);
         } else
             return null;
 
-        return (ArrayList<ProfileInfo>) favorites;
+        return (ArrayList<ServiceProvider>) favorites;
     }
 }

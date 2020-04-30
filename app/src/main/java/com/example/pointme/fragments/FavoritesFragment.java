@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.adapters.FavoritesAdapter;
-import com.example.pointme.models.ProfileInfo;
+import com.example.pointme.models.ServiceProvider;
 import com.example.pointme.utils.SharedPreference;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class FavoritesFragment extends Fragment implements RecyclerViewClickList
     private static final String ARG_PARAM1 = "param1";
     private String title;
     private SharedPreference sharedPreference;
-    private List<ProfileInfo> favorites;
+    private List<ServiceProvider> favorites;
     private String TAG = "FavoriteFragment";
 
     private RecyclerView list;
@@ -104,7 +104,7 @@ public class FavoritesFragment extends Fragment implements RecyclerViewClickList
 
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(ARG_PARAM1, title);
+//        bundle.putString(ARG_PARAM1, title);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
@@ -114,7 +114,7 @@ public class FavoritesFragment extends Fragment implements RecyclerViewClickList
     }
 
     @Override
-    public void onClickPI(ProfileInfo profileInfo) {
+    public void onClickPI(ServiceProvider profileInfo) {
 
     }
 
@@ -127,16 +127,16 @@ public class FavoritesFragment extends Fragment implements RecyclerViewClickList
         actionBar.setTitle("Favorites");
     }
 
-    private List<ProfileInfo> createList() {
+    private List<ServiceProvider> createList() {
 
-        List<ProfileInfo> result = new ArrayList<>();
+        List<ServiceProvider> result = new ArrayList<>();
         ArrayList<String> y = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
-            ProfileInfo info = new ProfileInfo();
-            info.setName("yahia" + i);
-            info.setTitle(title);
-            result.add(info);
+//            ServiceProvider info = new ServiceProvider();
+//            info.setName("yahia" + i);
+//            info.setTitle(title);
+//            result.add(info);
         }
 
         return result;
