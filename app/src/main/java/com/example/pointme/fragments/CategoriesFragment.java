@@ -19,19 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.adapters.CategoriesAdapter;
 import com.example.pointme.decorator.GridSpacingItemDecorator;
 import com.example.pointme.models.CategoriesModel;
-import com.example.pointme.models.ProfileInfo;
 import com.example.pointme.viewModels.CategoriesViewModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.pointme.activities.MainActivity.nameOfProvider;
+import static com.example.pointme.activities.MainActivity.NAME_OF_PROVIDER;
 
 public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoriesAdapterOnClickHandler {
 
@@ -41,7 +39,6 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     private CategoriesModel categoriesModel;
 
     private CategoriesAdapter categoriesAdapter;
-    private ArrayList<String> serviceProviders;
     private String TAG = "CategoriesFragment";
 
     private CategoriesViewModel categoriesViewModel;
@@ -55,7 +52,6 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        serviceProviders = new ArrayList<>();
         categoriesAdapter = new CategoriesAdapter(getActivity(), this);
 //        DBCom.getCategoriesList(this);
 
@@ -92,7 +88,6 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
                         Log.d(TAG, dataSnapshot.toString());
                         categoriesModel = dataSnapshot.toObject(CategoriesModel.class);
                         categoriesAdapter.setCategoriesData(categoriesModel.getImageUrls());
-//                        Log.d(TAG, categoriesModel.getCrossfit());
                     }
                 }
             }
@@ -111,24 +106,17 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         recyclerView.setAdapter(categoriesAdapter);
     }
 
-
-//    @Override
-//    public void onClick(String title) {
-//        Log.d(TAG, "CategoryName");
-//        ListOfServiceProvidersFragment fragment = new ListOfServiceProvidersFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putString(nameOfProvider, "CategoryName");
-//        fragment.setArguments(bundle);
-//        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
-//        transaction.replace(R.id.frame_container, fragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
-
-
     @Override
     public void onClick(int position) {
-
+        Log.d(TAG, "CategoryName");
+        ListOfServiceProvidersFragment fragment = new ListOfServiceProvidersFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(NAME_OF_PROVIDER, categoriesModel.getCategoriesNames().get(position));
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

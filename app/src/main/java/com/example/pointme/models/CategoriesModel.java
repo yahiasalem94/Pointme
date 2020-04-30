@@ -13,6 +13,7 @@ public class CategoriesModel {
 //    private String imageIds;
     private HashMap<String, String> categories;
     private ArrayList<String> images = new ArrayList<>();
+    private ArrayList<String> categorieNames = new ArrayList<>();
 
     public CategoriesModel() {
     }
@@ -32,5 +33,9 @@ public class CategoriesModel {
 
     public ArrayList<String> getImageUrls() {
         return images = new ArrayList<>(categories.values());
+    }
+
+    public ArrayList<String> getCategoriesNames() {
+        return categorieNames = new ArrayList<>(categories.keySet());
     }
 }

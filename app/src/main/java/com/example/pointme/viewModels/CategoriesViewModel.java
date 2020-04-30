@@ -11,13 +11,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import static com.example.pointme.constants.Constants.APP_DATA;
+import static com.example.pointme.constants.Constants.APP_DATA_NODE;
 
 public class CategoriesViewModel extends AndroidViewModel {
 
     private static final String TAG = CategoriesViewModel.class.getSimpleName();
     private static final FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
-    private static final DocumentReference DOCUMENT_REFERENCE = mDatabase.collection(APP_DATA).document(Constants.SERVICES);
+    private static final DocumentReference DOCUMENT_REFERENCE = mDatabase.collection(APP_DATA_NODE).document(Constants.SERVICES);
     private final FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(DOCUMENT_REFERENCE);
 
     public CategoriesViewModel(@NonNull Application application) {

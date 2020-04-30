@@ -6,19 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.example.pointme.activities.MainActivity">
 
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/my_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:minHeight="?attr/actionBarSize"
-            style="@style/Toolbar"
-            app:theme="@style/AppTheme.AppBarOverlay"
-            android:elevation="5dp">
-
-
-        </androidx.appcompat.widget.Toolbar>
-
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:elevation="5dp"
+        style="@style/Toolbar">
+<!--        android:theme="@style/AppTheme.AppBarOverlay">-->
+    </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
         android:id="@+id/relative_layout"
@@ -34,6 +30,7 @@
             android:layout_above="@+id/navigation"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/navigation"
             android:layout_width="match_parent"
@@ -46,6 +43,7 @@
             app:itemIconTint="@color/selector_bottombar_item"
             app:itemTextColor="@android:color/white"
             app:labelVisibilityMode="unlabeled"
+            app:layout_insetEdge="bottom"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             app:menu="@menu/navigationbar" />
 

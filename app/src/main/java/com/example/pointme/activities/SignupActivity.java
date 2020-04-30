@@ -126,7 +126,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-    public void gotologin(View view) {
+    public void gotoLogin(View view) {
         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

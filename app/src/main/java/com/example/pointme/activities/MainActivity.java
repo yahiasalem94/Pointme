@@ -30,135 +30,41 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
 //    private DatabaseReference mDatabase;
     private BottomNavigationView bottomNavigationView;
     public Toolbar toolbar;
-    private TextView titleView;
-    private TextView subTitleView;
-    private ImageView backButton;
 
     private Event mEvent;
     private Appointment mAppointment;
     private Booking mBooking;
 
     private ArrayList<String> mDates;
-    private ActionBar actionBar;
 
     private CategoriesFragment categoriesFragment;
 
     /* Bundle Tags */
-    public static final String nameOfProvider = "nameOfProvider";
-    public static final String profileInfoTag = "ProfileInfo";
+    public static final String NAME_OF_PROVIDER = "nameOfProvider";
+    public static final String PROFILE_INFO = "ProfileInfo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
-       /* if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-        }
-        if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
-        //make fully Android Transparent Status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }*/
-
-        mAuth = FirebaseAuth.getInstance();
 //        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-//        titleView = findViewById(R.id.titleView);
-//        subTitleView = findViewById(R.id.subTitleView);
-//        backButton = findViewById(R.id.backButton);
-
         toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
         bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-       /* if (mAuth.getCurrentUser() == null)
-        {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
-        else
-        {*/
-       categoriesFragment = new CategoriesFragment();
-       loadFragment(categoriesFragment, getString(R.string.categories));
-
-       bottomNavigationView.setOnNavigationItemSelectedListener(
-               new BottomNavigationView.OnNavigationItemSelectedListener() {
-                   @Override
-                   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                       switch (item.getItemId()) {
-                           case R.id.categories:
-                               Log.i(TAG, "Loading categories fragment");
-                               loadFragment(categoriesFragment, getString(R.string.categories));
-                               return true;
-                           case R.id.favorites:
-                               actionBar.show();
-                               Log.i(TAG, "Loading favorites fragment");
-                               FavoritesFragment favoritesFragment = new FavoritesFragment();
-                               loadFragment(favoritesFragment, getString(R.string.favorites));
-                               return true;
-                           case R.id.search:
-                               actionBar.show();
-                               Log.i(TAG, "Loading favorites fragment");
-                               SearchFragment searchFragment = new SearchFragment();
-                               loadFragment(searchFragment, getString(R.string.search));
-                               return true;
-                           case R.id.booking:
-                               actionBar.show();
-                               Log.i(TAG, "Loading booking fragment");
-                               MyBookingFragment bookingFragment = new MyBookingFragment();
-                               loadFragment(bookingFragment, getString(R.string.booking));
-                               return true;
-                           case R.id.more:
-                               actionBar.show();
-                               Log.i(TAG, "Loading settings fragment");
-                               SettingsFragment settingsFragment = new SettingsFragment();
-                               loadFragment(settingsFragment, "SETTINGS");
-                               return true;
-                       }
-                       return false;
-                   }
-               });
-    }
-//    }
-
-    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
+        categoriesFragment = new CategoriesFragment();
+        loadFragment(categoriesFragment, getString(R.string.categories));
     }
 
-//    public void setTitle(String title) {
-//        if (titleView != null) {
-//            if (title.isEmpty()) {
-//                titleView.setVisibility(View.INVISIBLE);
-//                subTitleView.setText(getString(R.string.subtitle));
-//                backButton.setVisibility(View.VISIBLE);
-//            } else {
-//                subTitleView.setText(getString(R.string.subtitle));
-//                titleView.setText(title);
-//                subTitleView.setVisibility(View.VISIBLE);
-//                backButton.setVisibility(View.VISIBLE);
-//            }
-//        }
-//    }
    /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -184,9 +90,41 @@ public class MainActivity extends AppCompatActivity{
     public void loadFragment(Fragment fragment, String title) {
         // load fragment
         Log.d(TAG, "loading fragment");
+        setTitle(title);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.categories:
+                Log.i(TAG, "Loading categories fragment");
+                loadFragment(categoriesFragment, getString(R.string.categories));
+                return true;
+            case R.id.favorites:
+                Log.i(TAG, "Loading favorites fragment");
+                FavoritesFragment favoritesFragment = new FavoritesFragment();
+                loadFragment(favoritesFragment, getString(R.string.favorites));
+                return true;
+            case R.id.search:
+                Log.i(TAG, "Loading favorites fragment");
+                SearchFragment searchFragment = new SearchFragment();
+                loadFragment(searchFragment, getString(R.string.search));
+                return true;
+            case R.id.booking:
+                Log.i(TAG, "Loading booking fragment");
+                MyBookingFragment bookingFragment = new MyBookingFragment();
+                loadFragment(bookingFragment, getString(R.string.booking));
+                return true;
+            case R.id.more:
+                Log.i(TAG, "Loading settings fragment");
+                SettingsFragment settingsFragment = new SettingsFragment();
+                loadFragment(settingsFragment, "SETTINGS");
+                return true;
+        }
+        return false;
     }
 }
