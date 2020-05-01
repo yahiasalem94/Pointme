@@ -38,10 +38,10 @@ public class SharedPreference {
 
     public void addFavorite(Context context, ServiceProvider info) {
         List<ServiceProvider> favorites = getFavorites(context);
-        if (favorites == null)
-            favorites = new ArrayList<>();
-        favorites.add(info);
-        saveFavorites(context, favorites);
+        if (!favorites.contains(info)){
+            favorites.add(info);
+            saveFavorites(context, favorites);
+        }
     }
 
     public void removeFavorite(Context context, ServiceProvider info) {
@@ -67,9 +67,9 @@ public class SharedPreference {
 
             favorites = Arrays.asList(favoriteItems);
             favorites = new ArrayList<>(favorites);
-        } else
-            return null;
-
+        } else {
+            return new ArrayList<>();
+        }
         return (ArrayList<ServiceProvider>) favorites;
     }
 }

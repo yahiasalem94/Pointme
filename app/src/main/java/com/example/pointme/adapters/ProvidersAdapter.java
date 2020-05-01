@@ -21,95 +21,66 @@ import java.util.List;
 
 public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersItemHolder> {
 
-    private List<ServiceProvider> profileInfosList;
+    private List<ServiceProvider> serviceProviderList;
     private SharedPreference sharedPreference;
     private Context context;
     private ProvidersAdapterOnClickHandler mClickHandler;
+    private FavoriteOnClickHandler mFavoriteClickHandler;
 
     public interface ProvidersAdapterOnClickHandler {
         void onClick(int position);
     }
 
-    public ProvidersAdapter(Context context, ProvidersAdapterOnClickHandler mClickHandler) {
+    public interface FavoriteOnClickHandler {
+        void onFavoriteClick(CompoundButton compoundButton, boolean isChecked, int position);
+    }
+
+    public ProvidersAdapter(Context context, SharedPreference sharedPreference, ProvidersAdapterOnClickHandler mClickHandler, FavoriteOnClickHandler mFavoriteClickHandler ) {
         this.mClickHandler = mClickHandler;
+        this.mFavoriteClickHandler = mFavoriteClickHandler;
         this.context = context;
-        sharedPreference = new SharedPreference();
+        this.sharedPreference = sharedPreference;
     }
 
-    public void setProvidersData(ArrayList<ServiceProvider> profileInfosList) {
-        this.profileInfosList = profileInfosList;
+    public void setProvidersData(ArrayList<ServiceProvider> serviceProviderList) {
+        this.serviceProviderList = serviceProviderList;
         notifyDataSetChanged();
-    }
-    @Override
-    public void onBindViewHolder(ProvidersItemHolder holder, int i) {
-        final ServiceProvider info = profileInfosList.get(i);
-        holder.name.setText(info.getName());
-
-        if (checkFavoriteItem(info)) {
-            holder.favoritesButton.setChecked(true);
-        }
-
-        final ScaleAnimation scaleAnimation = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f,
-                Animation.RELATIVE_TO_SELF, 0.7f);
-        scaleAnimation.setDuration(500);
-        BounceInterpolator bounceInterpolator = new BounceInterpolator();
-        scaleAnimation.setInterpolator(bounceInterpolator);
-        holder.favoritesButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                //animation
-                compoundButton.startAnimation(scaleAnimation);
-
-                if (isChecked) {
-                    sharedPreference.addFavorite(context, info);
-                    Toast.makeText(context, "Added to favorites", Toast.LENGTH_LONG).show();
-                } else {
-                    sharedPreference.removeFavorite(context, info);
-
-                    Toast.makeText(context, "Removed from favorites", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-    /*Checks whether a particular product exists in SharedPreferences*/
-    public boolean checkFavoriteItem(ServiceProvider checkInfo) {
-        boolean check = false;
-        List<ServiceProvider> favorites = sharedPreference.getFavorites(context);
-        if (favorites != null) {
-            for (ServiceProvider info : favorites) {
-                if (info.equals(checkInfo)) {
-                    check = true;
-                    break;
-                }
-            }
-        }
-        return check;
     }
 
     @Override
     public ProvidersItemHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
-        View itemView = LayoutInflater.
-                from(viewGroup.getContext()).
+        // Inflate the RecyclerView item layout xml.
+        View itemView = LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.list_of_providers_card_layout, viewGroup, false);
 
-        final TextView titleView = itemView.findViewById(R.id.txtName);
+        return new ProvidersItemHolder(itemView, mClickHandler, mFavoriteClickHandler);
+    }
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                mRecyclerViewListener.onClickPI(profileInfosList.get(i));
+    @Override
+    public void onBindViewHolder(ProvidersItemHolder holder, int position) {
+        holder.name.setText(serviceProviderList.get(position).getName());
+
+        if (checkFavoriteItem(position)) {
+            holder.favoritesButton.setChecked(true);
+        }
+    }
+
+    /*Checks whether a particular product exists in SharedPreferences*/
+    public boolean checkFavoriteItem(int position) {
+        List<ServiceProvider> favorites = sharedPreference.getFavorites(context);
+        if (favorites != null) {
+            for (ServiceProvider info : favorites) {
+                if (info.equals(serviceProviderList.get(position))) {
+                    return true;
+                }
             }
-        });
-        return new ProvidersItemHolder(itemView, mClickHandler);
+        }
+        return false;
     }
 
     @Override
     public int getItemCount() {
-        int ret = 0;
-        if (profileInfosList != null) {
-            ret = profileInfosList.size();
-        }
-        return ret;
+        if (null == serviceProviderList) return 0;
+        return serviceProviderList.size();
     }
 }
