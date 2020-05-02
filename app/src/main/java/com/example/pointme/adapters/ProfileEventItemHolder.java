@@ -1,71 +1,46 @@
 package com.example.pointme.adapters;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alespero.expandablecardview.ExpandableCardView;
 import com.example.pointme.R;
 import com.example.pointme.constants.Type;
 
-public class ProfileEventItemHolder extends RecyclerView.ViewHolder {
+public class ProfileEventItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private ImageView imageView;
-    private TextView name, title, description;
-    private Button book;
-    private @Type int type;
-    private LinearLayout linearLayout;
-    private CardView cardView;
+    public ImageView imageView;
+    public TextView name, title, description;
+    public Button book;
+    public @Type int type;
+    public LinearLayout linearLayout;
+    public ExpandableCardView cardView;
+    private final ProfileAdapter.ProfileAdapterOnClickHandler mClickHandler;
 
-    public ProfileEventItemHolder(View itemView) {
+    ProfileEventItemHolder(View itemView, ProfileAdapter.ProfileAdapterOnClickHandler mClickHandler, Context context) {
         super(itemView);
 
-        if(itemView != null)
-        {
-            name = itemView.findViewById(R.id.txtName);
-            imageView = itemView.findViewById(R.id.card_view_image);
-            title = itemView.findViewById(R.id.eventTitle);
-            description = itemView.findViewById(R.id.description);
-            book = itemView.findViewById(R.id.bookNow);
-        }
+        name = itemView.findViewById(R.id.txtName);
+        imageView = itemView.findViewById(R.id.card_view_image);
+        title = itemView.findViewById(R.id.eventTitle);
+        description = itemView.findViewById(R.id.description);
+        cardView = itemView.findViewById(R.id.profile);
+        cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+        book = itemView.findViewById(R.id.bookNow);
+        this.mClickHandler = mClickHandler;
+        book.setOnClickListener(this);
     }
 
-    public TextView getNameText() {
-        return name;
-    }
-
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public TextView getTitle() {
-        return title;
-    }
-
-    public TextView getDescription() {
-        return description;
-    }
-
-    public LinearLayout getLinearLayout() {
-        return linearLayout;
-    }
-
-    public CardView getCardView() {
-        return cardView;
-    }
-
-    public Button getBook() {
-        return book;
-    }
-
-    public @Type int getType() {
-        return type;
-    }
-
-    public void setType(@Type int type) {
-        this.type = type;
+    @Override
+    public void onClick(View view) {
+        mClickHandler.onClick(type, getAdapterPosition());
     }
 }

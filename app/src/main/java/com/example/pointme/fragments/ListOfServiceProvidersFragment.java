@@ -103,6 +103,7 @@ public class ListOfServiceProvidersFragment extends Fragment implements Provider
                 mProgressBar.setVisibility(View.INVISIBLE);
                 for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
                     serviceProvidersModel = dataSnapshot.getDocuments().get(i).toObject(ServiceProvider.class);
+                    serviceProvidersModel.setuID(dataSnapshot.getDocuments().get(i).getId());
                     serviceProviders.add(serviceProvidersModel);
                 }
                 providersAdapter.setProvidersData(serviceProviders);

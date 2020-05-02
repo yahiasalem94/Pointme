@@ -18,7 +18,7 @@ public class ProvidersItemHolder extends RecyclerView.ViewHolder implements View
     private final ProvidersAdapter.ProvidersAdapterOnClickHandler mClickHandler;
     private final ProvidersAdapter.FavoriteOnClickHandler mFavoriteClickHandler;
 
-    public ProvidersItemHolder(View itemView, ProvidersAdapter.ProvidersAdapterOnClickHandler mClickHandler, ProvidersAdapter.FavoriteOnClickHandler mFavoriteClickHandler) {
+    ProvidersItemHolder(View itemView, ProvidersAdapter.ProvidersAdapterOnClickHandler mClickHandler, ProvidersAdapter.FavoriteOnClickHandler mFavoriteClickHandler) {
         super(itemView);
         name = itemView.findViewById(R.id.txtName);
 //      surname = itemView.findViewById(R.id.txtSurname);

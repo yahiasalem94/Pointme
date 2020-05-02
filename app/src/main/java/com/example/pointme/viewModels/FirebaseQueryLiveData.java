@@ -6,28 +6,26 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class FirebaseQueryLiveData extends LiveData<DocumentSnapshot> {
-    private static final String TAG = FirebaseQueryLiveData.class.getSimpleName();
+public class FirebaseQueryLiveData extends LiveData<QuerySnapshot> {
 
-    private DocumentReference documentReference;
+    private static final String TAG = FirebaseDocumentLiveData.class.getSimpleName();
+
+    private Query query;
 
     private final EventListener listener = new MyValueEventListener();
     private ListenerRegistration listenerRegistration;
 
     private boolean listenerRemovePending = false;
     private final Handler handler = new Handler();
-    
-    public FirebaseQueryLiveData(DocumentReference documentReference) {
-        this.documentReference = documentReference;
+
+    public FirebaseQueryLiveData(Query query) {
+        this.query = query;
     }
 
     private final Runnable removeListener = new Runnable() {
@@ -47,7 +45,7 @@ public class FirebaseQueryLiveData extends LiveData<DocumentSnapshot> {
             handler.removeCallbacks(removeListener);
         }
         else {
-            listenerRegistration = documentReference.addSnapshotListener(listener);
+            listenerRegistration = query.addSnapshotListener(listener);
         }
         listenerRemovePending = false;
     }
@@ -63,9 +61,9 @@ public class FirebaseQueryLiveData extends LiveData<DocumentSnapshot> {
     }
 
 
-    private class MyValueEventListener implements EventListener<DocumentSnapshot> {
+    private class MyValueEventListener implements EventListener<QuerySnapshot> {
         @Override
-        public void onEvent(@Nullable DocumentSnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
+        public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
             if (e != null) {
                 Log.e(TAG, "Can't listen to query snapshots: " + querySnapshot + ":::" + e.getMessage());
             } else {

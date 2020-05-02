@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -18,22 +20,39 @@ import android.widget.Button;
 
 import com.example.pointme.constants.ServerResult;
 import com.example.pointme.constants.Type;
-import com.example.pointme.interfaces.ProfileAdapterCallback;
 import com.example.pointme.interfaces.EventsFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Event;
+import com.example.pointme.models.Meeting;
 import com.example.pointme.models.ServiceProvider;
+import com.example.pointme.viewModels.AppointmentsViewModel;
+import com.example.pointme.viewModels.AppointmentsViewModelFactory;
+import com.example.pointme.viewModels.EventsViewModel;
+import com.example.pointme.viewModels.EventsViewModelFactory;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class EventsFragment extends Fragment implements ProfileAdapterCallback, EventsFragmentDBInt {
+import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
+
+public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAdapterOnClickHandler {
+
+    private final String TAG = EventsFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private ProfileAdapter profileAdapter;
     private ServiceProvider profileInfo;
-    private final String TAG = "EventFragment";
+
+    private Appointment appointmentsModel;
+    private Event eventsModel;
+    private ArrayList<Meeting> meetings;
+//    private ArrayList<Appointment> appointments;
+//    private ArrayList<Event> events;
+
+    private AppointmentsViewModel appointmentsViewModel;
+    private EventsViewModel eventsViewModel;
     /*Views*/
     private RecyclerView recyclerList;
     private Button book;
@@ -43,38 +62,47 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        meetings = new ArrayList<>();
         if (getArguments() != null) {
-            profileInfo = (ServiceProvider) getArguments().getSerializable("ProfileInfo");
-        } else {
-            profileInfo = null;
+            profileInfo = getArguments().getParcelable(PROFILE_INFO);
+
+            AppointmentsViewModelFactory appointmentsViewModelFactory = new AppointmentsViewModelFactory(profileInfo.getuID());
+            appointmentsViewModel = new ViewModelProvider(EventsFragment.this, appointmentsViewModelFactory).get(AppointmentsViewModel.class);
+
+            EventsViewModelFactory eventsViewModelFactory = new EventsViewModelFactory(profileInfo.getuID());
+            eventsViewModel = new ViewModelProvider(EventsFragment.this, eventsViewModelFactory).get(EventsViewModel.class);
         }
 
 
-//        DBCom.getSPEventsAndAppointments(this, profileInfo.getKey());
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_events, parent, false);
+        View mRootview = inflater.inflate(R.layout.fragment_events, parent, false);
+        scrollView = mRootview.findViewById(R.id.scrollView);
+        book = mRootview.findViewById(R.id.bookNow);
+        recyclerList = mRootview.findViewById(R.id.card_view_list);
+
+        profileAdapter = new ProfileAdapter(this, getActivity(), scrollView);
+        setupRecyclerView();
+
+        return mRootview;
+    }
+
+    private void setupRecyclerView() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerList.setLayoutManager(linearLayoutManager);
+
+        // Set data adapter.
+        recyclerList.setAdapter(profileAdapter);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerList = view.findViewById(R.id.card_view_list);
-        recyclerList.setLayoutManager(linearLayoutManager);
-
-        scrollView = view.findViewById(R.id.scrollView);
-        book = view.findViewById(R.id.bookNow);
-
-        profileAdapter = new ProfileAdapter(null, null,this, getActivity(), scrollView);
-
-        // Set data adapter.
-        recyclerList.setAdapter(profileAdapter);
-
         ViewCompat.setNestedScrollingEnabled(recyclerList, false);
+
 
         final GestureDetector gesture = new GestureDetector(getActivity(),
                 new GestureDetector.SimpleOnGestureListener() {
@@ -108,25 +136,62 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
                     }
                 });
 
-        recyclerList.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gesture.onTouchEvent(event);
+        recyclerList.setOnTouchListener((v, event) -> gesture.onTouchEvent(event));
+
+        observeMeetings();
+
+    }
+
+    private void observeMeetings() {
+
+        LiveData<QuerySnapshot> appointmentsLiveData = appointmentsViewModel.getDataSnapshotLiveData();
+        LiveData<QuerySnapshot> eventsLiveData = eventsViewModel.getDataSnapshotLiveData();
+
+        appointmentsLiveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
+            if (dataSnapshot != null) {
+//                mProgressBar.setVisibility(View.INVISIBLE);
+                for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
+                    appointmentsModel = dataSnapshot.getDocuments().get(i).toObject(Appointment.class);
+                    meetings.add(appointmentsModel);
+                }
+                profileAdapter.setMeetings(meetings);
+//                showDataView();
+            } else {
+//                mProgressBar.setVisibility(View.INVISIBLE);
+//                showErrorMessage();
+            }
+        });
+
+        eventsLiveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
+            if (dataSnapshot != null) {
+//                mProgressBar.setVisibility(View.INVISIBLE);
+                for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
+                    eventsModel = dataSnapshot.getDocuments().get(i).toObject(Event.class);
+                    meetings.add(eventsModel);
+                }
+                profileAdapter.setMeetings(meetings);
+//                showDataView();
+            } else {
+//                mProgressBar.setVisibility(View.INVISIBLE);
+//                showErrorMessage();
             }
         });
     }
 
     @Override
-    public void onBookPressed(Object object, @Type int type) {
-        /* loadFragment */
+    public void onClick(@Type int type, int position) {
         DatePickerFragment fragment = new DatePickerFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("ProfileInfo", profileInfo);
-        if(type == Type.EVENT){
-            bundle.putParcelable("Event", (Event) object);
-        }else{
-            bundle.putParcelable("Appointment", (Appointment) object);
+        bundle.putParcelable(PROFILE_INFO, profileInfo);
+
+        if(type == Type.EVENT) {
+            Event event = (Event) meetings.get(position);
+            bundle.putParcelable("Event", event);
+        }else if (type == Type.APPOINTMENT){
+            Appointment appointment = (Appointment) meetings.get(position);
+            bundle.putParcelable("Appointment", appointment);
         }
+
         bundle.putInt("Type", type);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -136,11 +201,13 @@ public class EventsFragment extends Fragment implements ProfileAdapterCallback, 
         transaction.commit();
     }
 
-    @Override
-    public void setSPEventsAndAppointments(@ServerResult int serverResult, ArrayList<Event> eventsList, ArrayList<Appointment> appointmentsList) {
-        if(serverResult == ServerResult.SUCCESS){
-            profileAdapter.newList(eventsList, appointmentsList);
-            recyclerList.getAdapter().notifyDataSetChanged();
-        }
-    }
+//    @Override
+//    public void setSPEventsAndAppointments(@ServerResult int serverResult, ArrayList<Event> eventsList, ArrayList<Appointment> appointmentsList) {
+//        if(serverResult == ServerResult.SUCCESS){
+//            profileAdapter.newList(eventsList, appointmentsList);
+//            recyclerList.getAdapter().notifyDataSetChanged();
+//        }
+//    }
+
+
 }

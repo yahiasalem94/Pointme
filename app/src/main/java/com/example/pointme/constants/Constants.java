@@ -14,15 +14,16 @@ public class Constants {
     public static final String USERS_NODE = "Users";
     public static final String APP_DATA_NODE = "AppData";
     public static final String SERVICE_PROVIDERS = "ServiceProviders";
+    public static final String APPOINTMENTS = "Appointments";
+    public static final String EVENTS = "Events";
 
     /* Firestore Documents */
     public static final String SERVICES = "Services";
 
     /* Firestore Queries */
     public static final String SERVICE = "service";
+    public static final String UID = "spID";
 
-    public static final String EVENTS = "Events";
-    public static final String APPOINTMENTS = "Appointments";
     public static final String BOOKINGS = "Bookings";
     public static final String FAVORITES = "Favorites";
     public static final String APPOINTMENT_SCHEDULE = "AppointmentSchedule";

@@ -12,18 +12,16 @@ import android.widget.ScrollView;
 
 import com.alespero.expandablecardview.ExpandableCardView;
 import com.example.pointme.constants.Type;
-import com.example.pointme.interfaces.ProfileAdapterCallback;
 import com.example.pointme.R;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Event;
+import com.example.pointme.models.Meeting;
 
 import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder> {
 
-    private List<Event> eventsList;
-    private List<Appointment> appointmentsList;
-    private ProfileAdapterCallback mAdapterCallback;
+    private List<Meeting> meetings;
 
     private ExpandableCardView cardView;
     private NestedScrollView scrollView;
@@ -31,70 +29,53 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
     private static int currentPosition = 0;
     private Context context;
 
-    public ProfileAdapter(List<Event> eventsList, List<Appointment> appointmentsList, ProfileAdapterCallback callback, Context context, NestedScrollView scrollView) {
-        this.eventsList = eventsList;
-        this.appointmentsList = appointmentsList;
-        mAdapterCallback = callback;
+    private ProfileAdapterOnClickHandler mClickHandler;
+
+    public interface ProfileAdapterOnClickHandler {
+        void onClick(@Type int type, int position);
+    }
+
+
+    public ProfileAdapter(ProfileAdapterOnClickHandler mClickHandler, Context context, NestedScrollView scrollView) {
+        this.mClickHandler = mClickHandler;
         this.context = context;
         this.scrollView = scrollView;
     }
 
-    public void newList(List<Event> eventsList, List<Appointment> appointmentsList) {
-        if (this.eventsList != null) {
-            this.eventsList.clear();
-        }
-        if (this.appointmentsList != null){
-            this.appointmentsList.clear();
-        }
-        this.eventsList = eventsList;
-        this.appointmentsList = appointmentsList;
+    public void setMeetings(List<Meeting> meetings) {
+        this.meetings = meetings;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        int ret = 0;
-        if (eventsList != null) {
-            ret += eventsList.size();
-        }
-        if (appointmentsList != null){
-            ret += appointmentsList.size();
-        }
-        return ret;
+        /* TODO Fix null pointer */
+        if (meetings == null) return 0;
+        return (meetings.size());
     }
 
     @Override
-    public void onBindViewHolder(final ProfileEventItemHolder contactViewHolder, final int position) {
-        if (position < eventsList.size()){
-            Event info = eventsList.get(position);
-            cardView.setTitle(info.getName());
-            cardView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            contactViewHolder.getTitle().setText(info.getDesc());
-            contactViewHolder.getDescription().setText(info.getDesc());
-            contactViewHolder.setType(Type.EVENT);
-        } else {
-            Appointment info = appointmentsList.get(position - eventsList.size());
-            cardView.setTitle(info.getName());
-            cardView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            contactViewHolder.getTitle().setText(info.getDesc());
-            contactViewHolder.getDescription().setText(info.getDesc());
-            contactViewHolder.setType(Type.APPOINTMENT);
-        }
-//        contactViewHolder.geNameText().setText(info.getName());
-//        contactViewHolder.getImageView().setImageResource(R.drawable.back_2);
-        contactViewHolder.getBook().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(contactViewHolder.getType() == Type.EVENT) {
-                    Event event = eventsList.get(position);
-                    mAdapterCallback.onBookPressed(event, Type.EVENT);
-                }else if (contactViewHolder.getType() == Type.APPOINTMENT){
-                    Appointment appointment = appointmentsList.get(position - eventsList.size());
-                    mAdapterCallback.onBookPressed(appointment, Type.APPOINTMENT);
-                }
-            }
-        });
+    public ProfileEventItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View itemView = LayoutInflater.
+                from(viewGroup.getContext()).
+                inflate(R.layout.profile_card_layout, viewGroup, false);
 
-        cardView.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+        return new ProfileEventItemHolder(itemView, mClickHandler, context);
+    }
+
+    @Override
+    public void onBindViewHolder(final ProfileEventItemHolder holder, final int position) {
+            holder.cardView.setTitle(meetings.get(position).getName());
+            holder.cardView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            holder.title.setText(meetings.get(position).getDesc());
+            holder.description.setText(meetings.get(position).getDesc());
+            if (meetings.get(position) instanceof Appointment) {
+                holder.type = Type.APPOINTMENT;
+            } else if (meetings.get(position) instanceof Event) {
+                holder.type = Type.EVENT;
+            }
+
+        holder.cardView.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
                 if (isExpanded) {
@@ -105,15 +86,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
         });
     }
 
-    @Override
-    public ProfileEventItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.
-                from(viewGroup.getContext()).
-                inflate(R.layout.profile_card_layout, viewGroup, false);
-        cardView = itemView.findViewById(R.id.profile);
-        cardView.findViewById(R.id.card).setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
 
-        return new ProfileEventItemHolder(itemView);
-    }
 
 }

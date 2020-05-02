@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,10 @@ import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.models.ServiceProvider;
 
+import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -31,7 +36,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private String TAG = ProfileFragment.class.getSimpleName();
     private ProfileAdapter profileAdapter;
-    private static final String ARG_PARAM1 = "param1";
     private String name;
     private ServiceProvider profileInfo;
 
@@ -39,13 +43,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private String instagramLink;
 
     /*Views*/
-    private ImageView profileImage;
+    private CircleImageView profileImage;
     private LinearLayout phoneLinearLayout;
     private LinearLayout instagramLinearLayout;
     private RecyclerView recyclerList;
-    private TextView nameView;
-    private Toolbar toolbar;
-    private View mRootview;
     ViewPager viewPager;
 
     @Override
@@ -53,36 +54,37 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            profileInfo = (ServiceProvider) getArguments().getSerializable(PROFILE_INFO);
+            profileInfo = getArguments().getParcelable(PROFILE_INFO);
         }
-
-        toolbar = ((MainActivity) getActivity()).toolbar;
-        toolbar.setTitle("");
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
-        mRootview = inflater.inflate(R.layout.fragment_profile, parent, false);
+        View mRootview = inflater.inflate(R.layout.fragment_profile, parent, false);
         // Defines the xml file for the fragment
         loadFragment();
 
-        profileImage = (de.hdodenhof.circleimageview.CircleImageView) mRootview.findViewById(R.id.ivProfile);
-        nameView = mRootview.findViewById(R.id.tvName);
+        /* Initalizing views */
+        profileImage = mRootview.findViewById(R.id.ivProfile);
+        TextView nameView = mRootview.findViewById(R.id.tvName);
         phoneLinearLayout = mRootview.findViewById(R.id.callLayout);
         instagramLinearLayout = mRootview.findViewById(R.id.instagramLayout);
 
+
         phoneLinearLayout.setOnClickListener(this);
+        phoneLinearLayout.setClickable(false);
+
         instagramLinearLayout.setOnClickListener(this);
+        instagramLinearLayout.setClickable(false);
+
         nameView.setText(profileInfo.getName());
-        phoneNumber += profileInfo.getTel();
-        instagramLink = profileInfo.getIg();
+
+        addLinks();
+
 
         final GestureDetector gesture = new GestureDetector(getActivity(),
-                new GestureDetector.SimpleOnGestureListener() {
+                new SimpleOnGestureListener() {
 
                     @Override
                     public boolean onDown(MotionEvent e) {
@@ -113,13 +115,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     }
                 });
 
-        mRootview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gesture.onTouchEvent(event);
-            }
-        });
+        mRootview.setOnTouchListener((v, event) -> gesture.onTouchEvent(event));
         return mRootview;
+    }
+
+    private void addLinks() {
+
+        if (profileInfo.getTel() != null) {
+            phoneNumber += profileInfo.getTel();
+            phoneLinearLayout.setClickable(true);
+        }
+
+        if (profileInfo.getIg() != null) {
+            instagramLink = profileInfo.getIg();
+            instagramLinearLayout.setClickable(true);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Toolbar toolbar = ((MainActivity) Objects.requireNonNull(getActivity())).toolbar;
+        toolbar.setTitle(null);
     }
 
     @Override
@@ -137,13 +154,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void callServiceProvider() {
+    private void callServiceProvider() {
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(phoneNumber));
         startActivity(intent);
     }
 
-    public void openInstagram() {
+    private void openInstagram() {
         if (!instagramLink.isEmpty()) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -155,17 +172,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         Uri.parse("https://www.instagram.com/" + instagramLink)));
             }
         } else {
-            Toast.makeText(getApplicationContext(), "User doesn't have instagram account", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "User doesn't have instagram account", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void loadFragment() {
+    private void loadFragment() {
         Log.d(TAG, "loading fragment");
         EventsFragment fragment = new EventsFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("ProfileInfo", profileInfo);
+        bundle.putParcelable(PROFILE_INFO, profileInfo);
         fragment.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);

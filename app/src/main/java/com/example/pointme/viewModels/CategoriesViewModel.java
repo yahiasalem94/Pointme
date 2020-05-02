@@ -18,7 +18,7 @@ public class CategoriesViewModel extends AndroidViewModel {
     private static final String TAG = CategoriesViewModel.class.getSimpleName();
     private static final FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
     private static final DocumentReference DOCUMENT_REFERENCE = mDatabase.collection(APP_DATA_NODE).document(Constants.SERVICES);
-    private final FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(DOCUMENT_REFERENCE);
+    private final FirebaseDocumentLiveData liveData = new FirebaseDocumentLiveData(DOCUMENT_REFERENCE);
 
     public CategoriesViewModel(@NonNull Application application) {
         super(application);
