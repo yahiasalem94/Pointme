@@ -29,6 +29,30 @@
         android:textColor="@color/white"
         android:textStyle="bold" />
 
+    <RatingBar
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvName"
+        android:layout_centerHorizontal="true"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:isIndicator="true"
+        />
+
+    <TextView
+        android:id="@+id/numReviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvName"
+        android:layout_toRightOf="@id/rating"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"

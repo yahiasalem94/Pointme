@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,8 +18,7 @@ import com.example.pointme.constants.Type;
 
 public class ProfileEventItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public ImageView imageView;
-    public TextView name, title, description;
+    public TextView title, description;
     public Button book;
     public @Type int type;
     public LinearLayout linearLayout;
@@ -28,12 +28,13 @@ public class ProfileEventItemHolder extends RecyclerView.ViewHolder implements V
     ProfileEventItemHolder(View itemView, ProfileAdapter.ProfileAdapterOnClickHandler mClickHandler, Context context) {
         super(itemView);
 
-        name = itemView.findViewById(R.id.txtName);
-        imageView = itemView.findViewById(R.id.card_view_image);
         title = itemView.findViewById(R.id.eventTitle);
         description = itemView.findViewById(R.id.description);
         cardView = itemView.findViewById(R.id.profile);
-        cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+//        cardView.findViewById(R.id.card).setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+//        cardView.findViewById(R.id.header).setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+//        cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
+//        cardView.setBackgroundColor(Color.YELLOW);
         book = itemView.findViewById(R.id.bookNow);
         this.mClickHandler = mClickHandler;
         book.setOnClickListener(this);

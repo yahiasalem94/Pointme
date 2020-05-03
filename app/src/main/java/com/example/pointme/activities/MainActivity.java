@@ -48,7 +48,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     /* Bundle Tags */
     public static final String NAME_OF_PROVIDER = "nameOfProvider";
-    public static final String PROFILE_INFO = "ProfileInfo";
+    public static final String PROFILE_INFO = "profileInfo";
+    public static final String MEETING = "meeting";
+    public static final String EVENT = "event";
+    public static final String APPOINTMENT = "appointment";
+    public static final String TYPE = "type";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

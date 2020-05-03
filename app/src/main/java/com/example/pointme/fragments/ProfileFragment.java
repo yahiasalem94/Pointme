@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,8 +47,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private CircleImageView profileImage;
     private LinearLayout phoneLinearLayout;
     private LinearLayout instagramLinearLayout;
-    private RecyclerView recyclerList;
-    ViewPager viewPager;
+    private RatingBar mRatingBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         TextView nameView = mRootview.findViewById(R.id.tvName);
         phoneLinearLayout = mRootview.findViewById(R.id.callLayout);
         instagramLinearLayout = mRootview.findViewById(R.id.instagramLayout);
-
+        mRatingBar = mRootview.findViewById(R.id.rating);
+        TextView numOfReviews = mRootview.findViewById(R.id.numReviews);
 
         phoneLinearLayout.setOnClickListener(this);
         phoneLinearLayout.setClickable(false);
@@ -79,7 +80,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         instagramLinearLayout.setClickable(false);
 
         nameView.setText(profileInfo.getName());
-
+        mRatingBar.setRating(profileInfo.getAvgRating());
+        numOfReviews.setText("(" + profileInfo.getNumReviews() + ")");
         addLinks();
 
 

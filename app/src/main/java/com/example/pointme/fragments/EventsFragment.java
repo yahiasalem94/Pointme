@@ -20,6 +20,7 @@ import android.widget.Button;
 
 import com.example.pointme.constants.ServerResult;
 import com.example.pointme.constants.Type;
+import com.example.pointme.decorator.DividerItemDecoration;
 import com.example.pointme.interfaces.EventsFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
@@ -35,7 +36,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import static com.example.pointme.activities.MainActivity.APPOINTMENT;
+import static com.example.pointme.activities.MainActivity.EVENT;
+import static com.example.pointme.activities.MainActivity.MEETING;
 import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
+import static com.example.pointme.activities.MainActivity.TYPE;
 
 public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAdapterOnClickHandler {
 
@@ -93,6 +98,7 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerList.setLayoutManager(linearLayoutManager);
+        recyclerList.addItemDecoration(new DividerItemDecoration(getActivity()));
 
         // Set data adapter.
         recyclerList.setAdapter(profileAdapter);
@@ -103,40 +109,40 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
 
         ViewCompat.setNestedScrollingEnabled(recyclerList, false);
 
-
-        final GestureDetector gesture = new GestureDetector(getActivity(),
-                new GestureDetector.SimpleOnGestureListener() {
-
-                    @Override
-                    public boolean onDown(MotionEvent e) {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                           float velocityY) {
-                        Log.i(TAG, "onFling has been called!");
-                        final int SWIPE_MIN_DISTANCE = 120;
-                        final int SWIPE_MAX_OFF_PATH = 250;
-                        final int SWIPE_THRESHOLD_VELOCITY = 200;
-                        try {
-                            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                                return false;
-                            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                                Log.i(TAG, "Right to Left");
-                            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                                Log.i(TAG, "Left to Right");
-                            }
-                        } catch (Exception e) {
-                            // nothing
-                        }
-                        return super.onFling(e1, e2, velocityX, velocityY);
-                    }
-                });
-
-        recyclerList.setOnTouchListener((v, event) -> gesture.onTouchEvent(event));
+//
+//        final GestureDetector gesture = new GestureDetector(getActivity(),
+//                new GestureDetector.SimpleOnGestureListener() {
+//
+//                    @Override
+//                    public boolean onDown(MotionEvent e) {
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+//                                           float velocityY) {
+//                        Log.i(TAG, "onFling has been called!");
+//                        final int SWIPE_MIN_DISTANCE = 120;
+//                        final int SWIPE_MAX_OFF_PATH = 250;
+//                        final int SWIPE_THRESHOLD_VELOCITY = 200;
+//                        try {
+//                            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+//                                return false;
+//                            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+//                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                                Log.i(TAG, "Right to Left");
+//                            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+//                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                                Log.i(TAG, "Left to Right");
+//                            }
+//                        } catch (Exception e) {
+//                            // nothing
+//                        }
+//                        return super.onFling(e1, e2, velocityX, velocityY);
+//                    }
+//                });
+//
+//        recyclerList.setOnTouchListener((v, event) -> gesture.onTouchEvent(event));
 
         observeMeetings();
 
@@ -184,15 +190,15 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
         Bundle bundle = new Bundle();
         bundle.putParcelable(PROFILE_INFO, profileInfo);
 
-        if(type == Type.EVENT) {
-            Event event = (Event) meetings.get(position);
-            bundle.putParcelable("Event", event);
-        }else if (type == Type.APPOINTMENT){
-            Appointment appointment = (Appointment) meetings.get(position);
-            bundle.putParcelable("Appointment", appointment);
-        }
-
-        bundle.putInt("Type", type);
+//        if(type == Type.EVENT) {
+//            Event event = (Event) meetings.get(position);
+//            bundle.putParcelable(EVENT, event);
+//        }else if (type == Type.APPOINTMENT){
+//            Appointment appointment = (Appointment) meetings.get(position);
+//            bundle.putParcelable(APPOINTMENT, appointment);
+//        }
+        bundle.putParcelable(MEETING, meetings.get(position));
+        bundle.putInt(TYPE, type);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);

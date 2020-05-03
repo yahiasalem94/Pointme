@@ -14,12 +14,19 @@ public class ServiceProvider implements Parcelable {
     private Image imageFile;
     private String uID;
     private String service;
+    private int avgRating;
+    private int attitueRating;
+    private int puncRating;
+    private int qualityRating;
+    private int numReviews;
 
     public ServiceProvider(){
 
     }
 
-    public ServiceProvider(String email, String name, String tel, String ig, boolean image, Image imageFile, String uID, String service) {
+
+    public ServiceProvider(String email, String name, String tel, String ig, boolean image, Image imageFile, String uID, String service,
+                           int avgRating, int attitueRating, int puncRating, int qualityRating, int numReviews) {
         this.email = email;
         this.name = name;
         this.tel = tel;
@@ -28,6 +35,11 @@ public class ServiceProvider implements Parcelable {
         this.imageFile = imageFile;
         this.uID = uID;
         this.service = service;
+        this.avgRating = avgRating;
+        this.attitueRating = attitueRating;
+        this.puncRating = puncRating;
+        this.qualityRating = qualityRating;
+        this.numReviews = numReviews;
     }
 
     protected ServiceProvider(Parcel in) {
@@ -38,6 +50,11 @@ public class ServiceProvider implements Parcelable {
         image = in.readByte() != 0;
         uID = in.readString();
         service = in.readString();
+        avgRating = in.readInt();
+        attitueRating = in.readInt();
+        puncRating = in.readInt();
+        qualityRating = in.readInt();
+        numReviews = in.readInt();
     }
 
     public static final Creator<ServiceProvider> CREATOR = new Creator<ServiceProvider>() {
@@ -116,6 +133,46 @@ public class ServiceProvider implements Parcelable {
         this.service = service;
     }
 
+    public int getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(int avgRating) {
+        this.avgRating = avgRating;
+    }
+
+    public int getAttitueRating() {
+        return attitueRating;
+    }
+
+    public void setAttitueRating(int attitueRating) {
+        this.attitueRating = attitueRating;
+    }
+
+    public int getPuncRating() {
+        return puncRating;
+    }
+
+    public void setPuncRating(int puncRating) {
+        this.puncRating = puncRating;
+    }
+
+    public int getQualityRating() {
+        return qualityRating;
+    }
+
+    public void setQualityRating(int qualityRating) {
+        this.qualityRating = qualityRating;
+    }
+
+    public int getNumReviews() {
+        return numReviews;
+    }
+
+    public void setNumReviews(int numReviews) {
+        this.numReviews = numReviews;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -145,5 +202,10 @@ public class ServiceProvider implements Parcelable {
         parcel.writeByte((byte) (image ? 1 : 0));
         parcel.writeString(uID);
         parcel.writeString(service);
+        parcel.writeInt(avgRating);
+        parcel.writeInt(attitueRating);
+        parcel.writeInt(puncRating);
+        parcel.writeInt(qualityRating);
+        parcel.writeInt(numReviews);
     }
 }
