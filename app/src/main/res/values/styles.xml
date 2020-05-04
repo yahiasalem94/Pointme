@@ -48,17 +48,17 @@
     </style>
 
     <style name="TextAppearance.CalendarDay" parent="android:TextAppearance.DeviceDefault.Small">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/calendar_day</item>
     </style>
 
     <style name="TextAppearance.CalendarWeek" parent="android:TextAppearance.DeviceDefault.Small">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="TextAppearance.CalendarMonth" parent="android:TextAppearance.DeviceDefault.Small">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
