@@ -133,19 +133,19 @@ public class Helper {
         DayOfWeek weekDay = day.getDate().getDayOfWeek();
         switch (weekDay) {
             case FRIDAY:
-                return "Fr";
+                return "Friday";
             case SATURDAY:
-                return "Sa";
+                return "Saturday";
             case SUNDAY:
-                return "Su";
+                return "Sunday";
             case MONDAY:
-                return "Mo";
+                return "Monday";
             case TUESDAY:
-                return "Tu";
+                return "Tuesday";
             case WEDNESDAY:
-                return "We";
+                return "Wednesday";
             case THURSDAY:
-                return "Th";
+                return "Thursday";
             default:
                 return null;
         }
@@ -175,6 +175,21 @@ public class Helper {
         return date;
     }
 
+    public static CalendarDay stringToDate(String stringDate) {
+        if (stringDate == null) {
+            return null;
+        } else {
+            int year = Integer.parseInt(stringDate.substring(0, 4));
+            int month = Integer.parseInt(stringDate.substring(4, 6));
+            int day = Integer.parseInt(stringDate.substring(6));
+
+            CalendarDay date;
+            date = CalendarDay.from(year, month, day);
+            return date;
+        }
+
+
+    }
     public static HashMap<String, Boolean> convertDateListToMap(ArrayList<String> dates) {
         HashMap<String, Boolean> map = new HashMap<>();
         for (String date : dates) {

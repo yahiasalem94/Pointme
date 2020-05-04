@@ -35,6 +35,7 @@ import com.example.pointme.viewModels.EventsViewModelFactory;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static com.example.pointme.activities.MainActivity.APPOINTMENT;
 import static com.example.pointme.activities.MainActivity.EVENT;
@@ -186,34 +187,17 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
 
     @Override
     public void onClick(@Type int type, int position) {
-        DatePickerFragment fragment = new DatePickerFragment();
+        CalendarFragment fragment = new CalendarFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(PROFILE_INFO, profileInfo);
 
-//        if(type == Type.EVENT) {
-//            Event event = (Event) meetings.get(position);
-//            bundle.putParcelable(EVENT, event);
-//        }else if (type == Type.APPOINTMENT){
-//            Appointment appointment = (Appointment) meetings.get(position);
-//            bundle.putParcelable(APPOINTMENT, appointment);
-//        }
         bundle.putParcelable(MEETING, meetings.get(position));
         bundle.putInt(TYPE, type);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
-        transaction.replace(R.id.container, fragment);
+        transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
-
-//    @Override
-//    public void setSPEventsAndAppointments(@ServerResult int serverResult, ArrayList<Event> eventsList, ArrayList<Appointment> appointmentsList) {
-//        if(serverResult == ServerResult.SUCCESS){
-//            profileAdapter.newList(eventsList, appointmentsList);
-//            recyclerList.getAdapter().notifyDataSetChanged();
-//        }
-//    }
-
-
 }

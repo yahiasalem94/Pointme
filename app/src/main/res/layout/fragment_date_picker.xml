@@ -22,12 +22,12 @@
         app:mcv_weekDayTextAppearance="@style/TextAppearance.CalendarWeek"
         />
 
-    <Button
-        android:id="@+id/calendar_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:textColor="@color/purple"
-        android:text="Select Date" />
+<!--    <Button-->
+<!--        android:id="@+id/calendar_button"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:textColor="@color/purple"-->
+<!--        android:text="Select Date" />-->
 
 </FrameLayout>
