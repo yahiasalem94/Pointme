@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void loadFragment(Fragment fragment, String title) {
         // load fragment
         Log.d(TAG, "loading fragment");
-        setTitle(title);
+//        toolbar.setTitle(title);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);

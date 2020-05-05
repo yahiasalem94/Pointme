@@ -64,12 +64,10 @@ public class ListOfServiceProvidersFragment extends Fragment implements Provider
         if (getArguments() != null) {
             String service = getArguments().getString(NAME_OF_PROVIDER);
             assert service != null;
-            toolbar.setTitle(service.toUpperCase());
+            getActivity().setTitle(service);
 
             ProvidersViewModelFactory providersViewModelFactory = new ProvidersViewModelFactory(service);
             providersViewModel = new ViewModelProvider(ListOfServiceProvidersFragment.this, providersViewModelFactory).get(ProvidersViewModel.class);
-        } else {
-            toolbar.setTitle(getString(R.string.Pointme).toUpperCase());
         }
 
         serviceProviders = new ArrayList<>();

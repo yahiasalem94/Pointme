@@ -4,14 +4,15 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="50dp">
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/card_view_recycler_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
         android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:scrollbarStyle="outsideOverlay"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

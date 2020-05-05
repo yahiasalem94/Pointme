@@ -53,10 +53,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         categoriesAdapter = new CategoriesAdapter(getActivity(), this);
-//        DBCom.getCategoriesList(this);
-
         categoriesViewModel = new ViewModelProvider(this).get(CategoriesViewModel.class);
-
+        getActivity().setTitle(R.string.categories);
 
     }
 
