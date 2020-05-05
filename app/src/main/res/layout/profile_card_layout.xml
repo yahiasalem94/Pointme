@@ -9,11 +9,10 @@
 
     <com.alespero.expandablecardview.ExpandableCardView
         android:id="@+id/profile"
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:inner_view="@layout/profile_card_inner_views"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="20dp"
         app:expandOnClick="true"
         app:animationDuration="500"
         app:startExpanded="false"

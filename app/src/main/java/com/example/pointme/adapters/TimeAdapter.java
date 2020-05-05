@@ -16,87 +16,65 @@ import com.example.pointme.R;
 
 import java.util.ArrayList;
 
-public class TimeAdapter extends Adapter<TimeAdapter.Holder> {
+public class TimeAdapter extends  RecyclerView.Adapter<TimeAdapterItemHolder> {
 
-    private ArrayList<String> list;
-    public static ArrayList<Holder> holders;
+    private ArrayList<String> itemList;
     private Context context;
     public static boolean isSelected;
     public static int selPos;
+    private TimeAdapterOnClickHandler mClickHandler;
 
-    //declare interface
-    private OnItemClicked onClick;
+//    //declare interface
+//    private OnItemClicked onClick;
 
-    //make interface like this
-    public interface OnItemClicked {
-        void onItemClick(Holder viewHolder, int position);
+//    //make interface like this
+//    public interface OnItemClicked {
+//        void onItemClick(Holder viewHolder, int position);
+//    }
+
+    public interface TimeAdapterOnClickHandler {
+        void onClick(int position);
     }
 
-    public TimeAdapter(ArrayList<String> list, Context context){
-        holders = new ArrayList<>();
-        isSelected = false;
+    public TimeAdapter(Context context, TimeAdapterOnClickHandler mClickHandler){
+//        holders = new ArrayList<>();
+//        isSelected = false;
         selPos = 0;
-        this.list = list;
+//        this.list = list;
         this.context = context;
-        setHasStableIds(true);
+        this.mClickHandler = mClickHandler;
+//        setHasStableIds(true);
+    }
+
+    public void setTimesData(ArrayList<String> itemList) {
+        this.itemList = itemList;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public TimeAdapterItemHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.time_picker_list, viewGroup, false);
 
-        return new Holder(view);
+        return new TimeAdapterItemHolder(view, mClickHandler);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final Holder viewHolder, final int i) {
-        String stHour = list.get(i).substring(0, 2);
-        String stMin = list.get(i).substring(2, 4);
-        String endHour = list.get(i).substring(4, 6);
-        String endMin = list.get(i).substring(6, 8);
+    public void onBindViewHolder(@NonNull final TimeAdapterItemHolder holder, int i) {
+        String stHour = itemList.get(i).substring(0, 2);
+        String stMin = itemList.get(i).substring(2, 4);
+        String endHour = itemList.get(i).substring(4, 6);
+        String endMin = itemList.get(i).substring(6, 8);
         String time = stHour + ":" + stMin + " - " + endHour + ":" + endMin;
-        viewHolder.mTimeTextView.setText(time);
-        viewHolder.mTimeTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClick.onItemClick(viewHolder, i);
-            }
-        });
-
-        if (isSelected){
-            if (!holders.get(selPos).equals(viewHolder)){
-                viewHolder.mTimeTextView.setTextColor(Color.GRAY);
-            }
-        }
-
-
-        holders.add(viewHolder);
+        holder.mTimeTextView.setText(time);
     }
 
 
     @Override
     public int getItemCount() {
-        return list.size();
+        if (null == itemList) return 0;
+        return itemList.size();
     }
 
-    public void setOnClick(OnItemClicked onClick)
-    {
-        Log.d("DEBUGGG", "TIME CLICKED");
-        this.onClick=onClick;
-    }
-
-    public class Holder extends RecyclerView.ViewHolder{
-        public TextView mTimeTextView;
-        public ImageView mCheckImageView;
-
-
-        public Holder(View itemView) {
-            super(itemView);
-            mTimeTextView = (TextView) itemView.findViewById(R.id.time_text_view);
-            mCheckImageView = (ImageView) itemView.findViewById(R.id.check_image_view);
-
-        }
-    }
 
 }
