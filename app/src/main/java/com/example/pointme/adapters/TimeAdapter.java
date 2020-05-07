@@ -1,16 +1,13 @@
 package com.example.pointme.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.pointme.R;
 
@@ -18,7 +15,7 @@ import java.util.ArrayList;
 
 public class TimeAdapter extends  RecyclerView.Adapter<TimeAdapterItemHolder> {
 
-    private ArrayList<String> itemList;
+    private ArrayList<String> data = new ArrayList<>();
     private Context context;
     public static boolean isSelected;
     public static int selPos;
@@ -47,7 +44,9 @@ public class TimeAdapter extends  RecyclerView.Adapter<TimeAdapterItemHolder> {
     }
 
     public void setTimesData(ArrayList<String> itemList) {
-        this.itemList = itemList;
+        if (this.data !=  null)
+            this.data.clear();
+        this.data.addAll(itemList);
         notifyDataSetChanged();
     }
 
@@ -61,10 +60,10 @@ public class TimeAdapter extends  RecyclerView.Adapter<TimeAdapterItemHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final TimeAdapterItemHolder holder, int i) {
-        String stHour = itemList.get(i).substring(0, 2);
-        String stMin = itemList.get(i).substring(2, 4);
-        String endHour = itemList.get(i).substring(4, 6);
-        String endMin = itemList.get(i).substring(6, 8);
+        String stHour = data.get(i).substring(0, 2);
+        String stMin = data.get(i).substring(2, 4);
+        String endHour = data.get(i).substring(4, 6);
+        String endMin = data.get(i).substring(6, 8);
         String time = stHour + ":" + stMin + " - " + endHour + ":" + endMin;
         holder.mTimeTextView.setText(time);
     }
@@ -72,8 +71,8 @@ public class TimeAdapter extends  RecyclerView.Adapter<TimeAdapterItemHolder> {
 
     @Override
     public int getItemCount() {
-        if (null == itemList) return 0;
-        return itemList.size();
+        if (null == data) return 0;
+        return data.size();
     }
 
 

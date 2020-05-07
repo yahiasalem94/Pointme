@@ -24,6 +24,9 @@ public class Constants {
     public static final String SERVICE = "service";
     public static final String UID = "spID";
 
+    /* Cloud Fuctions */
+    public static final String GET_BOOKING_SLOTS = "getBookingSlots";
+
     public static final String BOOKINGS = "Bookings";
     public static final String FAVORITES = "Favorites";
     public static final String APPOINTMENT_SCHEDULE = "AppointmentSchedule";
