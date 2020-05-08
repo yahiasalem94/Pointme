@@ -10,23 +10,26 @@ import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.models.Booking;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookingsAdapter extends RecyclerView.Adapter<BookingsItemHolder> {
 
-    private List<Booking> itemList;
+    private List<Booking> itemList = new ArrayList<>();
     private RecyclerViewClickListener mRecyclerViewListener;
+    private boolean isPastBookings = false;
 
-    public BookingsAdapter(List<Booking> itemList, RecyclerViewClickListener callback) {
-        this.itemList = itemList;
+    public BookingsAdapter(RecyclerViewClickListener callback) {
         mRecyclerViewListener = callback;
     }
 
-    public void newList(List<Booking> itemList) {
-        if (this.itemList != null) {
+    public void newList(List<Booking> itemList, boolean isPastBookings) {
+        if (this.itemList != null)
             this.itemList.clear();
-        }
-        this.itemList = itemList;
+
+        this.itemList.addAll(itemList);
+        this.isPastBookings = isPastBookings;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -40,25 +43,33 @@ public class BookingsAdapter extends RecyclerView.Adapter<BookingsItemHolder> {
     }
 
     @Override
-    public void onBindViewHolder(BookingsItemHolder contactViewHolder, int i) {
-        Booking info = itemList.get(i);
-        contactViewHolder.getNameText().setText(info.getTime());
-    }
-
-    @Override
     public BookingsItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.bookings_card_layout, viewGroup, false);
 
-        final TextView titleView = itemView.findViewById(R.id.txtName);
-
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecyclerViewListener.onClick(titleView.getText().toString());
+//                mRecyclerViewListener.onClick(titleView.getText().toString());
             }
         });
         return new BookingsItemHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(BookingsItemHolder contactViewHolder, int i) {
+        Booking info = itemList.get(i);
+        contactViewHolder.meetingName.setText(info.getMeetingName());
+        contactViewHolder.spName.setText("By " + info.getSpName());
+        contactViewHolder.date.setText(info.getBookingDetails().get(0).getDate());
+        contactViewHolder.time.setText(info.getBookingDetails().get(0).getTime());
+        contactViewHolder.approved.setText(info.getApprovalStatus());
+        if(isPastBookings) {
+            contactViewHolder.reviewButton.setVisibility(View.VISIBLE);
+        } else {
+            contactViewHolder.reviewButton.setVisibility(View.GONE);
+        }
+
     }
 }

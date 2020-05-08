@@ -16,6 +16,7 @@ public class Constants {
     public static final String SERVICE_PROVIDERS = "ServiceProviders";
     public static final String APPOINTMENTS = "Appointments";
     public static final String EVENTS = "Events";
+    public static final String BOOKINGS = "Bookings";
 
     /* Firestore Documents */
     public static final String SERVICES = "Services";
@@ -23,11 +24,12 @@ public class Constants {
     /* Firestore Queries */
     public static final String SERVICE = "service";
     public static final String UID = "spID";
+    public static final String CRID = "crID";
 
     /* Cloud Fuctions */
     public static final String GET_BOOKING_SLOTS = "getBookingSlots";
 
-    public static final String BOOKINGS = "Bookings";
+
     public static final String FAVORITES = "Favorites";
     public static final String APPOINTMENT_SCHEDULE = "AppointmentSchedule";
     public static final String SCHEDULE_DB = "ScheduleDB";

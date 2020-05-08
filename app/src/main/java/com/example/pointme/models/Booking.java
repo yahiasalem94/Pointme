@@ -1,31 +1,32 @@
 package com.example.pointme.models;
 
+import java.util.ArrayList;
+
 public class Booking {
 
     private String spID;
-    private String crId;
-    private String meetingID;
+    private String crID;
     private String spName;
     private String meetingName;
-    private String date;
-    private String time;
     private String type;
     private String approvalStatus;
     private boolean cancelled;
+    private ArrayList<BookingDetails> bookingDetails;
 
-    public Booking(){}
+    public Booking(){
 
-    public Booking(String spID, String CreatorID, String meetingID, String spName, String meetingName,String date, String time, String approvalStatus, boolean cancelled){
+    }
+
+    public Booking(String spID, String CreatorID, String spName, String meetingName, String type, String approvalStatus,
+                   boolean cancelled, ArrayList<BookingDetails> bookingDetails){
         this.spID = spID;
-        this.crId = CreatorID;
-        this.meetingID = meetingID;
+        this.crID = CreatorID;
         this.spName = spName;
         this.meetingName = meetingName;
-        this.date = date;
-        this.time = time;
         this.type = type;
         this.approvalStatus = approvalStatus;
         this.cancelled = cancelled;
+        this.bookingDetails = bookingDetails;
     }
 
     public String getSpID() {
@@ -36,20 +37,12 @@ public class Booking {
         this.spID = spID;
     }
 
-    public String getCrId() {
-        return crId;
+    public String getCrID() {
+        return crID;
     }
 
-    public void setCrId(String crId) {
-        this.crId = crId;
-    }
-
-    public String getMeetingID() {
-        return meetingID;
-    }
-
-    public void setMeetingID(String meetingID) {
-        this.meetingID = meetingID;
+    public void setCrID(String crID) {
+        this.crID = crID;
     }
 
     public String getSpName() {
@@ -64,24 +57,16 @@ public class Booking {
         return meetingName;
     }
 
-    public void setMeetingName(String meetingID) {
+    public void setMeetingName(String meetingName) {
         this.meetingName = meetingName;
     }
 
-    public String getDate() {
-        return date;
+    public String getType() {
+        return type;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getApprovalStatus() {
@@ -98,5 +83,13 @@ public class Booking {
 
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    public ArrayList<BookingDetails> getBookingDetails() {
+        return bookingDetails;
+    }
+
+    public void setBookingDetails(ArrayList<BookingDetails> bookingDetails) {
+        this.bookingDetails = bookingDetails;
     }
 }
