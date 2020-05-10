@@ -1,0 +1,109 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/qualityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/qualityTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quality"
+        android:textSize="20sp"/>
+    <RatingBar
+        android:id="@+id/quality_rating"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:layout_marginStart="60dp"
+        android:layout_toRightOf="@+id/qualityTv"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/puncLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qualityLayout">
+
+        <TextView
+            android:id="@+id/puncTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="Punctuality"
+            android:textSize="20sp" />
+
+        <RatingBar
+        android:id="@+id/punc_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:isIndicator="true"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/puncTv"
+        />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/attitudeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/puncLayout">
+        <TextView
+            android:id="@+id/attitudeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Attitude"
+            android:textSize="20sp"/>
+        <RatingBar
+            android:id="@+id/attitude_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:isIndicator="true"
+            android:layout_marginStart="60dp"
+            android:layout_toRightOf="@+id/attitudeTv" />
+    </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/reviews_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="72dp"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@+id/attitudeLayout"
+            />
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

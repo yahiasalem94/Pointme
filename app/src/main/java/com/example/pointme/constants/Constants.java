@@ -17,6 +17,7 @@ public class Constants {
     public static final String APPOINTMENTS = "Appointments";
     public static final String EVENTS = "Events";
     public static final String BOOKINGS = "Bookings";
+    public static final String REVIEWS = "Reviews";
 
     /* Firestore Documents */
     public static final String SERVICES = "Services";
