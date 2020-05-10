@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="250dp"
     android:orientation="vertical"
     android:layout_below="@id/linearLayout">
 
     <RelativeLayout
+        android:id="@+id/event_description_relativelayout"
+        android:layout_margin="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparentWhite">
-
-        <TextView
-            android:id="@+id/eventTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:textSize="25sp" />
-
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            android:layout_below="@id/eventTitle" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="left"
+            android:textColor="@color/white"
+            tools:text="The description of the event"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_below="@+id/description"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            tools:text="Fees: 400"/>
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/bookNow"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="150dp"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="BOOK NOW"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            app:backgroundTint="@color/transparent"
-            app:strokeColor="@color/white"
-            app:strokeWidth="2dp" />
-
+        android:layout_below="@+id/event_description_relativelayout">
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bookNow"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:text="Book"
+        android:textSize="15sp"
+        app:backgroundTint="@color/transparent"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp" />
     </RelativeLayout>
-
 </RelativeLayout>

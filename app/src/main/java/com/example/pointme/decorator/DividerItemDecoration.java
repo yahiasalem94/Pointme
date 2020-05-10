@@ -24,8 +24,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 /* TODO CHANGE */
-        left = 200;
-        right = 1000;
+//        left = 200;
+//        right = 1000;
 
         int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {

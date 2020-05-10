@@ -154,42 +154,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-//    @Override
-//    public void onSwipe_Forward(Swipe_Button_View swipe_button_view) {
-//        if (!isEventFragmentLoaded) {
-//            isEventFragmentLoaded = true;
-//            isReviewFragmentLoaded = false;
-//            EventsFragment fragment = new EventsFragment();
-//
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable(PROFILE_INFO, profileInfo);
-//            fragment.setArguments(bundle);
-//            FragmentTransaction transaction = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
-//            transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right, R.anim.slide_from_right, R.anim.slide_to_left);
-//            transaction.replace(R.id.container, fragment);
-//            transaction.addToBackStack(null);
-//            transaction.commit();
-//        }
-//    }
-//
-//    @Override
-//    public void onSwipe_Reverse(Swipe_Button_View swipe_button_view) {
-//        if (!isReviewFragmentLoaded) {
-//            isEventFragmentLoaded = false;
-//            isReviewFragmentLoaded = true;
-//            ReviewFragment fragment = new ReviewFragment();
-////            Bundle bundle = new Bundle();
-////            bundle.putParcelable(PROFILE_INFO, profileInfo);
-////            fragment.setArguments(bundle);
-//            FragmentTransaction transaction = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
-//            transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right, R.anim.slide_from_right, R.anim.slide_to_left);
-//            transaction.replace(R.id.container, fragment);
-//            transaction.addToBackStack(null);
-//            transaction.commit();
-//        }
-//    }
-
-
     @Override
     public void onClick(View view) {
 

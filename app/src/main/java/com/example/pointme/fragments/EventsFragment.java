@@ -47,7 +47,6 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
 
     private final String TAG = EventsFragment.class.getSimpleName();
 
-    private static final String ARG_PARAM1 = "param1";
     private ProfileAdapter profileAdapter;
     private ServiceProvider profileInfo;
 
@@ -108,7 +107,7 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        ViewCompat.setNestedScrollingEnabled(recyclerList, false);
+//        ViewCompat.setNestedScrollingEnabled(recyclerList, false);
 
 //
 //        final GestureDetector gesture = new GestureDetector(getActivity(),
@@ -200,4 +199,5 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
 }

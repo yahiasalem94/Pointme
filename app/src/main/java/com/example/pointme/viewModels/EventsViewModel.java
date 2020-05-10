@@ -13,7 +13,7 @@ import static com.example.pointme.constants.Constants.EVENTS;
 import static com.example.pointme.constants.Constants.UID;
 
 public class EventsViewModel extends ViewModel {
-    private static final String TAG = ProvidersViewModel.class.getSimpleName();
+    private static final String TAG = EventsViewModel.class.getSimpleName();
     private static final FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
     private static Query query;
     private FirebaseQueryLiveData liveData;

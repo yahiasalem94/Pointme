@@ -4,11 +4,14 @@ import android.content.Context;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -41,6 +44,10 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
         void onClick(@Type int type, int position);
     }
 
+//    public interface ProfileAdapterOnExpandableCard {
+//        void onClick();
+//    }
+
     public ProfileAdapter(ProfileAdapterOnClickHandler mClickHandler, Context context, NestedScrollView scrollView) {
         this.mClickHandler = mClickHandler;
         this.context = context;
@@ -66,14 +73,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
                 from(viewGroup.getContext()).
                 inflate(R.layout.profile_card_layout, viewGroup, false);
 
-        return new ProfileEventItemHolder(itemView, mClickHandler, context);
+        return new ProfileEventItemHolder(itemView, mClickHandler);
     }
 
     @Override
     public void onBindViewHolder(final ProfileEventItemHolder holder, final int position) {
-            holder.cardView.setTitle(meetings.get(position).getName());
-            holder.cardView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            holder.title.setText(meetings.get(position).getDesc());
+            holder.eventTvTitle.setText(meetings.get(position).getName());
             holder.description.setText(meetings.get(position).getDesc());
             if (meetings.get(position) instanceof Appointment) {
                 holder.type = Type.APPOINTMENT;
@@ -81,12 +86,19 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
                 holder.type = Type.EVENT;
             }
 
-        holder.cardView.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onExpandChanged(View v, boolean isExpanded) {
-                if (isExpanded) {
-                    Log.i("PROFILE ADAPTER", "Exapnded");
-                    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            public void onClick(View v) {
+                if (holder.expandableView.getVisibility() == View.GONE){
+                    TransitionManager.beginDelayedTransition(holder.cardView, new AutoTransition());
+                    holder.expandableView.setVisibility(View.VISIBLE);
+//                    TranslateAnimation animation = new TranslateAnimation(0.0f, -200.0f, 0.0f, 0.0f); // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
+//                    animation.setDuration(8500); // animation duration, change accordingly
+//                    animation.setFillAfter(false);
+//                    holder.eventTvTitle.startAnimation(animation);//your_view f
+                } else {
+                    TransitionManager.beginDelayedTransition(holder.cardView, new AutoTransition());
+                    holder.expandableView.setVisibility(View.GONE);
                 }
             }
         });
