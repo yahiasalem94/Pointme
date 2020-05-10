@@ -1,12 +1,15 @@
 package com.example.pointme.fragments;
 
+import android.animation.ObjectAnimator;
 import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,8 +37,12 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
-public class MyBookingFragment extends Fragment implements RecyclerViewClickListener, View.OnClickListener {
+import static com.example.pointme.activities.MainActivity.BOOKING;
+import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
+
+public class MyBookingFragment extends Fragment implements View.OnClickListener, BookingsAdapter.BookingsAdapterOnClickHandler {
 
     private String title = "Bookings";
     private String currentUser;
@@ -52,12 +59,11 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
 
     private Booking bookingDetailsModel;
     private BookingsViewModel bookingsViewModel;
-    private ArrayList<Booking> bookings, upcomingBookings, pastBookings;
+    private ArrayList<Booking> upcomingBookings, pastBookings;
 
     private CalendarDay dateToday;
 
     public MyBookingFragment() {
-        bookings = new ArrayList<>();
         upcomingBookings = new ArrayList<>();
         pastBookings = new ArrayList<>();
 
@@ -90,9 +96,11 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
         upcomingLinearLayout = mRootview.findViewById(R.id.upcomingLinearLayout);
         pastLinearLayout = mRootview.findViewById(R.id.pastLinearLayout);
 
+//        upcomingLinearLayout.setBackgroundResource(R.drawable.transition_drawable);
         upcomingLinearLayout.setOnClickListener(this);
         upcomingLinearLayout.setClickable(false);
 
+//        pastLinearLayout.setBackgroundResource(R.drawable.transition_drawable_1);
         pastLinearLayout.setOnClickListener(this);
         pastLinearLayout.setClickable(true);
 
@@ -113,15 +121,6 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
         // Set data adapter.
         list.setAdapter(adapter);
     }
-    @Override
-    public void onClick(String title) {
-
-    }
-
-    @Override
-    public void onClickPI(ServiceProvider profileInfo) {
-
-    }
 
     private void observeMeetings() {
 
@@ -130,6 +129,8 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
         bookingsLiveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
             if (dataSnapshot != null) {
 ////                mProgressBar.setVisibility(View.INVISIBLE);
+                pastBookings.clear();
+                upcomingBookings.clear();
                 for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
                     bookingDetailsModel = dataSnapshot.getDocuments().get(i).toObject(Booking.class);
                     if (Helper.stringToDate(bookingDetailsModel.getBookingDetails().get(0).getDate()).isBefore(dateToday)) {
@@ -154,18 +155,20 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         Log.d(TAG, "resume");
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setTitle("Bookings");
+        getActivity().setTitle("My Bookings");
     }
 
     public void upcomingClick() {
         isPastBookings = false;
         pastLinearLayout.setBackgroundResource(0);
         upcomingLinearLayout.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.capsule_white_background));
+//        TransitionDrawable transition = (TransitionDrawable) upcomingLinearLayout.getBackground();
+//        transition.startTransition(1500);
+
+
         upcompingTv.setTextColor(Color.BLACK);
         pastTv.setTextColor(Color.WHITE);
         adapter.newList(upcomingBookings, isPastBookings);
@@ -178,7 +181,9 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
     public void pastClick() {
         isPastBookings = true;
         upcomingLinearLayout.setBackgroundResource(0);
-        pastLinearLayout.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.capsule_white_background));
+        pastLinearLayout.setBackgroundResource(R.drawable.transition_drawable);
+//        TransitionDrawable transition = (TransitionDrawable) pastLinearLayout.getBackground();
+//        transition.startTransition(1500);
         pastTv.setTextColor(Color.BLACK);
         upcompingTv.setTextColor(Color.WHITE);
         adapter.newList(pastBookings, isPastBookings);
@@ -194,5 +199,20 @@ public class MyBookingFragment extends Fragment implements RecyclerViewClickList
         } else {
             pastClick();
         }
+    }
+
+    @Override
+    public void onClick(int position) {
+        Log.d(TAG, "loading fragment");
+        WriteReviewFragment fragment = new WriteReviewFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BOOKING, pastBookings.get(position));
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right, R.anim.slide_from_left, R.anim.slide_to_right);
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

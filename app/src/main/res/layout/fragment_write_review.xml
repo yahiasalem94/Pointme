@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.WriteReviewFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/meetingName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="25sp"
+            tools:text="Private Yoga"/>
+
+        <TextView
+            android:id="@+id/spName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/meetingName"
+            android:textSize="20sp"
+            tools:text="Creator Name"/>
+
+        <RelativeLayout
+            android:id="@+id/date_time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/spName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="32dp"
+                android:textSize="15sp"
+                tools:text="Date"/>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="88dp"
+                android:layout_toEndOf="@+id/date"
+                android:textSize="15sp"
+                tools:text="Time" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/qualityLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date_time_layout">
+
+            <TextView
+                android:id="@+id/qualityTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quality"
+                android:textSize="20sp"/>
+
+            <RatingBar
+                android:id="@+id/quality_rating"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:layout_marginStart="60dp"
+                android:layout_toRightOf="@+id/qualityTv"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/puncLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qualityLayout">
+
+            <TextView
+                android:id="@+id/puncTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="Punctuality"
+                android:textSize="20sp" />
+
+            <RatingBar
+                android:id="@+id/punc_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:isIndicator="false"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/puncTv" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/attitudeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/puncLayout">
+
+            <TextView
+                android:id="@+id/attitudeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Attitude"
+                android:textSize="20sp"/>
+
+            <RatingBar
+                android:id="@+id/attitude_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:isIndicator="false"
+                android:layout_marginStart="60dp"
+                android:layout_toRightOf="@+id/attitudeTv" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/addreviewText"
+            android:layout_width="350dp"
+            android:layout_height="150dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/attitudeLayout"
+            android:background="@color/transparentWhite"
+            android:gravity="start"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="Please write a review" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submit_review"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:text="Submit"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/transparent"
+            app:strokeColor="@color/white"
+            app:strokeWidth="1dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addreviewText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

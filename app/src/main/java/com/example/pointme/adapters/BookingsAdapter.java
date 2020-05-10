@@ -16,11 +16,15 @@ import java.util.List;
 public class BookingsAdapter extends RecyclerView.Adapter<BookingsItemHolder> {
 
     private List<Booking> itemList = new ArrayList<>();
-    private RecyclerViewClickListener mRecyclerViewListener;
+    private BookingsAdapterOnClickHandler mClickHandler;
     private boolean isPastBookings = false;
 
-    public BookingsAdapter(RecyclerViewClickListener callback) {
-        mRecyclerViewListener = callback;
+    public interface BookingsAdapterOnClickHandler {
+        void onClick(int position);
+    }
+
+    public BookingsAdapter(BookingsAdapterOnClickHandler mClickHandler) {
+        this.mClickHandler = mClickHandler;
     }
 
     public void newList(List<Booking> itemList, boolean isPastBookings) {
@@ -48,13 +52,7 @@ public class BookingsAdapter extends RecyclerView.Adapter<BookingsItemHolder> {
                 from(viewGroup.getContext()).
                 inflate(R.layout.bookings_card_layout, viewGroup, false);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                mRecyclerViewListener.onClick(titleView.getText().toString());
-            }
-        });
-        return new BookingsItemHolder(itemView);
+        return new BookingsItemHolder(itemView, mClickHandler);
     }
 
     @Override
