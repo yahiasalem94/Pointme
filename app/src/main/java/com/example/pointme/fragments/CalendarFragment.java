@@ -61,6 +61,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.example.pointme.activities.MainActivity.APPOINTMENT;
+import static com.example.pointme.activities.MainActivity.CONFIRM_DATE;
+import static com.example.pointme.activities.MainActivity.CONFIRM_TIME;
 import static com.example.pointme.activities.MainActivity.EVENT;
 import static com.example.pointme.activities.MainActivity.MEETING;
 import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
@@ -76,12 +78,13 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
     private @Type int type;
 
 
+    private String meetingId;
+    private String meetingName;
     private int minPeriod;
     private String startDate;
     private String endDate;
     private HashMap<String, String> times;
     private ArrayList<String> days;
-
     private String mPickedDate;
     private ArrayList<String> mTimePickedList = new ArrayList<>();
 
@@ -114,6 +117,8 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
             type = getArguments().getInt(TYPE);
             if (type == Type.EVENT) {
                 event = getArguments().getParcelable(MEETING);
+                meetingId = event.getMeetingID();
+                meetingName = event.getName();
                 minPeriod = event.getMinPeriod();
                 startDate = event.getStartDate();
                 endDate = event.getEndDate();
@@ -122,6 +127,8 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
                 times = (HashMap<String, String>) event.getTimes();
             } else {
                 appointment = getArguments().getParcelable(MEETING);
+                meetingId = appointment.getMeetingID();
+                meetingName = appointment.getName();
                 minPeriod = appointment.getMinPeriod();
                 startDate = appointment.getStartDate();
                 endDate = appointment.getEndDate();
@@ -193,6 +200,7 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
             public void onChanged(ArrayList<String> bookingSlots) {
                 if (bookingSlots != null) {
 //                    mTimePickedList = (ArrayList) bookingSlots.getAsJsonObject("bookingSlot").getx
+
                     mAdapter.setTimesData(bookingSlots);
                     showRecyclerView();
                 }
@@ -230,72 +238,20 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
     @Override
     public void onClick(int position) {
         /* Time Adapter Click */
-        MyBookingFragment fragment = new MyBookingFragment();
+        BookingConfirmationFragment fragment = new BookingConfirmationFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(CONFIRM_DATE, mPickedDate);
+        bundle.putString(CONFIRM_TIME, mTimePickedList.get(position));
+        bundle.putString("MeetingId", meetingId);
+        bundle.putString("MeetingName", meetingName);
+        bundle.putInt(TYPE, type);
+        bundle.putParcelable(PROFILE_INFO, profileInfo);
+        fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-
-    private class AsyncTaskRunner extends AsyncTask<CalendarDay, Void, String> {
-
-
-        String result;
-        @Override
-        protected String doInBackground(CalendarDay... params) {
-//            publishProgress("Sleeping..."); // Calls onProgressUpdate()
-            Map<String, String> data = new HashMap<>();
-            data.put("date", mPickedDate);
-            data.put("spID", appointment.getSpID());
-            data.put("appSchedule", times.get(Helper.getWeekDay(params[0])));
-            data.put("timeDiff", timeDiff);
-            data.put("duration", appointment.getDuration());
-
-            mFunctions
-                    .getHttpsCallable(GET_BOOKING_SLOTS)
-                    .call(data)
-                    .continueWith(new Continuation<HttpsCallableResult, String>() {
-                        @Override
-                        public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                            // This continuation runs on either success or failure, but if the task
-                            // has failed then getResult() will throw an Exception which will be
-                            // propagated down.
-                            if (!task.isSuccessful()) {
-                                Exception e = task.getException();
-                                if (e instanceof FirebaseFunctionsException) {
-                                    FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                                    FirebaseFunctionsException.Code code = ffe.getCode();
-                                    Object details = ffe.getDetails();
-                                    Log.d(TAG, "Code is " + code + " details " + details.toString());
-                                }
-                            } else {
-//                            String result = task.getException().toString();
-                                result = (String) task.getResult().getData();
-                                Log.d(TAG, result);
-                            }
-                            return result;
-                        }
-                    });
-            return result;
-        }
-
-
-        @Override
-        protected void onPostExecute(String result) {
-            // execution of result of Long time consuming operation
-            progressDialog.dismiss();
-            if (result != null) {
-                Log.d(TAG, result);
-            } else {
-                Log.d(TAG, "NULL");
-                }
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-
-        }
     }
 }
