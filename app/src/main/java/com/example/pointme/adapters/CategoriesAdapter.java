@@ -30,7 +30,7 @@ import java.util.List;
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesItemHolder> {
 
     private static final String TAG = CategoriesAdapter.class.getSimpleName();
-    private ArrayList<String> itemList;
+    private ArrayList<String> itemList = new ArrayList<>();
     private Context mContext;
     private CategoriesAdapterOnClickHandler mClickHandler;
 
@@ -44,7 +44,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesItemHolder
     }
 
     public void setCategoriesData(ArrayList<String> itemList) {
-        this.itemList = itemList;
+        if (this.itemList != null)
+            this.itemList.clear();
+
+        this.itemList.addAll(itemList);
         notifyDataSetChanged();
     }
 
