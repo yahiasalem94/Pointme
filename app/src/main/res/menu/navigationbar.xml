@@ -4,26 +4,21 @@
     <item
         android:id="@+id/categories"
         android:icon="@drawable/categories"
-        android:title="@string/categories" />
+        android:title="categories" />
 
     <item
         android:id="@+id/favorites"
         android:icon="@drawable/favorites"
-        android:title="@string/favorites" />
-
-    <item
-        android:id="@+id/search"
-        android:icon="@drawable/search"
-        android:title="@string/search" />
+        android:title="favorites" />
 
     <item
         android:id="@+id/booking"
         android:icon="@drawable/calender"
-        android:title="@string/booking" />
+        android:title="booking" />
 
     <item
         android:id="@+id/more"
         android:icon="@drawable/lists"
-        android:title="@string/more" />
+        android:title="more" />
 
 </menu>

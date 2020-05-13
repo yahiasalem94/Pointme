@@ -11,40 +11,10 @@
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/orange</item>
 
-        <item name="windowActionBar">false</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">@drawable/background</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:fitsSystemWindows">false</item>
-<!--        <item name="android:listDivider">@drawable/item_divider</item>-->
-
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-
-    </style>
-
-    <style name="Toolbar">
-        <item name="windowActionBarOverlay">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:elevation">0dp</item>
-        <!--<item name="android:background">@color/primaryDarkColor</item>-->
-    </style>
-
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:fontFamily">@font/opensans_semibold</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">30sp</item>
-    </style>
-
-    <style name="Toolbar.SubText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:fontFamily">@font/barlowcondensed_regular</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:windowBackground">@drawable/gradient_background</item>
     </style>
 
     <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">

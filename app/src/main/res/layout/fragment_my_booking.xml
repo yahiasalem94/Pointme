@@ -19,10 +19,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/reviewsLinearLayout"
             android:gravity="center"
-            android:background="@drawable/capsule_white_background"
-            android:onClick="upcomingClick">
+            android:background="@drawable/capsule_white_background">
 
             <TextView
                 android:id="@+id/upcomingTv"
@@ -40,9 +38,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/eventsLinearLayout"
-            android:gravity="center"
-            android:onClick="pastClick">
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/pastTv"
@@ -57,7 +53,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/buttonLayout"
-        android:paddingTop="?attr/actionBarSize"
+        android:layout_marginTop="8dp"
+        android:paddingTop="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
