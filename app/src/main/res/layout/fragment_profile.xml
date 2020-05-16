@@ -136,6 +136,7 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/linearLayout"
         android:background="@drawable/capsule_grey_background">
