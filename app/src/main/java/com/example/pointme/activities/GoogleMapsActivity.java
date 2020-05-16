@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.pointme.R;
 import com.example.pointme.utils.DoubleArrayEvaluator;
+import com.example.pointme.utils.LocationTrack;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -73,6 +74,8 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
+    private LocationTrack locationTrack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +99,32 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        locationTrack = new LocationTrack(this);
+    }
+
+    private void getLocation() {
+        if (mLocationPermissionsGranted) {
+            if (locationTrack.canGetLocation()) {
+                moveCamera(new LatLng(locationTrack.getLatitude(), locationTrack.getLongitude()), 15f);
+                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(locationTrack.getLatitude(), locationTrack.getLongitude())).draggable(true));
+                Log.d(TAG, locationTrack.getLatitude()+"" + " " + locationTrack.getLongitude()+"");
+            } else {
+                locationTrack.showSettingsAlert();
+            }
+        } else {
+            getLocationPermission();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        locationTrack.stopListener();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
@@ -111,7 +140,7 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
         mMap.setOnMarkerDragListener(this);
 
         if (mLocationPermissionsGranted) {
-            getDeviceLocation();
+//            getDeviceLocation();
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
@@ -120,7 +149,7 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
+            getLocation();
         }
     }
 
@@ -180,33 +209,31 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
         });
     }
 
-    private void getDeviceLocation(){
-        Log.d(TAG, "getDeviceLocation: getting the devices current location");
-
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        try{
-            if(mLocationPermissionsGranted){
-
-                final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        Log.d(TAG, "onComplete: found location!");
-                        Location currentLocation = (Location) task.getResult();
-
-                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
-
-                        marker = mMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).draggable(true));
-                    }else{
-                        Log.d(TAG, "onComplete: current location is null");
-                        Toast.makeText(GoogleMapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        } catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
-        }
-    }
+//    private void getDeviceLocation(){
+//        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+//
+//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+//
+//        try{
+//            if(mLocationPermissionsGranted){
+//
+//                final Task location = mFusedLocationProviderClient.getLastLocation();
+//                location.addOnCompleteListener(task -> {
+//                    if(task.isSuccessful()){
+//                        Log.d(TAG, "onComplete: found location!");
+//                        Location currentLocation = (Location) task.getResult();
+//
+//
+//                    }else{
+//                        Log.d(TAG, "onComplete: current location is null");
+//                        Toast.makeText(GoogleMapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        } catch (SecurityException e){
+//            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+//        }
+//    }
 
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
