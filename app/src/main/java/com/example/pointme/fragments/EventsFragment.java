@@ -4,7 +4,6 @@ package com.example.pointme.fragments;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,10 +27,13 @@ import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Event;
 import com.example.pointme.models.Meeting;
 import com.example.pointme.models.ServiceProvider;
+import com.example.pointme.models.WorkshopModel;
 import com.example.pointme.viewModels.AppointmentsViewModel;
 import com.example.pointme.viewModels.AppointmentsViewModelFactory;
 import com.example.pointme.viewModels.EventsViewModel;
 import com.example.pointme.viewModels.EventsViewModelFactory;
+import com.example.pointme.viewModels.WorkshopViewModel;
+import com.example.pointme.viewModels.WorkshopViewModelFactory;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -52,12 +54,14 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
 
     private Appointment appointmentsModel;
     private Event eventsModel;
+    private WorkshopModel workshopModel;
     private ArrayList<Meeting> meetings;
 //    private ArrayList<Appointment> appointments;
 //    private ArrayList<Event> events;
 
     private AppointmentsViewModel appointmentsViewModel;
     private EventsViewModel eventsViewModel;
+    private WorkshopViewModel workshopViewModel;
     /*Views*/
     private RecyclerView recyclerList;
     private Button book;
@@ -76,6 +80,9 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
 
             EventsViewModelFactory eventsViewModelFactory = new EventsViewModelFactory(profileInfo.getuID());
             eventsViewModel = new ViewModelProvider(EventsFragment.this, eventsViewModelFactory).get(EventsViewModel.class);
+
+            WorkshopViewModelFactory workshopViewModelFactory = new WorkshopViewModelFactory(profileInfo.getuID());
+            workshopViewModel = new ViewModelProvider(EventsFragment.this, workshopViewModelFactory).get(WorkshopViewModel.class);
         }
 
 
@@ -106,52 +113,14 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-//        ViewCompat.setNestedScrollingEnabled(recyclerList, false);
-
-//
-//        final GestureDetector gesture = new GestureDetector(getActivity(),
-//                new GestureDetector.SimpleOnGestureListener() {
-//
-//                    @Override
-//                    public boolean onDown(MotionEvent e) {
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-//                                           float velocityY) {
-//                        Log.i(TAG, "onFling has been called!");
-//                        final int SWIPE_MIN_DISTANCE = 120;
-//                        final int SWIPE_MAX_OFF_PATH = 250;
-//                        final int SWIPE_THRESHOLD_VELOCITY = 200;
-//                        try {
-//                            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-//                                return false;
-//                            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-//                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-//                                Log.i(TAG, "Right to Left");
-//                            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-//                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-//                                Log.i(TAG, "Left to Right");
-//                            }
-//                        } catch (Exception e) {
-//                            // nothing
-//                        }
-//                        return super.onFling(e1, e2, velocityX, velocityY);
-//                    }
-//                });
-//
-//        recyclerList.setOnTouchListener((v, event) -> gesture.onTouchEvent(event));
-
         observeMeetings();
-
     }
 
     private void observeMeetings() {
 
         LiveData<QuerySnapshot> appointmentsLiveData = appointmentsViewModel.getDataSnapshotLiveData();
         LiveData<QuerySnapshot> eventsLiveData = eventsViewModel.getDataSnapshotLiveData();
+        LiveData<QuerySnapshot> workshopLiveData = workshopViewModel.getDataSnapshotLiveData();
 
         appointmentsLiveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
             if (dataSnapshot != null) {
@@ -182,22 +151,55 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
 //                showErrorMessage();
             }
         });
+
+        workshopLiveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
+            if (dataSnapshot != null) {
+//                mProgressBar.setVisibility(View.INVISIBLE);
+                for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
+                    workshopModel = dataSnapshot.getDocuments().get(i).toObject(WorkshopModel.class);
+                    meetings.add(workshopModel);
+                }
+                profileAdapter.setMeetings(meetings);
+//                showDataView();
+            } else {
+//                mProgressBar.setVisibility(View.INVISIBLE);
+//                showErrorMessage();
+            }
+        });
     }
+
 
     @Override
     public void onClick(@Type int type, int position) {
-        CalendarFragment fragment = new CalendarFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(PROFILE_INFO, profileInfo);
 
-        bundle.putParcelable(MEETING, meetings.get(position));
-        bundle.putInt(TYPE, type);
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
-        transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        if (type == Type.WORKSHOP) {
+
+            WorkshopCalendarFragment fragment = new WorkshopCalendarFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(PROFILE_INFO, profileInfo);
+
+            bundle.putParcelable(MEETING, meetings.get(position));
+            fragment.setArguments(bundle);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+        } else {
+            CalendarFragment fragment = new CalendarFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(PROFILE_INFO, profileInfo);
+
+            bundle.putParcelable(MEETING, meetings.get(position));
+            bundle.putInt(TYPE, type);
+            fragment.setArguments(bundle);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
 }

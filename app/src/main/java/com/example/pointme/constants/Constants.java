@@ -16,6 +16,7 @@ public class Constants {
     public static final String SERVICE_PROVIDERS = "ServiceProviders";
     public static final String APPOINTMENTS = "Appointments";
     public static final String EVENTS = "Events";
+    public static final String WORKSHOPS = "Workshops";
     public static final String BOOKINGS = "Bookings";
     public static final String REVIEWS = "Reviews";
 
@@ -30,6 +31,9 @@ public class Constants {
     /* Cloud Fuctions */
     public static final String GET_BOOKING_SLOTS = "getBookingSlots";
 
+    /* Event Schedule Type */
+    public static final String WEEKLY_BASED = "WB";
+    public static final String DATE_BASED = "DB";
 
     public static final String FAVORITES = "Favorites";
     public static final String APPOINTMENT_SCHEDULE = "AppointmentSchedule";

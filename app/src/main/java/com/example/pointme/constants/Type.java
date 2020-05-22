@@ -6,4 +6,5 @@ import androidx.annotation.IntDef;
 public @interface Type {
     int EVENT = 1;
     int APPOINTMENT = 2;
+    int WORKSHOP = 3;
 }
