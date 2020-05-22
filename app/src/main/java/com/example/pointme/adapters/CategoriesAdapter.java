@@ -18,7 +18,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.models.CategoriesModel;
 import com.example.pointme.utils.GlideApp;
@@ -31,6 +30,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesItemHolder
 
     private static final String TAG = CategoriesAdapter.class.getSimpleName();
     private ArrayList<String> itemList = new ArrayList<>();
+    private ArrayList<String> categoryNames = new ArrayList<>();
     private Context mContext;
     private CategoriesAdapterOnClickHandler mClickHandler;
 
@@ -43,11 +43,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesItemHolder
         this.mContext = mContext;
     }
 
-    public void setCategoriesData(ArrayList<String> itemList) {
+    public void setCategoriesData(ArrayList<String> categoryNames, ArrayList<String> itemList) {
         if (this.itemList != null)
             this.itemList.clear();
+        if (this.categoryNames != null)
+            this.categoryNames.clear();
 
         this.itemList.addAll(itemList);
+        this.categoryNames.addAll(categoryNames);
         notifyDataSetChanged();
     }
 
@@ -63,12 +66,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesItemHolder
 
     @Override
     public void onBindViewHolder(CategoriesItemHolder holder, final int position) {
+        holder.categoryName.setText(categoryNames.get(position));
         GlideApp.with(mContext)
                 .load(itemList.get(position))
                 .apply(new RequestOptions()
-                        .placeholder(new ColorDrawable(Color.BLACK))
-                        .fitCenter()
-                        .dontAnimate())
+                        .placeholder(R.drawable.no_image)
+                        .error(R.drawable.no_image)
+                        .fitCenter())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

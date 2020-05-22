@@ -1,5 +1,6 @@
 package com.example.pointme.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,21 +34,15 @@ import static com.example.pointme.activities.MainActivity.NAME_OF_PROVIDER;
 
 public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoriesAdapterOnClickHandler {
 
-    private Toolbar toolbar;
+    private String TAG = CategoriesFragment.class.getSimpleName();
 
-    private List<CategoriesModel> categoriesList = null;
     private CategoriesModel categoriesModel;
-
     private CategoriesAdapter categoriesAdapter;
-    private String TAG = "CategoriesFragment";
-
     private CategoriesViewModel categoriesViewModel;
-    private LiveData<DocumentSnapshot> liveData;
 
     /* Views */
     private RecyclerView recyclerView;
-    private GridLayoutManager gridLayoutManager;
-    private View mRootview;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +56,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        mRootview = inflater.inflate(R.layout.fragment_categories, parent, false);
+        View mRootview = inflater.inflate(R.layout.fragment_categories, parent, false);
         recyclerView = mRootview.findViewById(R.id.card_view_recycler_list);
 
         // Create the recyclerview.
@@ -74,18 +69,21 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        progressDialog = ProgressDialog.show(getActivity(),
+                "ProgressDialog", "Fetching Categories");
 
-        liveData = categoriesViewModel.getDataSnapshotLiveData();
+        LiveData<DocumentSnapshot> liveData = categoriesViewModel.getDataSnapshotLiveData();
 
         liveData.observe(getViewLifecycleOwner(), new Observer<DocumentSnapshot>() {
             @Override
             public void onChanged(@Nullable DocumentSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
                     if (dataSnapshot.exists()) {
+                        progressDialog.dismiss();
                         // update the UI here with values in the snapshot
                         Log.d(TAG, dataSnapshot.toString());
                         categoriesModel = dataSnapshot.toObject(CategoriesModel.class);
-                        categoriesAdapter.setCategoriesData(categoriesModel.getImageUrls());
+                        categoriesAdapter.setCategoriesData(categoriesModel.getCategoriesNames(), categoriesModel.getImageUrls());
                     }
                 }
             }
@@ -94,10 +92,11 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
 
     private void setupRecyclerView() {
         // Create the grid layout manager with 2 columns.
-        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        recyclerView.addItemDecoration(new GridSpacingItemDecorator(getActivity(), 2, 10, true));
+//        recyclerView.addItemDecoration(new GridSpacingItemDecorator(getActivity(), 2, 10, true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         // Set data adapter.
