@@ -47,11 +47,37 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         categoriesAdapter = new CategoriesAdapter(getActivity(), this);
         categoriesViewModel = new ViewModelProvider(this).get(CategoriesViewModel.class);
-        getActivity().setTitle(R.string.categories);
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "OnStart");
+        getActivity().setTitle(R.string.categories);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "OnResume");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "OnDestroy");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "OnDestroyView");
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -77,11 +103,12 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         liveData.observe(getViewLifecycleOwner(), new Observer<DocumentSnapshot>() {
             @Override
             public void onChanged(@Nullable DocumentSnapshot dataSnapshot) {
+                Log.d(TAG, "[OnChanged]: " + hashCode());
+
                 if (dataSnapshot != null) {
                     if (dataSnapshot.exists()) {
                         progressDialog.dismiss();
                         // update the UI here with values in the snapshot
-                        Log.d(TAG, dataSnapshot.toString());
                         categoriesModel = dataSnapshot.toObject(CategoriesModel.class);
                         categoriesAdapter.setCategoriesData(categoriesModel.getCategoriesNames(), categoriesModel.getImageUrls());
                     }

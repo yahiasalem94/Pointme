@@ -66,7 +66,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesItemHolder
 
     @Override
     public void onBindViewHolder(CategoriesItemHolder holder, final int position) {
-        holder.categoryName.setText(categoryNames.get(position));
+//        holder.categoryName.setText(categoryNames.get(position));
         GlideApp.with(mContext)
                 .load(itemList.get(position))
                 .apply(new RequestOptions()
