@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -19,15 +20,23 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.models.ServiceProvider;
+import com.example.pointme.utils.GlideApp;
+import com.example.pointme.utils.SharedPreference;
 
 import java.util.Objects;
 
@@ -36,7 +45,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
 import static com.example.pointme.activities.MainActivity.PROFILE_UID;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener {
+public class ProfileFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private String TAG = ProfileFragment.class.getSimpleName();
     private ProfileAdapter profileAdapter;
@@ -46,8 +55,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private String phoneNumber = "tel:";
     private String instagramLink;
 
+    private SharedPreference sharedPreference;
+
     /*Views*/
     private CircleImageView profileImage;
+    private ToggleButton favoritesButton;
     private LinearLayout phoneLinearLayout;
     private LinearLayout instagramLinearLayout;
     private RatingBar mRatingBar;
@@ -64,6 +76,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             profileInfo = getArguments().getParcelable(PROFILE_INFO);
 
         }
+        sharedPreference = new SharedPreference();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         getActivity().setTitle("Profile");
     }
 
@@ -76,6 +94,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         /* Initalizing views */
         profileImage = mRootview.findViewById(R.id.ivProfile);
+        favoritesButton = mRootview.findViewById(R.id.button_favorite);
         TextView nameView = mRootview.findViewById(R.id.tvName);
         phoneLinearLayout = mRootview.findViewById(R.id.callLayout);
         instagramLinearLayout = mRootview.findViewById(R.id.instagramLayout);
@@ -85,6 +104,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         reviewsTv = mRootview.findViewById(R.id.reviewsTv);
         eventLinearLayout = mRootview.findViewById(R.id.eventsLinearLayout);
         reviewsLinearLayout = mRootview.findViewById(R.id.reviewsLinearLayout);
+
+        favoritesButton.setOnCheckedChangeListener(this);
 
         eventLinearLayout.setOnClickListener(this);
         eventLinearLayout.setClickable(false);
@@ -98,6 +119,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         instagramLinearLayout.setOnClickListener(this);
         instagramLinearLayout.setClickable(false);
+
+        GlideApp.with(this)
+                .load(profileInfo.getImage())
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.no_image)
+                        .error(R.drawable.no_image)
+                        .fitCenter())
+                .into(profileImage);
 
         nameView.setText(profileInfo.getName());
         mRatingBar.setRating(profileInfo.getAvgRating());
@@ -187,6 +216,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        final ScaleAnimation scaleAnimation = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f,
+                Animation.RELATIVE_TO_SELF, 0.7f);
+        scaleAnimation.setDuration(500);
+        BounceInterpolator bounceInterpolator = new BounceInterpolator();
+        scaleAnimation.setInterpolator(bounceInterpolator);
+
+        //animation
+        compoundButton.startAnimation(scaleAnimation);
+
+        if (isChecked) {
+            sharedPreference.addFavorite(getActivity(), profileInfo);
+            Toast.makeText(getActivity(), "Added to favorites", Toast.LENGTH_LONG).show();
+        } else {
+            sharedPreference.removeFavorite(getActivity(), profileInfo);
+            Toast.makeText(getActivity(), "Removed from favorites", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void callServiceProvider() {
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(phoneNumber));
@@ -233,6 +282,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         transaction.replace(R.id.container, fragment);
         transaction.commit();
     }
+
 
 
 }
