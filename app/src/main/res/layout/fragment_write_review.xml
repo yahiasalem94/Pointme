@@ -58,12 +58,14 @@
                 tools:text="Time" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/qualityLayout"
-            android:layout_width="match_parent"
+        <GridLayout
+            android:id="@+id/grid_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:columnCount="2"
+            android:rowCount="3"
             android:layout_marginTop="16dp"
+            android:orientation="horizontal"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/date_time_layout">
@@ -72,81 +74,60 @@
                 android:id="@+id/qualityTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Quality"
                 android:textSize="20sp"/>
 
             <RatingBar
                 android:id="@+id/quality_rating"
+                android:theme="@style/RatingBar"
                 android:scaleX="0.6"
                 android:scaleY="0.6"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:isIndicator="false"
+                android:layout_height="45dp"
+                android:isIndicator="true"
                 android:numStars="5"
-                android:stepSize="0.5"
-                android:layout_marginStart="60dp"
-                android:layout_toRightOf="@+id/qualityTv"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/puncLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/qualityLayout">
+                android:stepSize="0.5" />
 
             <TextView
                 android:id="@+id/puncTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
                 android:text="Punctuality"
                 android:textSize="20sp" />
 
             <RatingBar
                 android:id="@+id/punc_rating"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
+                android:theme="@style/RatingBar"
                 android:scaleX="0.6"
                 android:scaleY="0.6"
                 android:numStars="5"
                 android:stepSize="0.5"
-                android:isIndicator="false"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@+id/puncTv" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/attitudeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/puncLayout">
+                android:isIndicator="true" />
 
             <TextView
                 android:id="@+id/attitudeTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Attitude"
                 android:textSize="20sp"/>
 
             <RatingBar
                 android:id="@+id/attitude_rating"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
+                android:theme="@style/RatingBar"
                 android:scaleX="0.6"
                 android:scaleY="0.6"
                 android:numStars="5"
                 android:stepSize="0.5"
-                android:isIndicator="false"
-                android:layout_marginStart="60dp"
-                android:layout_toRightOf="@+id/attitudeTv" />
-        </RelativeLayout>
+                android:isIndicator="true" />
+        </GridLayout>
+
 
         <EditText
             android:id="@+id/addreviewText"
@@ -154,7 +135,7 @@
             android:layout_height="150dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attitudeLayout"
+            app:layout_constraintTop_toBottomOf="@+id/grid_layout"
             android:background="@color/transparentWhite"
             android:gravity="start"
             android:layout_marginTop="8dp"

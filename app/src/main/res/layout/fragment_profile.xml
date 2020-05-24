@@ -46,6 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvName"
+        android:theme="@style/RatingBar"
         android:layout_centerHorizontal="true"
         style="?android:attr/ratingBarStyleSmall"
         android:numStars="5"
