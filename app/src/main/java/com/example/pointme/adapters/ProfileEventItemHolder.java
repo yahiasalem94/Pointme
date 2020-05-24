@@ -13,19 +13,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alespero.expandablecardview.ExpandableCardView;
 import com.example.pointme.R;
-import com.example.pointme.constants.Type;
-import com.example.pointme.viewModels.ProvidersViewModel;
+import com.example.pointme.constants.Constants;
 
 public class ProfileEventItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView eventTvTitle;
+    public ImageView arrowButton;
     public ConstraintLayout expandableView;
     public TextView description;
     private TextView feesTv;
     public Button book;
-    public @Type int type;
+    public @Constants.Type int type;
     public LinearLayout linearLayout;
     public CardView cardView;
     private final ProfileAdapter.ProfileAdapterOnClickHandler mClickHandler;
@@ -35,6 +34,7 @@ public class ProfileEventItemHolder extends RecyclerView.ViewHolder implements V
         super(itemView);
 
         eventTvTitle = itemView.findViewById(R.id.eventTv_title);
+        arrowButton = itemView.findViewById(R.id.arrowBtn);
         expandableView = itemView.findViewById(R.id.expandableView);
         description = itemView.findViewById(R.id.description);
         feesTv = itemView.findViewById(R.id.et_fees);

@@ -1,30 +1,22 @@
 package com.example.pointme.adapters;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
+
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
-import android.widget.Button;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
-import com.alespero.expandablecardview.ExpandableCardView;
-import com.example.pointme.constants.Type;
 import com.example.pointme.R;
+import com.example.pointme.constants.Constants;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Event;
-import com.example.pointme.models.ExpandModel;
 import com.example.pointme.models.Meeting;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>  {
@@ -41,7 +33,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
 
 
     public interface ProfileAdapterOnClickHandler {
-        void onClick(@Type int type, int position);
+        void onClick(@Constants.Type int type, int position);
     }
 
 //    public interface ProfileAdapterOnExpandableCard {
@@ -81,9 +73,11 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
             holder.eventTvTitle.setText(meetings.get(position).getName());
             holder.description.setText(meetings.get(position).getDesc());
             if (meetings.get(position) instanceof Appointment) {
-                holder.type = Type.APPOINTMENT;
+                holder.type = Constants.Type.APPOINTMENT;
             } else if (meetings.get(position) instanceof Event) {
-                holder.type = Type.EVENT;
+                holder.type = Constants.Type.EVENT;
+            } else {
+                holder.type = Constants.Type.WORKSHOP;
             }
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +86,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
                 if (holder.expandableView.getVisibility() == View.GONE){
                     TransitionManager.beginDelayedTransition(holder.cardView, new AutoTransition());
                     holder.expandableView.setVisibility(View.VISIBLE);
+                    holder.arrowButton.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
 //                    TranslateAnimation animation = new TranslateAnimation(0.0f, -200.0f, 0.0f, 0.0f); // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
 //                    animation.setDuration(8500); // animation duration, change accordingly
 //                    animation.setFillAfter(false);
@@ -99,6 +94,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileEventItemHolder>
                 } else {
                     TransitionManager.beginDelayedTransition(holder.cardView, new AutoTransition());
                     holder.expandableView.setVisibility(View.GONE);
+                    holder.arrowButton.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
                 }
             }
         });

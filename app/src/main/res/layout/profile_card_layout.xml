@@ -32,15 +32,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@color/transparent">
 
+            <ImageView
+                android:id="@+id/arrowBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/ic_keyboard_arrow_down_black_24dp" />
+
             <TextView
                 android:id="@+id/eventTv_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/arrowBtn"
+                android:layout_marginStart="16dp"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:layout_centerHorizontal="true"
                 android:textSize="20sp"
-                tools:text="Yoga"/>
+                tools:text="Yoga" />
         </RelativeLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
