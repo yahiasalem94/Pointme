@@ -1,25 +1,19 @@
 package com.example.pointme.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.example.pointme.R;
 import com.example.pointme.fragments.FavoritesFragment;
 import com.example.pointme.fragments.MyBookingFragment;
-import com.example.pointme.fragments.SearchFragment;
 import com.example.pointme.fragments.SettingsFragment;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Booking;
@@ -37,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //    private DatabaseReference mDatabase;
     private BottomNavigationView bottomNavigationView;
     public Toolbar toolbar;
-
+    public ToggleButton favoritesButton;
     private Event mEvent;
     private Appointment mAppointment;
     private Booking mBooking;
@@ -53,18 +47,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public static final String EVENT = "event";
     public static final String APPOINTMENT = "appointment";
     public static final String TYPE = "type";
-
+    public static final String PROFILE_UID = "profileUid";
+    public static final String BOOKING = "booking";
+    public static final String CONFIRM_DATE = "ConfirmDate";
+    public static final String CONFIRM_TIME = "ConfirmTime";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 //        mDatabase = FirebaseDatabase.getInstance().getReference();
-        toolbar = findViewById(R.id.my_toolbar);
+        toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
+        favoritesButton = findViewById(R.id.button_favorite);
         categoriesFragment = new CategoriesFragment();
         loadFragment(categoriesFragment, getString(R.string.categories));
     }
@@ -113,11 +110,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 FavoritesFragment favoritesFragment = new FavoritesFragment();
                 loadFragment(favoritesFragment, getString(R.string.favorites));
                 return true;
-            case R.id.search:
-                Log.i(TAG, "Loading favorites fragment");
-                SearchFragment searchFragment = new SearchFragment();
-                loadFragment(searchFragment, getString(R.string.search));
-                return true;
+//            case R.id.search:
+//                Log.i(TAG, "Loading favorites fragment");
+//                SearchFragment searchFragment = new SearchFragment();
+//                loadFragment(searchFragment, getString(R.string.search));
+//                return true;
             case R.id.booking:
                 Log.i(TAG, "Loading booking fragment");
                 MyBookingFragment bookingFragment = new MyBookingFragment();
