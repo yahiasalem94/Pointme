@@ -5,11 +5,11 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class LinearSpacesItemDecoration extends RecyclerView.ItemDecoration {
+public class LinearRightSpacesItemDecoration extends RecyclerView.ItemDecoration {
 
     private int spacing;
 
-    public LinearSpacesItemDecoration(int spacing) {
+    public LinearRightSpacesItemDecoration(int spacing) {
         this.spacing = spacing;
     }
 
