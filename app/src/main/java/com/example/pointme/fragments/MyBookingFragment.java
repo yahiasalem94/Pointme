@@ -1,14 +1,10 @@
 package com.example.pointme.fragments;
 
-import android.animation.ObjectAnimator;
 import android.graphics.Color;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,11 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.pointme.adapters.BookingsAdapter;
-import com.example.pointme.decorator.LinearSpacesItemDecoration;
-import com.example.pointme.interfaces.RecyclerViewClickListener;
+import com.example.pointme.decorator.LinearRightSpacesItemDecoration;
 import com.example.pointme.R;
 import com.example.pointme.models.Booking;
-import com.example.pointme.models.ServiceProvider;
 import com.example.pointme.utils.Helper;
 import com.example.pointme.viewModels.BookingsViewModel;
 import com.example.pointme.viewModels.BookingsViewModelFactory;
@@ -40,7 +34,6 @@ import java.util.Date;
 import java.util.Objects;
 
 import static com.example.pointme.activities.MainActivity.BOOKING;
-import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
 
 public class MyBookingFragment extends Fragment implements View.OnClickListener, BookingsAdapter.BookingsAdapterOnClickHandler {
 
@@ -117,7 +110,7 @@ public class MyBookingFragment extends Fragment implements View.OnClickListener,
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(linearLayoutManager);
-        list.addItemDecoration(new LinearSpacesItemDecoration( 50));
+        list.addItemDecoration(new LinearRightSpacesItemDecoration( 50));
         // Set data adapter.
         list.setAdapter(adapter);
     }
@@ -184,6 +177,7 @@ public class MyBookingFragment extends Fragment implements View.OnClickListener,
         pastLinearLayout.setBackgroundResource(R.drawable.transition_drawable);
 //        TransitionDrawable transition = (TransitionDrawable) pastLinearLayout.getBackground();
 //        transition.startTransition(1500);
+
         pastTv.setTextColor(Color.BLACK);
         upcompingTv.setTextColor(Color.WHITE);
         adapter.newList(pastBookings, isPastBookings);

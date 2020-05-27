@@ -1,25 +1,14 @@
 package com.example.pointme.adapters;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
-import com.alespero.expandablecardview.ExpandableCardView;
-import com.example.pointme.constants.Type;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.pointme.R;
-import com.example.pointme.models.Appointment;
-import com.example.pointme.models.Event;
-import com.example.pointme.models.ExpandModel;
-import com.example.pointme.models.Meeting;
 import com.example.pointme.models.Reviews;
 
 import java.util.ArrayList;

@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.adapters.FavoritesAdapter;
 import com.example.pointme.models.ServiceProvider;
@@ -24,7 +23,7 @@ import com.example.pointme.utils.SharedPreference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesFragment extends Fragment implements RecyclerViewClickListener {
+public class FavoritesFragment extends Fragment {
 
     private Toolbar toolbar;
     private FavoritesAdapter adapter;
@@ -73,7 +72,7 @@ public class FavoritesFragment extends Fragment implements RecyclerViewClickList
             if (favorites.size() == 0) {
                 showAlert("No Items", "Add service providers to your list");
             } else {
-                adapter = new FavoritesAdapter(favorites, this);
+                adapter = new FavoritesAdapter(favorites);
                 // Set data adapter.
                 list.setAdapter(adapter);
             }
@@ -99,24 +98,19 @@ public class FavoritesFragment extends Fragment implements RecyclerViewClickList
         }
     }
 
-    @Override
-    public void onClick(String title) {
-
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle bundle = new Bundle();
-//        bundle.putString(ARG_PARAM1, title);
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
-        transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    @Override
-    public void onClickPI(ServiceProvider profileInfo) {
-
-    }
+//    @Override
+//    public void onClick(String title) {
+//
+//        ProfileFragment fragment = new ProfileFragment();
+//        Bundle bundle = new Bundle();
+////        bundle.putString(ARG_PARAM1, title);
+//        fragment.setArguments(bundle);
+//        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
+//        transaction.replace(R.id.frame_container, fragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 
     @Override
     public void onResume() {

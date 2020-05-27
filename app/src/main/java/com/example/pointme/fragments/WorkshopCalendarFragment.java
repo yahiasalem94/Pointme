@@ -122,13 +122,20 @@ public class WorkshopCalendarFragment extends Fragment implements WorkshopAdapte
         filter = year + "0" + (month+monthOffset);
 
         mWorkshopAdapter = new WorkshopAdapter(getActivity(), this);
-        getActivity().setTitle("Book a Workshop");
+
 
         if (scheduleType.equals(WEEKLY_BASED)) {
             listView = Helper.weeklyBasedWorkshops(times, startDate, endDate);
+            listView = Helper.filterWeeklyBasedWorkshops(listView, filter);
         } else {
             listView = Helper.dateBasedWorkshops(times, filter);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().setTitle("Book a Workshop");
     }
 
     @Override
@@ -179,6 +186,7 @@ public class WorkshopCalendarFragment extends Fragment implements WorkshopAdapte
 
             if (scheduleType.equals(WEEKLY_BASED)) {
                 listView = Helper.weeklyBasedWorkshops(times, startDate, endDate);
+                listView = Helper.filterWeeklyBasedWorkshops(listView, filter);
             } else {
                 listView = Helper.dateBasedWorkshops(times, filter);
             }
@@ -198,6 +206,7 @@ public class WorkshopCalendarFragment extends Fragment implements WorkshopAdapte
 
             if (scheduleType.equals(WEEKLY_BASED)) {
                 listView = Helper.weeklyBasedWorkshops(times, startDate, endDate);
+                listView = Helper.filterWeeklyBasedWorkshops(listView, filter);
             } else {
                 listView = Helper.dateBasedWorkshops(times, filter);
             }

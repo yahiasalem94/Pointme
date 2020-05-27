@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.models.Booking;
 

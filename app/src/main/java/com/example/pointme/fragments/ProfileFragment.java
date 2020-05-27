@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -16,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +36,7 @@ import android.widget.ToggleButton;
 
 import com.bumptech.glide.request.RequestOptions;
 import com.example.pointme.R;
+import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.models.ServiceProvider;
 import com.example.pointme.utils.GlideApp;
@@ -77,12 +81,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, C
 
         }
         sharedPreference = new SharedPreference();
+        favoritesButton = ((MainActivity) getActivity()).favoritesButton;
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         getActivity().setTitle("Profile");
+
+
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        favoritesButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        favoritesButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -90,11 +111,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, C
 
         View mRootview = inflater.inflate(R.layout.fragment_profile, parent, false);
         // Defines the xml file for the fragment
-        loadEventFragment();
 
         /* Initalizing views */
         profileImage = mRootview.findViewById(R.id.ivProfile);
-        favoritesButton = mRootview.findViewById(R.id.button_favorite);
         TextView nameView = mRootview.findViewById(R.id.tvName);
         phoneLinearLayout = mRootview.findViewById(R.id.callLayout);
         instagramLinearLayout = mRootview.findViewById(R.id.instagramLayout);
@@ -133,40 +152,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, C
         numOfReviews.setText("(" + profileInfo.getNumReviews() + ")");
         addLinks();
 
+        loadEventFragment();
 
-//        final GestureDetector gesture = new GestureDetector(getActivity(),
-//                new SimpleOnGestureListener() {
-//
-//                    @Override
-//                    public boolean onDown(MotionEvent e) {
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-//                                           float velocityY) {
-//                        Log.i(TAG, "onFling has been called!");
-//                        final int SWIPE_MIN_DISTANCE = 120;
-//                        final int SWIPE_MAX_OFF_PATH = 250;
-//                        final int SWIPE_THRESHOLD_VELOCITY = 200;
-//                        try {
-//                            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-//                                return false;
-//                            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-//                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-//                                Log.i(TAG, "Right to Left");
-//                            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-//                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-//                                Log.i(TAG, "Left to Right");
-//                            }
-//                        } catch (Exception e) {
-//                            // nothing
-//                        }
-//                        return super.onFling(e1, e2, velocityX, velocityY);
-//                    }
-//                });
-//
-//        mRootview.setOnTouchListener((v, event) -> gesture.onTouchEvent(event));
         return mRootview;
     }
 
@@ -266,7 +253,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, C
         bundle.putParcelable(PROFILE_INFO, profileInfo);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slide_to_right, R.anim.slide_from_left, R.anim.slide_to_right);
+        transaction.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left, R.anim.slide_from_left, R.anim.slide_to_right);
         transaction.replace(R.id.container, fragment);
         transaction.commit();
     }

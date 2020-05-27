@@ -1,5 +1,6 @@
 package com.example.pointme.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -12,13 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.RatingBar;
-import android.widget.TextView;
 
 import com.example.pointme.R;
 import com.example.pointme.adapters.ReviewsAdapter;
-import com.example.pointme.decorator.DividerItemDecoration;
-import com.example.pointme.decorator.LinearSpacesItemDecoration;
+import com.example.pointme.decorator.LinearBottomSpacesItemDecoration;
+import com.example.pointme.decorator.LinearRightSpacesItemDecoration;
 import com.example.pointme.models.Reviews;
 import com.example.pointme.viewModels.ReviewsViewModel;
 import com.example.pointme.viewModels.ReviewsViewModelFactory;
@@ -79,7 +81,8 @@ public class ReviewFragment extends Fragment {
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerList.setLayoutManager(linearLayoutManager);
-        recyclerList.addItemDecoration(new LinearSpacesItemDecoration( 50));
+        recyclerList.addItemDecoration(new LinearBottomSpacesItemDecoration( 50));
+
 
         // Set data adapter.
         recyclerList.setAdapter(mAdapter);
@@ -108,11 +111,22 @@ public class ReviewFragment extends Fragment {
                     reviews.add(reviewsModel);
                 }
                 mAdapter.setReviews(reviews);
+                runLayoutAnimation(recyclerList);
 //                showDataView();
             } else {
 //                mProgressBar.setVisibility(View.INVISIBLE);
 //                showErrorMessage();
             }
         });
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_slide);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 }

@@ -1,85 +1,63 @@
 package com.example.pointme.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pointme.R;
-import com.example.pointme.activities.LoginActivity;
-import com.example.pointme.activities.MainActivity;
-import com.example.pointme.activities.SignupActivity;
 import com.example.pointme.adapters.TimeAdapter;
-import com.example.pointme.constants.Type;
+import com.example.pointme.constants.Constants;
 import com.example.pointme.decorator.AllDaysDisabledDecorator;
 import com.example.pointme.decorator.DayEnableDecorator;
-import com.example.pointme.decorator.GridSpacingItemDecorator;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Event;
 import com.example.pointme.models.Meeting;
 import com.example.pointme.models.ServiceProvider;
 import com.example.pointme.utils.Helper;
 import com.example.pointme.viewModels.BookingSlotsViewModel;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.FirebaseFunctionsException;
-import com.google.firebase.functions.HttpsCallableResult;
-import com.google.gson.JsonObject;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
-import static com.example.pointme.activities.MainActivity.APPOINTMENT;
 import static com.example.pointme.activities.MainActivity.CONFIRM_DATE;
 import static com.example.pointme.activities.MainActivity.CONFIRM_TIME;
-import static com.example.pointme.activities.MainActivity.EVENT;
 import static com.example.pointme.activities.MainActivity.MEETING;
 import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
 import static com.example.pointme.activities.MainActivity.TYPE;
-import static com.example.pointme.constants.Constants.GET_BOOKING_SLOTS;
+import static com.example.pointme.constants.Constants.WEEKLY_BASED;
 
 public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapterOnClickHandler {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     private ServiceProvider profileInfo;
-    private Event event;
-    private Appointment appointment;
-    private @Type int type;
+    private Meeting meeting;
+    private @Constants.Type int type;
 
+    private boolean isEvent;
+    private boolean isAppointment;
+
+    Map<String, String> bookingSlotsData = new HashMap<>();
 
     private String meetingId;
     private String meetingName;
+    private String spId;
     private int minPeriod;
     private String startDate;
     private String endDate;
@@ -90,6 +68,7 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
 
     /* Appointment */
     private String timeDiff;
+    private String duration;
     /*  Events */
     private String schedueType;
     private ArrayList<String> stringDates;
@@ -114,29 +93,33 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
 
         if (getArguments() != null) {
             profileInfo = getArguments().getParcelable(PROFILE_INFO);
+            meeting = getArguments().getParcelable(MEETING);
             type = getArguments().getInt(TYPE);
-            if (type == Type.EVENT) {
-                event = getArguments().getParcelable(MEETING);
-                meetingId = event.getMeetingID();
-                meetingName = event.getName();
-                minPeriod = event.getMinPeriod();
-                startDate = event.getStartDate();
-                endDate = event.getEndDate();
-                schedueType = event.getScheduleType();
-                stringDates = event.getDates();
-                times = (HashMap<String, String>) event.getTimes();
-            } else {
-                appointment = getArguments().getParcelable(MEETING);
-                meetingId = appointment.getMeetingID();
-                meetingName = appointment.getName();
-                minPeriod = appointment.getMinPeriod();
-                startDate = appointment.getStartDate();
-                endDate = appointment.getEndDate();
-                schedueType = "WB";
-                times = (HashMap<String, String>) appointment.getTimes();
-                timeDiff = appointment.getTimeDiff();
+
+            meetingId = meeting.getMeetingID();
+            meetingName = meeting.getName();
+            spId = meeting.getSpID();
+            minPeriod = meeting.getMinPeriod();
+            startDate = meeting.getStartDate();
+            endDate = meeting.getEndDate();
+
+
+            if (meeting instanceof Event) {
+                isEvent = true;
+                schedueType = ((Event) meeting).getScheduleType();
+                stringDates = ((Event) meeting).getDates();
+                times = ((Event) meeting).getTimes();
+                days = new ArrayList<>(times.keySet());
+            } else if (meeting instanceof Appointment) {
+                isAppointment = true;
+                times = ((Appointment) meeting).getTimes();
+                timeDiff = ((Appointment) meeting).getTimeDiff();
+                duration = ((Appointment) meeting).getDuration();
+
+                days = new ArrayList<>(times.keySet());
             }
-            days = new ArrayList<>(times.keySet());
+
+
         }
         mAdapter = new TimeAdapter(getActivity(), this);
         mViewModel = new ViewModelProvider(this).get(BookingSlotsViewModel.class);
@@ -162,8 +145,8 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
                     "ProgressDialog", "Fetching Booking Slots");
             mTimePickedList.clear();
             mPickedDate = Helper.dateToString(calendarDay.getYear(), calendarDay.getMonth(), calendarDay.getDay());
-            if (type == Type.EVENT) {
-                if (schedueType.equals("WB")) {
+            if (isEvent) {
+                if (schedueType.equals(WEEKLY_BASED)) {
                     mPickedDate = Helper.getWeekDay(calendarDay);
                     mTimePickedList.add(times.get(mPickedDate));
                     mAdapter.setTimesData(mTimePickedList);
@@ -173,15 +156,15 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
                     mAdapter.setTimesData(mTimePickedList);
                     showRecyclerView();
                 }
-            } else {
-                Map<String, String> data = new HashMap<>();
-                data.put("date", mPickedDate);
-                data.put("spID", appointment.getSpID());
-                data.put("appSchedule", times.get(Helper.getWeekDay(calendarDay)));
-                data.put("timeDiff", timeDiff);
-                data.put("duration", appointment.getDuration());
+            } else if (isAppointment) {
+                bookingSlotsData.clear();
+                bookingSlotsData.put("date", mPickedDate);
+                bookingSlotsData.put("spID", spId);
+                bookingSlotsData.put("appSchedule", times.get(Helper.getWeekDay(calendarDay)));
+                bookingSlotsData.put("timeDiff", timeDiff);
+                bookingSlotsData.put("duration", duration);
 
-                mViewModel.getBookingSlots(data);
+                mViewModel.getBookingSlots(bookingSlotsData);
             }
         });
 
@@ -200,7 +183,8 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
             public void onChanged(ArrayList<String> bookingSlots) {
                 if (bookingSlots != null) {
 //                    mTimePickedList = (ArrayList) bookingSlots.getAsJsonObject("bookingSlot").getx
-
+                    mTimePickedList.clear();
+                    mTimePickedList.addAll(bookingSlots);
                     mAdapter.setTimesData(bookingSlots);
                     showRecyclerView();
                 }
@@ -223,7 +207,7 @@ public class CalendarFragment extends Fragment implements TimeAdapter.TimeAdapte
     }
     private void handleAppointments() {
 
-        if (schedueType.equals("WB")) {
+        if (isAppointment || schedueType.equals(WEEKLY_BASED)) {
             mMaterialCalendarView.addDecorator(new DayEnableDecorator(days, minPeriod, startDate, endDate));
         } else {
             for (int i = 0; i < stringDates.size(); i++) {

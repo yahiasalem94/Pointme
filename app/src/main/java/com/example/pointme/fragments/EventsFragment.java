@@ -9,18 +9,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
-import android.view.GestureDetector;
+
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.pointme.constants.ServerResult;
-import com.example.pointme.constants.Type;
+import com.example.pointme.constants.Constants;
 import com.example.pointme.decorator.DividerItemDecoration;
-import com.example.pointme.interfaces.EventsFragmentDBInt;
 import com.example.pointme.R;
 import com.example.pointme.adapters.ProfileAdapter;
 import com.example.pointme.models.Appointment;
@@ -37,10 +33,7 @@ import com.example.pointme.viewModels.WorkshopViewModelFactory;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
-import static com.example.pointme.activities.MainActivity.APPOINTMENT;
-import static com.example.pointme.activities.MainActivity.EVENT;
 import static com.example.pointme.activities.MainActivity.MEETING;
 import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
 import static com.example.pointme.activities.MainActivity.TYPE;
@@ -170,9 +163,9 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
 
 
     @Override
-    public void onClick(@Type int type, int position) {
+    public void onClick(@Constants.Type int type, int position) {
 
-        if (type == Type.WORKSHOP) {
+        if (type == Constants.Type.WORKSHOP) {
 
             WorkshopCalendarFragment fragment = new WorkshopCalendarFragment();
             Bundle bundle = new Bundle();

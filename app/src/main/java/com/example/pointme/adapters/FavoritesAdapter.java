@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.pointme.interfaces.RecyclerViewClickListener;
 import com.example.pointme.R;
 import com.example.pointme.models.ServiceProvider;
 
@@ -15,11 +14,11 @@ import java.util.List;
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesEventItemHolder> {
 
     private List<ServiceProvider> itemList;
-    private RecyclerViewClickListener mRecyclerViewListener;
+//    private RecyclerViewClickListener mRecyclerViewListener;
 
-    public FavoritesAdapter(List<ServiceProvider> itemList, RecyclerViewClickListener callback) {
+    public FavoritesAdapter(List<ServiceProvider> itemList /*RecyclerViewClickListener callback*/) {
         this.itemList = itemList;
-        mRecyclerViewListener = callback;
+//        mRecyclerViewListener = callback;
     }
 
     public void newList(List<ServiceProvider> itemList) {

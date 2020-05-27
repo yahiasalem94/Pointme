@@ -45,6 +45,8 @@ public class ListOfServiceProvidersFragment extends Fragment implements Provider
     private ArrayList<ServiceProvider> serviceProviders;
     private SharedPreference sharedPreference;
 
+    private String service;
+
     private RecyclerView list;
     private TextView errorTextView;
     private ProgressBar mProgressBar;
@@ -58,13 +60,11 @@ public class ListOfServiceProvidersFragment extends Fragment implements Provider
     {
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = ((MainActivity) Objects.requireNonNull(getActivity())).toolbar;
         sharedPreference = new SharedPreference();
 
         if (getArguments() != null) {
-            String service = getArguments().getString(NAME_OF_PROVIDER);
-            assert service != null;
-            getActivity().setTitle(service);
+            service = getArguments().getString(NAME_OF_PROVIDER);
+
 
             ProvidersViewModelFactory providersViewModelFactory = new ProvidersViewModelFactory(service);
             providersViewModel = new ViewModelProvider(ListOfServiceProvidersFragment.this, providersViewModelFactory).get(ProvidersViewModel.class);
@@ -73,6 +73,13 @@ public class ListOfServiceProvidersFragment extends Fragment implements Provider
         serviceProviders = new ArrayList<>();
         providersAdapter = new ProvidersAdapter(getActivity(), sharedPreference,this, this);
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        assert service != null;
+        getActivity().setTitle(service);
     }
 
     @Override
@@ -98,6 +105,7 @@ public class ListOfServiceProvidersFragment extends Fragment implements Provider
 
         liveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
             if (dataSnapshot != null) {
+                serviceProviders.clear();
                 mProgressBar.setVisibility(View.INVISIBLE);
                 for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
                     serviceProvidersModel = dataSnapshot.getDocuments().get(i).toObject(ServiceProvider.class);

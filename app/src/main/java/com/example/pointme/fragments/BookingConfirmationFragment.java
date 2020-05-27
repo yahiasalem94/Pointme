@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.example.pointme.R;
 import com.example.pointme.activities.GoogleMapsActivity;
 import com.example.pointme.activities.MainActivity;
-import com.example.pointme.constants.Type;
+import com.example.pointme.constants.Constants;
 import com.example.pointme.models.Booking;
 import com.example.pointme.models.ServiceProvider;
 import com.example.pointme.viewModels.AddBookingViewModel;
@@ -37,7 +37,7 @@ public class BookingConfirmationFragment extends Fragment implements View.OnClic
     private String mTime;
     private String meetingId;
     private String meetingName;
-    private @Type  int type;
+    private @Constants.Type int type;
     private ServiceProvider profileInfo;
 
     private FirebaseAuth mAuth;
@@ -53,7 +53,7 @@ public class BookingConfirmationFragment extends Fragment implements View.OnClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setTitle("Booking Confirmation");
+
         if (getArguments() != null) {
             mDate = getArguments().getString(CONFIRM_DATE);
             mTime = getArguments().getString(CONFIRM_TIME);
@@ -63,6 +63,12 @@ public class BookingConfirmationFragment extends Fragment implements View.OnClic
             type = getArguments().getInt(TYPE);
         }
         mAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().setTitle("Booking Confirmation");
     }
 
     @Override
@@ -131,7 +137,7 @@ public class BookingConfirmationFragment extends Fragment implements View.OnClic
             booking.setApprovalStatus("Approved");
             booking.setCancelled(false);
 
-            if (type == Type.EVENT) {
+            if (type == Constants.Type.EVENT) {
                 booking.setType("Event");
             } else {
                 booking.setType("Appointment");
