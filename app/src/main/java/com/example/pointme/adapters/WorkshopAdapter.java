@@ -1,6 +1,5 @@
 package com.example.pointme.adapters;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,10 +7,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.example.pointme.R;
-import com.example.pointme.decorator.LinearSpacesItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,7 @@ public class WorkshopAdapter extends RecyclerView.Adapter<WorkshopItemHolder> {
 
     private HorizontalAdapter mAdapter;
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
-    private LinearSpacesItemDecoration dividerItemDecoration;
+
     private final int VERTICAL = 1;
     private final int HORIZONTAL = 2;
 
@@ -37,7 +34,7 @@ public class WorkshopAdapter extends RecyclerView.Adapter<WorkshopItemHolder> {
     public WorkshopAdapter(Context mContext, WorkshopAdapterOnClickHandler clickHandler) {
         this.mClickHandler = clickHandler;
         this.mContext = mContext;
-        dividerItemDecoration = new LinearSpacesItemDecoration(10);
+
     }
 
     public void setWorkshopData(List<TreeMap<String, String>> workshopDates) {
@@ -64,8 +61,6 @@ public class WorkshopAdapter extends RecyclerView.Adapter<WorkshopItemHolder> {
 //        holder.timeTextview.setText(itemList.get(position).entrySet().iterator().next().getValue());
 
         LinearLayoutManager childLayoutManager = new LinearLayoutManager(mContext,  RecyclerView.HORIZONTAL, false);
-
-        holder.recyclerView.addItemDecoration(dividerItemDecoration);
 
         mAdapter = new HorizontalAdapter(itemList.get(position));
         childLayoutManager.setInitialPrefetchItemCount(2);
