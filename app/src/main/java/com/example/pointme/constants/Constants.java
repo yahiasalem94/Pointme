@@ -51,8 +51,12 @@ public class Constants {
     /* FB Permissions */
     public static final String FB_EMAIL = "email";
     public static final String FB_PROFILE = "public_profile";
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({EVENTTYPE, APPOINTMENTTYPE})
-    public @interface ScheduleType { }
+
+    @IntDef({Type.EVENT, Type.APPOINTMENT, Type.WORKSHOP})
+    public @interface Type {
+        int EVENT = 1;
+        int APPOINTMENT = 2;
+        int WORKSHOP = 3;
+    }
 
 }
