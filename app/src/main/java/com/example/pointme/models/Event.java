@@ -10,7 +10,7 @@ public class Event extends Meeting {
 
     private String scheduleType;
     private ArrayList<String> dates;
-
+    private HashMap<String, String> times;
 
 
     public Event() {
@@ -18,12 +18,13 @@ public class Event extends Meeting {
     }
 
     public Event(String name, String desc, int fees, int minPeriod, String spID, String spName, String meetingID, boolean reqAccept, String startDate,
-                       String endDate, HashMap<String, String> times, String timeDiff, String duration){
+                       String endDate, HashMap<String, String> times){
 
-        super(name, desc, fees, minPeriod, spID, spName, meetingID, reqAccept, startDate, endDate, times);
+        super(name, desc, fees, minPeriod, spID, spName, meetingID, reqAccept, startDate, endDate);
 
         this.scheduleType = scheduleType;
         this.dates = dates;
+        this.times = times;
     }
 
     public String getScheduleType() {
@@ -40,6 +41,14 @@ public class Event extends Meeting {
 
     public void setDates(ArrayList<String> dates) {
         this.dates = dates;
+    }
+
+    public HashMap<String,String> getTimes() {
+        return times;
+    }
+
+    public void setTimes(HashMap<String, String> times) {
+        this.times = times;
     }
 
 }

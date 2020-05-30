@@ -18,13 +18,13 @@ public class Meeting implements Parcelable {
     private boolean reqAccept;
     private String startDate;
     private String endDate;
-    private HashMap<String, String> times;
+//    private HashMap<String, String> times;
 
     public Meeting(){
 
     }
 
-    public Meeting(String name, String desc, int fees, int minPeriod, String spID, String spName, String meetingID, boolean reqAccept, String startDate, String endDate, HashMap<String, String> times) {
+    public Meeting(String name, String desc, int fees, int minPeriod, String spID, String spName, String meetingID, boolean reqAccept, String startDate, String endDate) {
         this.name = name;
         this.desc = desc;
         this.fees = fees;
@@ -35,7 +35,6 @@ public class Meeting implements Parcelable {
         this.reqAccept = reqAccept;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.times = times;
     }
 
     protected Meeting(Parcel in) {
@@ -141,14 +140,6 @@ public class Meeting implements Parcelable {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
-    }
-
-    public Map<String, String> getTimes() {
-        return times;
-    }
-
-    public void setTimes(HashMap<String, String> times) {
-        this.times = times;
     }
 
     @Override
