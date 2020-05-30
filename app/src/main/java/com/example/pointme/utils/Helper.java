@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.threeten.bp.DayOfWeek;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -213,7 +214,8 @@ public class Helper {
 
     public static List<TreeMap<String, String>> dateBasedWorkshops( ArrayList<Map<String, String>> hashMaps, String filter ) {
 
-        List<TreeMap<String, String>> times = convertToTreeMap(hashMaps);
+       List<TreeMap<String, String>> times = convertToTreeMap(hashMaps);
+
 
         List<TreeMap<String, String>> filtered = times.stream()
                 .filter(map -> map.keySet().stream()
@@ -229,6 +231,18 @@ public class Helper {
         return filtered;
     }
 
+    public static List<TreeMap<String, String>> filterWeeklyBasedWorkshops(List<TreeMap<String, String>> maps, String filter ) {
+
+//        List<TreeMap<String, String>> times = convertToTreeMap(hashMaps);
+
+
+        List<TreeMap<String, String>> filtered = maps.stream()
+                .filter(map -> map.keySet().stream()
+                        .anyMatch(e -> e.contains(filter)))
+                .collect(Collectors.toList());
+
+        return filtered;
+    }
 
     @Nullable
     public static  List<TreeMap<String, String>> weeklyBasedWorkshops(ArrayList<Map<String, String>> hashMaps, CalendarDay startCalendarDay, CalendarDay endCalendarDay) {
@@ -299,6 +313,19 @@ public class Helper {
                     }
                 })
                 .collect(Collectors.toList());
+
+        // replacing days with dates
+        for (int replaceIndex = 0; replaceIndex < viewList.size(); replaceIndex++) {
+            Iterator<Map.Entry<String, String>> iterator = viewList.get(replaceIndex).entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                for (TreeMap<String, String> map : times) {
+                    if (map.containsKey(entry.getValue())) {
+                        entry.setValue(map.get(entry.getValue()));
+                    }
+                }
+            }
+        }
 
         return viewList;
     }
