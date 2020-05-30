@@ -2,13 +2,21 @@ package com.example.pointme.activities;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.example.pointme.utils.ConnectionLiveData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ToggleButton;
 
 import com.example.pointme.R;
@@ -37,9 +45,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Booking mBooking;
 
     private ArrayList<String> mDates;
+    private ConnectionLiveData connectionLiveData;
 
     private CategoriesFragment categoriesFragment;
 
+    private CardView noInternetView;
+    private FrameLayout container;
     /* Bundle Tags */
     public static final String NAME_OF_PROVIDER = "nameOfProvider";
     public static final String PROFILE_INFO = "profileInfo";
@@ -55,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        noInternetView = findViewById(R.id.noInternetCV);
+        container = findViewById(R.id.frame_container);
 //        mDatabase = FirebaseDatabase.getInstance().getReference();
         toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -64,29 +76,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         favoritesButton = findViewById(R.id.button_favorite);
         categoriesFragment = new CategoriesFragment();
         loadFragment(categoriesFragment, getString(R.string.categories));
-    }
-
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        connectionLiveData = new ConnectionLiveData(this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
+    protected void onStart() {
+        super.onStart();
+        connectionLiveData.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Log.d(TAG, "Connection changed " + aBoolean);
+                if (!aBoolean) {
+                    noInternetView.setVisibility(View.VISIBLE);
+                    container.setVisibility(View.GONE);
+                } else {
+                    noInternetView.setVisibility(View.GONE);
+                    container.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
 
     public void loadFragment(Fragment fragment, String title) {
         // load fragment
