@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 import com.example.pointme.R;
@@ -42,7 +44,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
 
     /* Views */
     private RecyclerView recyclerView;
-    private ProgressDialog progressDialog;
+    private ProgressBar mProgressBar;
+    private TextView errorTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         // Defines the xml file for the fragment
         View mRootview = inflater.inflate(R.layout.fragment_categories, parent, false);
         recyclerView = mRootview.findViewById(R.id.card_view_recycler_list);
-
+        mProgressBar = mRootview.findViewById(R.id.pb_loading_indicator);
+        errorTextView = mRootview.findViewById(R.id.tv_error_message_display);
         // Create the recyclerview.
         setupRecyclerView();
 
@@ -95,25 +99,26 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        progressDialog = ProgressDialog.show(getActivity(),
-                "ProgressDialog", "Fetching Categories");
 
         LiveData<DocumentSnapshot> liveData = categoriesViewModel.getDataSnapshotLiveData();
-
+        mProgressBar.setVisibility(View.VISIBLE);
         liveData.observe(getViewLifecycleOwner(), new Observer<DocumentSnapshot>() {
+
             @Override
             public void onChanged(@Nullable DocumentSnapshot dataSnapshot) {
                 Log.d(TAG, "[OnChanged]: " + hashCode());
-
+                mProgressBar.setVisibility(View.GONE);
                 if (dataSnapshot != null) {
                     if (dataSnapshot.exists()) {
-                        progressDialog.dismiss();
                         // update the UI here with values in the snapshot
                         categoriesModel = dataSnapshot.toObject(CategoriesModel.class);
                         categoriesAdapter.setCategoriesData(categoriesModel.getCategoriesNames(), categoriesModel.getImageUrls());
                     }
+                } else {
+                    showErrorMessage();
                 }
             }
+
         });
     }
 
@@ -128,6 +133,13 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
 
         // Set data adapter.
         recyclerView.setAdapter(categoriesAdapter);
+    }
+
+    private void showErrorMessage() {
+        /* First, hide the currently visible data */
+        recyclerView.setVisibility(View.INVISIBLE);
+        /* Then, show the error */
+        errorTextView.setVisibility(View.VISIBLE);
     }
 
     @Override

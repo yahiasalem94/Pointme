@@ -7,10 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +29,12 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.pointme.R;
 import com.example.pointme.activities.MainActivity;
 import com.example.pointme.adapters.ProvidersAdapter;
+import com.example.pointme.models.CategoriesModel;
 import com.example.pointme.models.ServiceProvider;
 import com.example.pointme.utils.SharedPreference;
 import com.example.pointme.viewModels.ProvidersViewModel;
 import com.example.pointme.viewModels.ProvidersViewModelFactory;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -103,21 +107,26 @@ public class ListOfServiceProvidersFragment extends Fragment implements Provider
         mProgressBar.setVisibility(View.VISIBLE);
         LiveData<QuerySnapshot> liveData = providersViewModel.getDataSnapshotLiveData();
 
-        liveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
-            if (dataSnapshot != null) {
-                serviceProviders.clear();
-                mProgressBar.setVisibility(View.INVISIBLE);
-                for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
-                    serviceProvidersModel = dataSnapshot.getDocuments().get(i).toObject(ServiceProvider.class);
-                    serviceProvidersModel.setuID(dataSnapshot.getDocuments().get(i).getId());
-                    serviceProviders.add(serviceProvidersModel);
+        liveData.observe(getViewLifecycleOwner(), new Observer<QuerySnapshot>() {
+            @Override
+            public void onChanged(@Nullable QuerySnapshot dataSnapshot) {
+                Log.d(TAG, "[OnChanged]: " + hashCode());
+                mProgressBar.setVisibility(View.GONE);
+                if (dataSnapshot != null) {
+                    serviceProviders.clear();
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
+                        serviceProvidersModel = dataSnapshot.getDocuments().get(i).toObject(ServiceProvider.class);
+                        assert serviceProvidersModel != null;
+                        serviceProvidersModel.setuID(dataSnapshot.getDocuments().get(i).getId());
+                        serviceProviders.add(serviceProvidersModel);
+                    }
+                    providersAdapter.setProvidersData(serviceProviders);
+                } else {
+                    showErrorMessage();
                 }
-                providersAdapter.setProvidersData(serviceProviders);
-                showDataView();
-            } else {
-                mProgressBar.setVisibility(View.INVISIBLE);
-                showErrorMessage();
             }
+
         });
     }
 
@@ -126,13 +135,6 @@ public class ListOfServiceProvidersFragment extends Fragment implements Provider
         list.setLayoutManager(linearLayoutManager);
         // Set data adapter.
         list.setAdapter(providersAdapter);
-    }
-
-    private void showDataView() {
-        /* First, make sure the error is invisible */
-        errorTextView.setVisibility(View.INVISIBLE);
-        /* Then, make sure the weather data is visible */
-        list.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {

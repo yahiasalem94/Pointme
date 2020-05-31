@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.pointme.constants.Constants;
 import com.example.pointme.decorator.DividerItemDecoration;
@@ -59,6 +61,8 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
     private RecyclerView recyclerList;
     private Button book;
     private NestedScrollView scrollView;
+    private ProgressBar mProgressBar;
+    private TextView errorTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,8 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
         scrollView = mRootview.findViewById(R.id.scrollView);
         book = mRootview.findViewById(R.id.bookNow);
         recyclerList = mRootview.findViewById(R.id.card_view_list);
+        errorTextView = mRootview.findViewById(R.id.tv_error_message_display);
+        mProgressBar = mRootview.findViewById(R.id.pb_loading_indicator);
 
         profileAdapter = new ProfileAdapter(this, getActivity(), scrollView);
         setupRecyclerView();
@@ -114,8 +120,10 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
         LiveData<QuerySnapshot> appointmentsLiveData = appointmentsViewModel.getDataSnapshotLiveData();
         LiveData<QuerySnapshot> eventsLiveData = eventsViewModel.getDataSnapshotLiveData();
         LiveData<QuerySnapshot> workshopLiveData = workshopViewModel.getDataSnapshotLiveData();
+        mProgressBar.setVisibility(View.VISIBLE);
 
         appointmentsLiveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
+            mProgressBar.setVisibility(View.GONE);
             if (dataSnapshot != null) {
 //                mProgressBar.setVisibility(View.INVISIBLE);
                 for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
@@ -125,12 +133,12 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
                 profileAdapter.setMeetings(meetings);
 //                showDataView();
             } else {
-//                mProgressBar.setVisibility(View.INVISIBLE);
-//                showErrorMessage();
+                showErrorMessage();
             }
         });
 
         eventsLiveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
+            mProgressBar.setVisibility(View.GONE);
             if (dataSnapshot != null) {
 //                mProgressBar.setVisibility(View.INVISIBLE);
                 for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
@@ -140,12 +148,12 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
                 profileAdapter.setMeetings(meetings);
 //                showDataView();
             } else {
-//                mProgressBar.setVisibility(View.INVISIBLE);
-//                showErrorMessage();
+                showErrorMessage();
             }
         });
 
         workshopLiveData.observe(getViewLifecycleOwner(), dataSnapshot -> {
+            mProgressBar.setVisibility(View.GONE);
             if (dataSnapshot != null) {
 //                mProgressBar.setVisibility(View.INVISIBLE);
                 for (int i = 0 ; i < dataSnapshot.getDocuments().size(); i++) {
@@ -155,12 +163,17 @@ public class EventsFragment extends Fragment implements ProfileAdapter.ProfileAd
                 profileAdapter.setMeetings(meetings);
 //                showDataView();
             } else {
-//                mProgressBar.setVisibility(View.INVISIBLE);
-//                showErrorMessage();
+                showErrorMessage();
             }
         });
     }
 
+    private void showErrorMessage() {
+        /* First, hide the currently visible data */
+        recyclerList.setVisibility(View.INVISIBLE);
+        /* Then, show the error */
+        errorTextView.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onClick(@Constants.Type int type, int position) {

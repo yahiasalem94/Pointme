@@ -10,9 +10,12 @@
         android:id="@+id/card_view_recycler_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include
+        layout="@layout/inprogress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
