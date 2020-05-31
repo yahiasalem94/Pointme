@@ -72,7 +72,7 @@ public class ReviewFragment extends Fragment {
         qualityRatingBar = mRootview.findViewById(R.id.quality_rating);
         puncRatingBar = mRootview.findViewById(R.id.punc_rating);
         attitudeRatingBar = mRootview.findViewById(R.id.attitude_rating);
-        mAdapter = new ReviewsAdapter();
+        mAdapter = new ReviewsAdapter(getActivity());
         setupRecyclerView();
 
         return mRootview;
@@ -111,7 +111,7 @@ public class ReviewFragment extends Fragment {
                     reviews.add(reviewsModel);
                 }
                 mAdapter.setReviews(reviews);
-                runLayoutAnimation(recyclerList);
+//                runLayoutAnimation(recyclerList);
 //                showDataView();
             } else {
 //                mProgressBar.setVisibility(View.INVISIBLE);

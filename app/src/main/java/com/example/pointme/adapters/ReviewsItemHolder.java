@@ -1,5 +1,6 @@
 package com.example.pointme.adapters;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.RatingBar;
@@ -14,6 +15,7 @@ public class ReviewsItemHolder extends RecyclerView.ViewHolder {
     public TextView date;
     public RatingBar ratingBar;
     public TextView reviewText;
+    public CardView cardView;
 
     public ReviewsItemHolder(View itemView) {
         super(itemView);
@@ -21,5 +23,6 @@ public class ReviewsItemHolder extends RecyclerView.ViewHolder {
         date = itemView.findViewById(R.id.date_of_review);
         ratingBar = itemView.findViewById(R.id.ratingBar);
         reviewText = itemView.findViewById(R.id.reviewText);
+        cardView = itemView.findViewById(R.id.card_view);
     }
 }

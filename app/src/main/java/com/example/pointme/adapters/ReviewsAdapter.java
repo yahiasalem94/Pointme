@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +22,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsItemHolder>  {
     private NestedScrollView scrollView;
     private int minHeight;
     private static int currentPosition = 0;
-    private Context context;
+    private Context mContext;
 
 //    private ProfileAdapterOnClickHandler mClickHandler;
 
@@ -31,9 +32,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsItemHolder>  {
 //        void onClick(@Type int type, int position);
 //    }
 
-    public ReviewsAdapter() {
+    public ReviewsAdapter(Context mContext) {
 //        this.mClickHandler = mClickHandler;
-//        this.context = context;
+        this.mContext = mContext;
 //        this.scrollView = scrollView;
     }
 
@@ -63,6 +64,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsItemHolder>  {
 
     @Override
     public void onBindViewHolder(final ReviewsItemHolder holder, final int position) {
+
+        holder.cardView.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.item_animation_slide));
+
         holder.authorName.setText(reviewsList.get(position).getCrName());
         holder.date.setText(reviewsList.get(position).getCreated().toString());
         holder.reviewText.setText(reviewsList.get(position).getReviewText());
