@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.pointme.adapters.BookingsAdapter;
+import com.example.pointme.decorator.LinearBottomSpacesItemDecoration;
 import com.example.pointme.decorator.LinearRightSpacesItemDecoration;
 import com.example.pointme.R;
 import com.example.pointme.models.Booking;
@@ -110,7 +111,7 @@ public class MyBookingFragment extends Fragment implements View.OnClickListener,
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(linearLayoutManager);
-        list.addItemDecoration(new LinearRightSpacesItemDecoration( 50));
+        list.addItemDecoration(new LinearBottomSpacesItemDecoration( 50));
         // Set data adapter.
         list.setAdapter(adapter);
     }
