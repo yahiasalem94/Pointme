@@ -46,10 +46,24 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalItemHolder
     public void onBindViewHolder(@NonNull HorizontalItemHolder holder, int position) {
         key = (String) row.keySet().toArray()[position];
         value = row.get(key);
+        fixDateTimeView();
         holder.dateTextview.setText(key);
         holder.timeTextview.setText(value);
     }
 
+    private void fixDateTimeView() {
+
+        String year = key.substring(0, 4);
+        String month = key.substring(4, 6);
+        String day = key.substring(6);
+        key = day + "/" + month + "/" + year;
+
+        String stHour = value.substring(0, 2);
+        String stMin = value.substring(2, 4);
+        String endHour = value.substring(4, 6);
+        String endMin = value.substring(6, 8);
+        value = stHour + ":" + stMin + " - " + endHour + ":" + endMin;
+    }
 
     @Override
     public int getItemCount() {
