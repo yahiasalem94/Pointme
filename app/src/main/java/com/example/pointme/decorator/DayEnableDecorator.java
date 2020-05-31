@@ -38,7 +38,7 @@ public class DayEnableDecorator implements DayViewDecorator {
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        CalendarDay minDate = CalendarDay.from(CalendarDay.today().getYear(), CalendarDay.today().getMonth(), CalendarDay.today().getDay() + minPeriod);
+        CalendarDay minDate = Helper.incrementDateByDays(CalendarDay.today(), minPeriod);
         CalendarDay startDate = Helper.stringToDate(stringStartDate);
         CalendarDay endDate = Helper.stringToDate(stringEndDate);
 
