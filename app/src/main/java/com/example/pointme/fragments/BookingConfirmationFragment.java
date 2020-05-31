@@ -82,6 +82,7 @@ public class BookingConfirmationFragment extends Fragment implements View.OnClic
         confirmButton = mRootView.findViewById(R.id.confirm_button);
         mLocationButton = mRootView.findViewById(R.id.location_button);
 
+        fixDateTimeView();
         mConfirmDate.setText(mDate);
         mConfirmTime.setText(mTime);
 
@@ -89,6 +90,20 @@ public class BookingConfirmationFragment extends Fragment implements View.OnClic
         confirmButton.setOnClickListener(this);
 
         return mRootView;
+    }
+
+    private void fixDateTimeView() {
+
+        String year = mDate.substring(0, 4);
+        String month = mDate.substring(4, 6);
+        String day = mTime.substring(6);
+        mDate = day + "/" + month + "/" + year;
+
+        String stHour = mTime.substring(0, 2);
+        String stMin = mTime.substring(2, 4);
+        String endHour = mTime.substring(4, 6);
+        String endMin = mTime.substring(6, 8);
+        mTime = stHour + ":" + stMin + " - " + endHour + ":" + endMin;
     }
 
     @Override
