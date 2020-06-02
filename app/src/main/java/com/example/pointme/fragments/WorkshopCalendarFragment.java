@@ -32,10 +32,12 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.example.pointme.activities.MainActivity.MEETING;
@@ -69,7 +71,7 @@ public class WorkshopCalendarFragment extends Fragment implements WorkshopAdapte
     CalendarDay startDate;
     CalendarDay endDate;
 
-    List<TreeMap<String, String>> listView;
+    List<TreeMap<String, String>> listView = new ArrayList<>();
 
     /*Views*/
     private RecyclerView recyclerView;
@@ -99,13 +101,13 @@ public class WorkshopCalendarFragment extends Fragment implements WorkshopAdapte
         }
 
         if (stringStartDate == null) {
-            startDate = CalendarDay.from(CalendarDay.today().getYear(), CalendarDay.today().getMonth(), CalendarDay.today().getDay() + minPeriod);
+            startDate = Helper.incrementDateByDays( CalendarDay.today(), minPeriod);
         } else {
             startDate = Helper.stringToDate(stringStartDate);
         }
 
         if (stringEndDate == null) {
-            endDate = CalendarDay.from(CalendarDay.today().getYear()+1, CalendarDay.today().getMonth(), CalendarDay.today().getDay() + minPeriod);
+            endDate = Helper.incrementDateByDays( CalendarDay.from(CalendarDay.today().getYear()+1, CalendarDay.today().getMonth(), CalendarDay.today().getDay()), minPeriod);
         } else {
             endDate = Helper.stringToDate(stringEndDate);
         }
@@ -130,6 +132,8 @@ public class WorkshopCalendarFragment extends Fragment implements WorkshopAdapte
         } else {
             listView = Helper.dateBasedWorkshops(times, filter);
         }
+
+//       fixDateTimeView();
     }
 
     @Override
