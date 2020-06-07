@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/booking"
+        android:icon="@drawable/calender"
+        android:title="booking" />
+
+    <item
+        android:id="@+id/action_needed"
+        android:icon="@drawable/notifications_icon"
+        android:title="Actions" />
+
+
+    <item
+        android:id="@+id/action_empty"
+        android:title=""
+        android:checkable="false"
+        android:checked="false"
+        android:enabled="false"
+        />
+
+
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/profile_icon"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/lists"
+        android:title="more" />
+
+</menu>

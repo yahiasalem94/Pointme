@@ -22,6 +22,7 @@
     <color name="deep_purple">#4527a0</color>
     <color name="orange">#FFA500</color>
     <color name="transparentWhite">#59FFFFFF</color>
+    <color name="transparentWhite_99">#99FFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="color_facebook">#4267B2</color>
 </resources>

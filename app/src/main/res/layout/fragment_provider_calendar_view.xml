@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:mcv_tileSize="50dp"
+            app:mcv_showOtherDates="decorated_disabled"
+            app:mcv_selectionColor="@color/white"
+            app:mcv_dateTextAppearance="@style/TextAppearance.CalendarDay"
+            app:mcv_headerTextAppearance="@style/TextAppearance.CalendarMonth"
+            app:mcv_rightArrowMask="@drawable/ic_arrow_right_24dp"
+            app:mcv_leftArrowMask="@drawable/ic_arrow_left_24dp"
+            app:mcv_weekDayTextAppearance="@style/TextAppearance.CalendarWeek"
+            />
+
+    </LinearLayout>
+
+    <!-- Adding bottom sheet after main content -->
+    <include layout="@layout/bottom_sheet" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
