@@ -3,14 +3,15 @@ package com.example.pointme.activities;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 
-import com.example.pointme.fragments.ProviderCalendarView;
+import com.example.pointme.fragments.ActionNeededFragment;
+import com.example.pointme.fragments.ProviderAddDates;
+import com.example.pointme.fragments.ProviderCalendarFragment;
 import com.example.pointme.fragments.ProvidersProfileFragment;
 import com.example.pointme.models.ServiceProvider;
 import com.example.pointme.utils.ConnectionLiveData;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,16 +23,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ToggleButton;
 
 import com.example.pointme.R;
-import com.example.pointme.fragments.FavoritesFragment;
 import com.example.pointme.fragments.MyBookingFragment;
 import com.example.pointme.fragments.SettingsFragment;
 import com.example.pointme.models.Appointment;
 import com.example.pointme.models.Booking;
 import com.example.pointme.models.Event;
-import com.example.pointme.fragments.CategoriesFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ import java.util.ArrayList;
 import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
 
 
-public class ServiceProviderMainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class ServiceProviderMainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private static final String TAG = ServiceProviderMainActivity.class.getSimpleName();
     private FirebaseAuth mAuth;
@@ -56,7 +55,8 @@ public class ServiceProviderMainActivity extends AppCompatActivity implements Bo
     private CardView noInternetView;
     private FrameLayout container;
     public BottomAppBar bottomAppBar;
-    private ProviderCalendarView providersCalendarFragment;
+    private ProviderCalendarFragment providersCalendarFragment;
+    private FloatingActionButton fab;
 
     ServiceProvider provider;
     /* Bundle Tags */
@@ -68,6 +68,8 @@ public class ServiceProviderMainActivity extends AppCompatActivity implements Bo
         setContentView(R.layout.activity_service_provider_main);
         noInternetView = findViewById(R.id.noInternetCV);
         container = findViewById(R.id.frame_container);
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(this);
 //        mDatabase = FirebaseDatabase.getInstance().getReference();
         toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -77,7 +79,7 @@ public class ServiceProviderMainActivity extends AppCompatActivity implements Bo
          provider = new ServiceProvider("test@test.com", "Lina Essam", "01225189191",
                 null, "https://firebasestorage.googleapis.com/v0/b/pointme-dbd0b.appspot.com/o/Users%2F7SePfePNkWbTVCVgG0NoXtl9IKI3.jpg?alt=media&token=6b731b9e-3c71-4bb6-9db1-58bbdbb815f2"
         ,null, null,"Yoga", 3,4, 2, 5,10 );
-        providersCalendarFragment = new ProviderCalendarView();
+        providersCalendarFragment = new ProviderCalendarFragment();
         loadFragment(providersCalendarFragment);
         connectionLiveData = new ConnectionLiveData(this);
     }
@@ -111,19 +113,18 @@ public class ServiceProviderMainActivity extends AppCompatActivity implements Bo
         transaction.addToBackStack(null);
         transaction.commit();
     }
-//
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.booking:
                 Log.i(TAG, "Loading favorites fragment");
-
                 loadFragment(providersCalendarFragment);
                 return true;
             case R.id.action_needed:
                 Log.i(TAG, "Loading booking fragment");
-                MyBookingFragment bookingFragment = new MyBookingFragment();
-                loadFragment(bookingFragment);
+                ActionNeededFragment actionNeededFragment = new ActionNeededFragment();
+                loadFragment(actionNeededFragment);
                 return true;
             case R.id.profile:
                 Log.i(TAG, "Loading categories fragment");
@@ -137,5 +138,11 @@ public class ServiceProviderMainActivity extends AppCompatActivity implements Bo
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        ProviderAddDates providerAddDates = new ProviderAddDates();
+        loadFragment(providerAddDates);
     }
 }

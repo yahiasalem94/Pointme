@@ -27,7 +27,7 @@ public class Constants {
     public static final String SERVICE = "service";
     public static final String UID = "spID";
     public static final String CRID = "crID";
-
+    public static final String SPID = "spID";
     /* Cloud Fuctions */
     public static final String GET_BOOKING_SLOTS = "getBookingSlots";
 

@@ -1,6 +1,12 @@
 package com.example.pointme.fragments;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +21,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -45,10 +52,13 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.example.pointme.activities.MainActivity.PROFILE_INFO;
 import static com.example.pointme.activities.MainActivity.PROFILE_UID;
 
-public class ProvidersProfileFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class ProvidersProfileFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
+        ActionBottomDialogFragment.BottomSheetListener {
 
     private String TAG = ProfileFragment.class.getSimpleName();
     private ProfileAdapter profileAdapter;
@@ -96,7 +106,7 @@ public class ProvidersProfileFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
-        View mRootview = inflater.inflate(R.layout.fragment_profile, parent, false);
+        View mRootview = inflater.inflate(R.layout.fragment_provider_profile, parent, false);
         // Defines the xml file for the fragment
 
         /* Initalizing views */
@@ -110,6 +120,8 @@ public class ProvidersProfileFragment extends Fragment implements View.OnClickLi
         reviewsTv = mRootview.findViewById(R.id.reviewsTv);
         eventLinearLayout = mRootview.findViewById(R.id.eventsLinearLayout);
         reviewsLinearLayout = mRootview.findViewById(R.id.reviewsLinearLayout);
+
+        profileImage.setOnClickListener(this);
 
         eventLinearLayout.setOnClickListener(this);
         eventLinearLayout.setClickable(false);
@@ -183,6 +195,9 @@ public class ProvidersProfileFragment extends Fragment implements View.OnClickLi
                 reviewsLinearLayout.setClickable(false);
                 eventLinearLayout.setClickable(true);
                 break;
+            case R.id.ivProfile:
+                selectImage();
+                break;
             default:
                 break;
         }
@@ -212,6 +227,44 @@ public class ProvidersProfileFragment extends Fragment implements View.OnClickLi
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(phoneNumber));
         startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+                        profileImage.setImageBitmap(selectedImage);
+                    }
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri selectedImage =  data.getData();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        if (selectedImage != null) {
+                            Cursor cursor = Objects.requireNonNull(getActivity()).getApplicationContext().getContentResolver().query(selectedImage,
+                                    filePathColumn, null, null, null);
+                            if (cursor != null) {
+                                cursor.moveToFirst();
+
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String picturePath = cursor.getString(columnIndex);
+                                profileImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                                cursor.close();
+                            }
+                        }
+
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void selectImage() {
+        ActionBottomDialogFragment addPhotoBottomDialogFragment = ActionBottomDialogFragment.newInstance();
+        addPhotoBottomDialogFragment.show(this.getChildFragmentManager(), ActionBottomDialogFragment.TAG);
     }
 
     private void openInstagram() {
@@ -256,5 +309,22 @@ public class ProvidersProfileFragment extends Fragment implements View.OnClickLi
     }
 
 
-
+    @Override
+    public void onBottomSheetItemClick(int id) {
+        switch (id) {
+            case R.id.gallery:
+                Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePicture, 0);
+                break;
+            case R.id.camera:
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto , 1);
+                break;
+            case R.id.cancel:
+                /* fallthrough */
+                break;
+            default:
+                break;
+        }
+    }
 }
